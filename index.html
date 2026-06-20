@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>牌局记录</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Spectral:ital@1&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
     --radius-sm: 10px;
   }
 
-  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; overscroll-behavior-x: none; }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   html, body{
     margin:0; padding:0;
@@ -35,7 +35,6 @@
     font-family: 'IBM Plex Mono', monospace;
     min-height: 100vh;
     overscroll-behavior-y: contain;
-    touch-action: manipulation;
   }
 
   body{
@@ -58,7 +57,6 @@
   header.top{
     padding: 28px 20px 18px;
     position: relative;
-    padding-right: 150px; /* room for io-bar */
   }
   header.top::after{
     content:"";
@@ -66,6 +64,53 @@
     height:1px;
     background: linear-gradient(90deg, transparent, var(--line) 15%, var(--line) 85%, transparent);
   }
+
+  .header-tools{
+    display:flex;
+    gap: 7px;
+    margin-bottom: 16px;
+  }
+  .icon-btn{
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .icon-btn svg{ width:16px; height:16px; }
+  .icon-btn:active{ background: var(--card-raised); }
+  .hidden-file-input{ display:none; }
+
+  .toast{
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-14px);
+    background: var(--card-raised);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    z-index: 300;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease, transform .25s ease;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.4);
+    white-space: nowrap;
+    max-width: calc(100vw - 40px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .toast.show{
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
   .eyebrow{
     font-size: 11px;
     letter-spacing: 0.18em;
@@ -90,18 +135,9 @@
   .summary-row{
     display:flex; gap: 10px;
     margin-top: 18px;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 4px;
   }
-  .summary-row::-webkit-scrollbar{ display:none; }
   .summary-chip{
     flex:1;
-    flex-shrink: 0;
-    min-width: 78px;
-    max-width: 120px;
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
@@ -122,13 +158,33 @@
   .val.pos{ color: var(--gold-bright); }
   .val.neg{ color: var(--loss-bright); }
 
+  .nav-row{
+    display:flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .nav-btn{
+    flex:1;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--ink-dim);
+    font-family: 'Spectral', serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 10px 4px;
+    cursor: pointer;
+    text-align:center;
+    white-space: nowrap;
+  }
+  .nav-btn:active{ background: var(--card-raised); border-color: var(--gold); color: var(--ink); }
+
   /* ---------- Timeline list ---------- */
   #list{
     padding: 22px 16px 10px;
     display:flex;
     flex-direction: column-reverse; /* oldest visually first via column-reverse + DOM order */
     gap: 10px;
-    -webkit-overflow-scrolling: touch;
   }
 
   .day-group{
@@ -321,14 +377,12 @@
 
   .sheet-body{
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     padding: 4px 20px 24px;
     flex:1;
   }
 
   .field{
     margin-bottom: 22px;
-    position: relative;
   }
   .field-label{
     font-size: 11px;
@@ -401,6 +455,28 @@
     color: var(--ink-faint);
     margin-top: 7px;
     line-height:1.5;
+  }
+
+  /* Duration slider */
+  .duration-val{
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-faint);
+    transition: color .15s ease;
+  }
+  .duration-val.set{ color: var(--gold-bright); }
+  .duration-card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 16px 16px 13px;
+  }
+  .duration-ticks{
+    display:flex;
+    justify-content: space-between;
+    margin-top: 9px;
+    font-size: 10.5px;
+    color: var(--ink-faint);
   }
 
   /* Pill toggle group */
@@ -751,13 +827,8 @@
     flex-direction: column;
     transform: translateY(100%);
     transition: transform .3s cubic-bezier(.32,.72,0,1);
-    overflow: hidden;
   }
   .hand-editor.open{ transform: translateY(0); }
-  @media (min-width: 561px){
-    .hand-editor:not(.open){ transform: translateY(100%) translateX(calc(50vw + 280px)); }
-    .hand-editor.open{ transform: translateY(0) translateX(0); }
-  }
 
   .he-topbar{
     position: relative;
@@ -825,6 +896,227 @@
   }
   .he-textarea::placeholder{ color: var(--ink-faint); }
 
+  /* ---------- Full-screen stat page (charts + hands overview) ---------- */
+  .stat-page{
+    position: fixed;
+    inset: 0;
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--bg);
+    z-index: 190;
+    display:flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.32,.72,0,1);
+  }
+  .stat-page.open{ transform: translateY(0); }
+
+  .sp-topbar{
+    position: relative;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 14px 8px 14px 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sp-back{
+    width: 38px; height:38px;
+    border-radius: 50%;
+    background: none;
+    border:none;
+    color: var(--ink-dim);
+    font-size: 24px;
+    line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .sp-back:active{ background: var(--card); }
+  .sp-title{
+    position:absolute;
+    left:50%; top:50%;
+    transform: translate(-50%,-50%);
+    font-family:'Spectral', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    pointer-events:none;
+  }
+  .sp-spacer{ width:38px; flex-shrink:0; }
+
+  .sp-body{
+    flex:1;
+    overflow-y: auto;
+    padding: 20px 20px 40px;
+  }
+
+  /* -- chart page -- */
+  .sp-current{
+    text-align:center;
+    margin-bottom: 22px;
+  }
+  .sp-current-label{
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+  }
+  .sp-current-val{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 34px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--gold-bright);
+  }
+  .sp-current-val.neg{ color: var(--loss-bright); }
+
+  .chart-wrap{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 14px 14px;
+  }
+  .trend-svg{ width:100%; height:auto; display:block; }
+  .trend-line{ fill:none; stroke-width: 2.4; stroke-linecap:round; stroke-linejoin:round; }
+  .trend-area{ stroke:none; }
+  .zero-line{ stroke: var(--ink-faint); stroke-width:1; stroke-dasharray: 3 3; opacity:.5; }
+  .trend-dot{ fill: var(--bg); stroke-width: 2.2; }
+  .chart-axis-text{ font-family:'IBM Plex Mono',monospace; font-size:9px; fill: var(--ink-faint); }
+
+  .chart-axis-labels{
+    display:flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 10.5px;
+    color: var(--ink-faint);
+  }
+
+  .sp-chart-meta{
+    text-align:center;
+    margin-top: 14px;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+  }
+
+  /* period toggle (年 / 月 / 日) */
+  .period-toggle{
+    display:flex;
+    gap: 6px;
+    justify-content:center;
+    margin-bottom: 18px;
+  }
+  .period-btn{
+    padding: 6px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink-dim);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    font-weight:600;
+    cursor:pointer;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .period-btn.active{
+    background: rgba(201,162,75,0.14);
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+  .period-btn:active{ opacity:.7; }
+
+  /* multi-series legend */
+  .series-legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 8px 14px;
+    margin-top: 14px;
+    justify-content:center;
+  }
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--ink-dim);
+  }
+  .legend-dot{
+    width: 8px; height:8px;
+    border-radius:50%;
+    flex-shrink:0;
+  }
+
+  /* chart section title */
+  .sp-section-title{
+    font-family:'Spectral', serif;
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin: 22px 0 8px;
+    letter-spacing: 0.04em;
+  }
+  .sp-section-title:first-child{ margin-top:0; }
+
+  .chart-empty, .hands-overview-empty{
+    text-align:center;
+    color: var(--ink-faint);
+    padding: 70px 20px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .chart-empty .ce-glyph, .hands-overview-empty .ce-glyph{
+    font-size: 28px;
+    margin-bottom: 12px;
+    opacity:.5;
+  }
+
+  /* -- hands overview list -- */
+  .hov-card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 13px 14px;
+    margin-bottom: 9px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+  }
+  .hov-card::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:3px;
+  }
+  .hov-card.venue-venetian::before{ background: var(--venetian); }
+  .hov-card.venue-mgm::before{ background: var(--mgm); }
+  .hov-card:active{ background: var(--card-raised); }
+  .hov-meta{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    margin-bottom: 7px;
+  }
+  .hov-date{
+    font-family:'Spectral', serif;
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    font-weight: 600;
+  }
+  .hov-tag{
+    font-size: 10px;
+    color: var(--ink-faint);
+    background: var(--card-raised);
+    border-radius: 5px;
+    padding: 2px 6px;
+  }
+  .hov-text{
+    font-family:'Spectral', serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   /* tiny calendar (custom, since native date input styling is unreliable on mobile webviews) */
   .cal-pop{
     background: var(--card);
@@ -882,336 +1174,23 @@
   .cal-day.selected{ background: var(--gold); color:#1A1408; font-weight:700; }
 
   ::selection{ background: var(--gold); color:#1A1408; }
-
-  /* ---------- Import / Export ---------- */
-  .io-bar{
-    position: absolute;
-    top: 28px;
-    right: 20px;
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .io-btn{
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 6px 11px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--ink-dim);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    transition: border-color .15s ease, color .15s ease, background .15s ease;
-  }
-  .io-btn:hover{ border-color: var(--gold); color: var(--gold); background: rgba(201,162,75,0.08); }
-  .io-btn:active{ transform: scale(0.96); }
-  .io-btn svg{ width:13px; height:13px; flex-shrink:0; }
-
-  /* Toast */
-  #io-toast{
-    position: fixed;
-    bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%) translateY(16px);
-    background: var(--card-raised);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 10px 18px;
-    font-size: 13px;
-    color: var(--ink);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity .22s ease, transform .22s ease;
-    white-space: nowrap;
-    z-index: 200;
-  }
-  #io-toast.show{
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  #io-toast.ok{ border-color: var(--gold); color: var(--gold-bright); }
-  #io-toast.err{ border-color: var(--loss); color: var(--loss-bright); }
-
-  /* ---------- Clickable summary chips ---------- */
-  .summary-chip-btn{
-    cursor: pointer;
-    transition: border-color .15s ease, background .15s ease;
-  }
-  .summary-chip-btn:hover{ border-color: var(--gold); background: rgba(201,162,75,0.08); }
-  .summary-chip-btn:active{ transform: scale(0.97); }
-  .chip-arrow{ font-size:20px; color:var(--gold); line-height:1; }
-
-  /* ---------- Full-screen modal panels ---------- */
-  .modal-overlay{
-    position: fixed; inset:0;
-    background: rgba(7,10,8,0.65);
-    backdrop-filter: blur(3px);
-    z-index: 120;
-    opacity:0; pointer-events:none;
-    transition: opacity .25s ease;
-  }
-  .modal-overlay.open{ opacity:1; pointer-events:auto; }
-
-  .modal-panel{
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    max-width: 560px;
-    margin: 0 auto;
-    background: var(--bg);
-    z-index: 121;
-    transform: translateX(100%);
-    transition: transform .32s cubic-bezier(.32,.72,0,1);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .modal-panel.open{ transform: translateX(0); }
-  /* On wide screens, ensure panel is fully hidden off-screen */
-  @media (min-width: 561px){
-    .modal-panel{ transform: translateX(calc(50vw + 280px)); }
-    .modal-panel.open{ transform: translateX(0); }
-  }
-
-  .modal-topbar{
-    display: flex;
-    align-items: center;
-    padding: 18px 20px 14px;
-    gap: 14px;
-    border-bottom: 1px solid var(--line);
-    flex-shrink:0;
-  }
-  .modal-back{
-    width:34px; height:34px;
-    border-radius:50%;
-    background: var(--card);
-    border:1px solid var(--line);
-    color: var(--ink-dim);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
-    font-size:17px;
-  }
-  .modal-title{
-    font-family:'Spectral', serif;
-    font-size:19px;
-    font-weight:600;
-    color: var(--ink);
-    flex:1;
-  }
-
-  /* ---------- Analysis panel tab bar ---------- */
-  .anal-tabs{
-    display:flex;
-    padding: 14px 20px 0;
-    gap: 10px;
-    flex-shrink:0;
-  }
-  .anal-tab{
-    flex:1;
-    padding: 10px 8px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--ink-dim);
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    font-weight:600;
-    text-align:center;
-    cursor:pointer;
-    transition: border-color .15s, color .15s, background .15s;
-  }
-  .anal-tab.active{
-    border-color: var(--gold);
-    color: var(--gold-bright);
-    background: rgba(201,162,75,0.1);
-  }
-
-  .period-tabs{
-    display:flex;
-    padding: 12px 20px 0;
-    gap: 8px;
-    flex-shrink:0;
-  }
-  .period-tab{
-    padding: 7px 16px;
-    border-radius: 20px;
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--ink-dim);
-    font-size:12px;
-    font-family:'IBM Plex Mono', monospace;
-    cursor:pointer;
-    transition: border-color .15s, color .15s, background .15s;
-  }
-  .period-tab.active{
-    border-color: var(--gold);
-    color: var(--gold-bright);
-    background: rgba(201,162,75,0.12);
-  }
-
-  .chart-area{
-    flex:1;
-    padding: 16px 16px 20px;
-    overflow: hidden;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
-  .chart-legend{
-    display:flex;
-    flex-wrap:wrap;
-    gap: 10px;
-    padding: 0 4px;
-    flex-shrink:0;
-  }
-  .legend-item{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    font-size:11px;
-    color: var(--ink-dim);
-  }
-  .legend-dot{
-    width:8px; height:8px;
-    border-radius:50%;
-    flex-shrink:0;
-  }
-  .chart-canvas-wrap{
-    flex:1;
-    position:relative;
-    min-height:0;
-  }
-  canvas.chart-canvas{
-    width:100% !important;
-    height:100% !important;
-    display:block;
-  }
-  .chart-empty{
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color: var(--ink-faint);
-    font-size:14px;
-    font-family:'Spectral',serif;
-    font-style:italic;
-  }
-
-  /* ---------- Hands log panel ---------- */
-  .hands-log-scroll{
-    flex:1;
-    overflow-y:auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 14px 16px 24px;
-  }
-  .hl-entry{
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    margin-bottom: 10px;
-    overflow:hidden;
-    cursor:pointer;
-    transition: border-color .15s;
-  }
-  .hl-entry:hover{ border-color: var(--gold); }
-  .hl-header{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding: 12px 14px;
-  }
-  .hl-meta{
-    flex:1;
-    min-width:0;
-  }
-  .hl-date{
-    font-family:'Spectral',serif;
-    font-size:14px;
-    color: var(--ink);
-    font-weight:500;
-  }
-  .hl-sub{
-    font-size:11px;
-    color: var(--ink-faint);
-    margin-top:2px;
-  }
-  .hl-count{
-    font-size:12px;
-    color: var(--ink-faint);
-    flex-shrink:0;
-  }
-  .hl-body{
-    display:none;
-    padding: 0 14px 14px;
-    flex-direction:column;
-    gap:8px;
-  }
-  .hl-entry.expanded .hl-body{ display:flex; }
-  .hl-hand{
-    background: var(--card-raised);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size:13px;
-    line-height:1.6;
-    color: var(--ink-dim);
-    white-space:pre-wrap;
-    word-break:break-word;
-  }
-  .hl-hand-num{
-    font-size:10px;
-    color: var(--ink-faint);
-    letter-spacing:.05em;
-    margin-bottom:4px;
-  }
-  .hl-arrow{
-    font-size:16px;
-    color: var(--ink-faint);
-    transition: transform .2s ease;
-    flex-shrink:0;
-  }
-  .hl-entry.expanded .hl-arrow{ transform: rotate(90deg); }
-  .hl-empty{
-    text-align:center;
-    padding: 60px 20px;
-    color: var(--ink-faint);
-    font-family:'Spectral',serif;
-    font-style:italic;
-    font-size:15px;
-  }
 </style>
 </head>
 <body>
 
 <div id="app">
   <header class="top">
+    <div class="header-tools">
+      <button class="icon-btn" id="exportBtn" aria-label="导出数据">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5"/><path d="M5 18h14"/></svg>
+      </button>
+      <button class="icon-btn" id="importBtn" aria-label="导入数据">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V4m0 0l-3.5 3.5M12 4l3.5 3.5"/><path d="M5 18h14"/></svg>
+      </button>
+      <input type="file" id="importFileInput" accept="application/json,.json" class="hidden-file-input">
+    </div>
     <p class="eyebrow">Personal Log</p>
     <h1 class="title">牌局 <em>记录</em></h1>
-
-    <!-- Import / Export -->
-    <div class="io-bar">
-      <button class="io-btn" id="exportBtn" title="导出数据">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        导出
-      </button>
-      <button class="io-btn" id="importBtn" title="导入数据">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-        导入
-      </button>
-      <input type="file" id="importFile" accept=".json" style="display:none">
-    </div>
     <div class="summary-row">
       <div class="summary-chip">
         <div class="label">总场次</div>
@@ -1221,20 +1200,16 @@
         <div class="label">总盈亏</div>
         <div class="val" id="statTotal">HK$0</div>
       </div>
-      <div class="summary-chip">
-        <div class="label">平均分</div>
-        <div class="val" id="statAvg">—</div>
-      </div>
-      <div class="summary-chip summary-chip-btn" id="analysisBtn">
-        <div class="label">数据分析</div>
-        <div class="val chip-arrow">▸</div>
-      </div>
-      <div class="summary-chip summary-chip-btn" id="handsLogBtn">
-        <div class="label">关键牌局</div>
-        <div class="val chip-arrow">▸</div>
-      </div>
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn" data-stat="amount">金额</button>
+      <button class="nav-btn" data-stat="score">分数</button>
+      <button class="nav-btn" data-stat="winrate">赢率</button>
+      <button class="nav-btn" data-stat="hands">关键牌局</button>
     </div>
   </header>
+
+  <div class="toast" id="toast"></div>
 
   <div id="list"></div>
 
@@ -1244,44 +1219,6 @@
     <div class="es">点击右下角的「+」，记下今天这一局。</div>
   </div>
 </div>
-
-
-<!-- ===== Analysis Modal ===== -->
-<div class="modal-overlay" id="analysisOverlay"></div>
-<div class="modal-panel" id="analysisPanel">
-  <div class="modal-topbar">
-    <div class="modal-back" id="analysisBack">‹</div>
-    <div class="modal-title">数据分析</div>
-  </div>
-  <div class="anal-tabs">
-    <div class="anal-tab active" id="analTabAmt">金额</div>
-    <div class="anal-tab" id="analTabScore">分数</div>
-  </div>
-  <div class="period-tabs">
-    <div class="period-tab active" data-period="year">年</div>
-    <div class="period-tab" data-period="month">月</div>
-    <div class="period-tab" data-period="day">日</div>
-  </div>
-  <div class="chart-area">
-    <div class="chart-legend" id="chartLegend"></div>
-    <div class="chart-canvas-wrap">
-      <canvas id="mainChart" class="chart-canvas"></canvas>
-      <div class="chart-empty" id="chartEmpty" style="display:none">暂无数据</div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== Hands Log Modal ===== -->
-<div class="modal-overlay" id="handsLogOverlay"></div>
-<div class="modal-panel" id="handsLogPanel">
-  <div class="modal-topbar">
-    <div class="modal-back" id="handsLogBack">‹</div>
-    <div class="modal-title">关键牌局</div>
-  </div>
-  <div class="hands-log-scroll" id="handsLogScroll"></div>
-</div>
-
-<div id="io-toast"></div>
 
 <button id="fab" aria-label="添加记录">
   <svg viewBox="0 0 24 24" fill="none" stroke="#1A1408" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
@@ -1323,7 +1260,18 @@
       <div class="session-hint" id="sessHint">这是当天的第 1 场记录</div>
     </div>
 
-    <div class="field">
+    <div class="field" id="fieldDuration">
+      <div class="field-label">
+        <span>时长</span>
+        <span class="duration-val" id="durationVal">请拖动选择</span>
+      </div>
+      <div class="duration-card">
+        <input type="range" class="rng" id="durationRng" min="1" max="10" step="1" value="1">
+        <div class="duration-ticks"><span>1 小时</span><span>10 小时</span></div>
+      </div>
+    </div>
+
+    <div class="field" id="fieldVenue">
       <div class="field-label">场馆</div>
       <div class="pill-group">
         <div class="pill" data-venue="venetian">
@@ -1337,7 +1285,7 @@
       </div>
     </div>
 
-    <div class="field">
+    <div class="field" id="fieldLevel">
       <div class="field-label">级别</div>
       <div class="pill-group">
         <div class="pill small" data-level="50/100">
@@ -1360,7 +1308,7 @@
       </div>
     </div>
 
-    <div class="field">
+    <div class="field" id="fieldAmount">
       <div class="field-label">金额</div>
       <div class="amount-row">
         <div class="sign-toggle">
@@ -1392,6 +1340,15 @@
     <button class="save-btn" id="saveBtn">保存记录</button>
     <button class="delete-btn" id="deleteBtn" style="display:none;">删除这条记录</button>
   </div>
+</div>
+
+<div class="stat-page" id="statPage">
+  <div class="sp-topbar">
+    <button class="sp-back" id="spBack" aria-label="返回">‹</button>
+    <span class="sp-title" id="spTitle">金额趋势</span>
+    <span class="sp-spacer"></span>
+  </div>
+  <div class="sp-body" id="spBody"></div>
 </div>
 
 <div class="hand-editor" id="handEditor">
@@ -1475,6 +1432,15 @@
     return Math.round(sum*10)/10;
   }
 
+  // shared chronological sort (ascending: oldest first), used by the list,
+  // and by every trend chart's cumulative calculation.
+  function getChronologicalEntries(){
+    return entries.slice().sort(function(a,b){
+      if(a.date !== b.date) return a.date < b.date ? -1 : 1;
+      return a.session - b.session;
+    });
+  }
+
   // ---------- Default draft ----------
   function freshDraft(){
     var iso = todayISO();
@@ -1484,6 +1450,8 @@
       id: null,
       date: iso,
       session: nextSessionFor(iso, null),
+      duration: null,
+      durationSet: false,
       venue: null,
       level: null,
       scores: scores,
@@ -1505,16 +1473,13 @@
   function renderStats(){
     var count = entries.length;
     document.getElementById("statCount").textContent = count;
-    var totalAmt = 0, totalScore = 0;
+    var totalAmt = 0;
     entries.forEach(function(e){
       totalAmt += (e.sign==="-" ? -1 : 1) * e.amount;
-      totalScore += computeTotal(e.scores);
     });
     var totalEl = document.getElementById("statTotal");
     totalEl.textContent = (totalAmt>=0?"+":"−")+"HK$"+formatMoney(Math.abs(totalAmt));
     totalEl.className = "val " + (totalAmt>0?"pos":(totalAmt<0?"neg":""));
-    var avgEl = document.getElementById("statAvg");
-    avgEl.textContent = count ? (totalScore/count).toFixed(1) : "—";
   }
 
   function formatMoney(n){
@@ -1528,10 +1493,7 @@
     // sort ascending by date then session, so DOM order is oldest->newest;
     // combined with column-reverse the newest renders at the bottom visually,
     // and the page naturally opens scrolled to the latest entry at the bottom.
-    var sorted = entries.slice().sort(function(a,b){
-      if(a.date !== b.date) return a.date < b.date ? -1 : 1;
-      return a.session - b.session;
-    });
+    var sorted = getChronologicalEntries();
 
     listEl.innerHTML = "";
     emptyEl.style.display = sorted.length ? "none" : "block";
@@ -1624,6 +1586,8 @@
       id: e.id,
       date: e.date,
       session: e.session,
+      duration: (typeof e.duration === "number") ? e.duration : null,
+      durationSet: (typeof e.duration === "number"),
       venue: e.venue,
       level: e.level,
       scores: Object.assign({}, e.scores),
@@ -1757,6 +1721,18 @@
     draft.session++; updateSessionUI();
   });
 
+  // ---------- Form: duration ----------
+  var durationRng = document.getElementById("durationRng");
+  var durationVal = document.getElementById("durationVal");
+
+  durationRng.addEventListener("input", function(){
+    var v = parseInt(durationRng.value, 10);
+    draft.duration = v;
+    draft.durationSet = true;
+    durationVal.textContent = v + " 小时";
+    durationVal.classList.add("set");
+  });
+
   // ---------- Form: venue / level pills ----------
   var venuePills = document.querySelectorAll(".pill[data-venue]");
   var levelPills = document.querySelectorAll(".pill[data-level]");
@@ -1836,7 +1812,9 @@
   var suitBtns = document.querySelectorAll(".suit-btn");
 
   var HAND_ITEM_H = 58; // measured on first render, includes 8px gap
-  var handEditIndex = null;  // null = creating a new hand, else index into draft.hands
+  var handEditIndex = null;  // null = creating a new hand (draft mode only)
+  var handEditMode = "draft"; // "draft" = editing draft.hands inside the sheet; "direct" = editing entries[x].hands directly
+  var handEditEntryId = null; // used when handEditMode === "direct"
   var dragState = null;
 
   function escapeHtml(s){
@@ -1963,8 +1941,24 @@
   });
 
   function openHandEditor(idx){
+    handEditMode = "draft";
+    handEditEntryId = null;
     handEditIndex = idx;
     heTextarea.value = idx === null ? "" : draft.hands[idx];
+    showHandEditor();
+  }
+
+  function openHandEditorDirect(entryId, idx){
+    var entry = entries.find(function(e){ return e.id === entryId; });
+    if(!entry) return;
+    handEditMode = "direct";
+    handEditEntryId = entryId;
+    handEditIndex = idx;
+    heTextarea.value = entry.hands[idx] || "";
+    showHandEditor();
+  }
+
+  function showHandEditor(){
     handEditor.classList.add("open");
     window.setTimeout(function(){
       heTextarea.focus();
@@ -1992,6 +1986,17 @@
 
   heSave.addEventListener("click", function(){
     var text = heTextarea.value.trim();
+    if(handEditMode === "direct"){
+      var entry = entries.find(function(e){ return e.id === handEditEntryId; });
+      if(entry){
+        if(text) entry.hands[handEditIndex] = text;
+        else entry.hands.splice(handEditIndex, 1);
+        saveEntries();
+      }
+      closeHandEditor();
+      renderHandsOverview();
+      return;
+    }
     if(handEditIndex === null){
       if(text) draft.hands.push(text);
     } else {
@@ -2003,6 +2008,16 @@
   });
 
   heDelete.addEventListener("click", function(){
+    if(handEditMode === "direct"){
+      var entry = entries.find(function(e){ return e.id === handEditEntryId; });
+      if(entry){
+        entry.hands.splice(handEditIndex, 1);
+        saveEntries();
+      }
+      closeHandEditor();
+      renderHandsOverview();
+      return;
+    }
     if(handEditIndex !== null){
       draft.hands.splice(handEditIndex, 1);
     }
@@ -2014,6 +2029,16 @@
   function populateForm(){
     dateText.textContent = formatCN(draft.date);
     updateSessionUI();
+
+    if(draft.durationSet){
+      durationRng.value = draft.duration;
+      durationVal.textContent = draft.duration + " 小时";
+      durationVal.classList.add("set");
+    } else {
+      durationRng.value = 1;
+      durationVal.textContent = "请拖动选择";
+      durationVal.classList.remove("set");
+    }
 
     venuePills.forEach(function(p){
       p.classList.toggle("selected", p.getAttribute("data-venue")===draft.venue);
@@ -2042,10 +2067,22 @@
 
   // ---------- Save / delete ----------
   document.getElementById("saveBtn").addEventListener("click", function(){
-    if(!draft.venue){ flashInvalid("场馆"); return; }
-    if(!draft.level){ flashInvalid("级别"); return; }
     var amt = parseFloat(draft.amount);
-    if(isNaN(amt) || amt < 0){ amountInput.focus(); flashInvalidEl(amountInput.parentElement); return; }
+    var amountValid = !isNaN(amt) && amt >= 0 && draft.amount !== "";
+
+    // checks in top-to-bottom form order; stop at the first unfilled field
+    var checks = [
+      { ok: draft.durationSet, el: document.getElementById("fieldDuration") },
+      { ok: !!draft.venue,     el: document.getElementById("fieldVenue") },
+      { ok: !!draft.level,     el: document.getElementById("fieldLevel") },
+      { ok: amountValid,       el: document.getElementById("fieldAmount") }
+    ];
+    for(var i=0;i<checks.length;i++){
+      if(!checks[i].ok){
+        scrollToInvalidField(checks[i].el);
+        return;
+      }
+    }
 
     var record = {
       id: editingId || (Date.now()+"-"+Math.random().toString(36).slice(2,8)),
@@ -2056,6 +2093,7 @@
       scores: draft.scores,
       sign: draft.sign,
       amount: amt,
+      duration: draft.duration,
       hands: draft.hands.slice()
     };
 
@@ -2078,520 +2116,535 @@
     hideSheet();
   });
 
-  function scrollSheetTo(el){
-    var sheetBody = document.querySelector('.sheet-body');
-    if(sheetBody && el){
-      var top = el.offsetTop;
-      sheetBody.scrollTo({ top: Math.max(0, top - 80), behavior: 'smooth' });
-    }
-  }
-  function flashInvalid(fieldName){
-    if(fieldName==="场馆"){
-      var target = venuePills[0].closest('.field');
-      scrollSheetTo(target);
-      setTimeout(function(){ pulseEl(venuePills[0].parentElement); }, 250);
-    } else if(fieldName==="级别"){
-      var target = levelPills[0].closest('.field');
-      scrollSheetTo(target);
-      setTimeout(function(){ pulseEl(levelPills[0].parentElement); }, 250);
-    }
-  }
-  function flashInvalidEl(el){
-    scrollSheetTo(el.closest('.field'));
-    setTimeout(function(){ pulseEl(el); }, 250);
+  function scrollToInvalidField(el){
+    if(!el) return;
+    el.scrollIntoView({ behavior:"smooth", block:"center" });
+    pulseEl(el);
   }
   function pulseEl(el){
-    el.style.transition = "box-shadow .15s ease";
+    el.style.transition = "box-shadow .15s ease, border-color .15s ease";
     el.style.boxShadow = "0 0 0 2px var(--loss-bright)";
-    setTimeout(function(){ el.style.boxShadow = "none"; }, 700);
+    el.style.borderRadius = el.style.borderRadius || "16px";
+    setTimeout(function(){ el.style.boxShadow = "none"; }, 900);
   }
 
-  // ---------- Import / Export ----------
-  var ioToast = document.getElementById("io-toast");
+  // ---------- Toast ----------
+  var toastEl = document.getElementById("toast");
   var toastTimer = null;
-
-  function showToast(msg, type){
-    ioToast.textContent = msg;
-    ioToast.className = "show " + (type || "");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function(){
-      ioToast.className = "";
-    }, 2800);
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove("show"); }, 2600);
   }
 
-  // Export: download all entries as a JSON file
-  document.getElementById("exportBtn").addEventListener("click", function(){
-    if(entries.length === 0){
-      showToast("暂无记录可导出", "err");
-      return;
-    }
-    var json = JSON.stringify(entries, null, 2);
-    var blob = new Blob([json], { type: "application/json" });
+  // ---------- Export / Import ----------
+  var exportBtn = document.getElementById("exportBtn");
+  var importBtn = document.getElementById("importBtn");
+  var importFileInput = document.getElementById("importFileInput");
+
+  exportBtn.addEventListener("click", function(){
+    if(!entries.length){ showToast("还没有可导出的记录"); return; }
+    var data = JSON.stringify(entries, null, 2);
+    var blob = new Blob([data], { type: "application/json" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url;
-    var date = new Date();
-    a.download = "牌局记录_" + date.getFullYear() + pad(date.getMonth()+1) + pad(date.getDate()) + ".json";
+    a.download = "poker-log-" + todayISO() + ".json";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showToast("已导出 " + entries.length + " 条记录 ✓", "ok");
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+    showToast("已导出 " + entries.length + " 条记录");
   });
 
-  // Import: read JSON file, deduplicate by id, merge new entries
-  document.getElementById("importBtn").addEventListener("click", function(){
-    document.getElementById("importFile").value = "";
-    document.getElementById("importFile").click();
+  importBtn.addEventListener("click", function(){
+    importFileInput.click();
   });
 
-  document.getElementById("importFile").addEventListener("change", function(e){
-    var file = e.target.files && e.target.files[0];
+  importFileInput.addEventListener("change", function(){
+    var file = importFileInput.files[0];
     if(!file) return;
-
     var reader = new FileReader();
-    reader.onload = function(ev){
+    reader.onload = function(){
       try{
-        var parsed = JSON.parse(ev.target.result);
-        if(!Array.isArray(parsed)){
-          showToast("格式错误：文件内容应为数组", "err");
-          return;
-        }
-
-        // Build a set of existing ids for fast lookup
-        var existingIds = {};
-        entries.forEach(function(e){ existingIds[e.id] = true; });
-
-        // Also deduplicate by (date + session + venue) as a secondary fingerprint
-        // in case records lack stable ids from older exports
-        function fingerprint(r){
-          return [r.date, r.session, r.venue, r.level, r.sign, r.amount].join("|");
-        }
-        var existingPrints = {};
-        entries.forEach(function(e){ existingPrints[fingerprint(e)] = true; });
-
-        var added = 0;
-        var skipped = 0;
-
-        parsed.forEach(function(rec){
-          // Basic shape validation
-          if(!rec || typeof rec !== "object" || !rec.date || !rec.venue) {
-            skipped++;
-            return;
-          }
-          // Assign id if missing
-          if(!rec.id){
-            rec.id = Date.now() + "-" + Math.random().toString(36).slice(2,8);
-          }
-          // Skip if id already exists
-          if(existingIds[rec.id]){
-            skipped++;
-            return;
-          }
-          // Skip if same (date, session, venue, level, amount) fingerprint exists
-          var fp = fingerprint(rec);
-          if(existingPrints[fp]){
-            skipped++;
-            return;
-          }
-          // Accept
-          entries.push(rec);
-          existingIds[rec.id] = true;
-          existingPrints[fp] = true;
-          added++;
-        });
-
-        saveEntries();
-        render();
-
-        if(added === 0){
-          showToast("所有记录均已存在，未导入新数据", "err");
-        } else if(skipped > 0){
-          showToast("已导入 " + added + " 条，跳过 " + skipped + " 条重复 ✓", "ok");
+        var parsed = JSON.parse(reader.result);
+        if(!Array.isArray(parsed)) throw new Error("not an array");
+        var result = mergeImportedEntries(parsed);
+        if(result.added === 0 && result.skipped > 0){
+          showToast("没有新记录，已跳过 " + result.skipped + " 条重复");
         } else {
-          showToast("成功导入 " + added + " 条记录 ✓", "ok");
+          showToast("已导入 " + result.added + " 条" + (result.skipped ? " · 跳过 " + result.skipped + " 条重复" : ""));
         }
       }catch(err){
-        showToast("解析失败：文件格式不正确", "err");
+        showToast("导入失败，文件格式不正确");
       }
+      importFileInput.value = "";
     };
     reader.readAsText(file);
   });
 
+  function entriesContentEqual(a, b){
+    return a.date===b.date && a.session===b.session && a.venue===b.venue &&
+           a.level===b.level && a.sign===b.sign &&
+           Math.abs((a.amount||0) - (b.amount||0)) < 0.001;
+  }
 
-  // ============================================================
-  // ANALYSIS PANEL
-  // ============================================================
-  (function(){
-    var overlay = document.getElementById("analysisOverlay");
-    var panel   = document.getElementById("analysisPanel");
-    var backBtn = document.getElementById("analysisBack");
-    var tabAmt  = document.getElementById("analTabAmt");
-    var tabScore= document.getElementById("analTabScore");
-    var legendEl= document.getElementById("chartLegend");
-    var emptyEl = document.getElementById("chartEmpty");
-    var canvas  = document.getElementById("mainChart");
-    var ctx     = canvas.getContext("2d");
+  function mergeImportedEntries(importedArr){
+    var existingIds = {};
+    entries.forEach(function(e){ existingIds[e.id] = true; });
 
-    var analMode   = "amount";  // "amount" | "score"
-    var analPeriod = "year";    // "year" | "month" | "day"
-    var chartInst  = null;
-
-    document.getElementById("analysisBtn").addEventListener("click", openAnalysis);
-    backBtn.addEventListener("click", closeAnalysis);
-    overlay.addEventListener("click", closeAnalysis);
-
-    function openAnalysis(){
-      overlay.classList.add("open");
-      panel.classList.add("open");
-      document.body.style.overflow = "hidden";
-      drawChart();
-    }
-    function closeAnalysis(){
-      overlay.classList.remove("open");
-      panel.classList.remove("open");
-      document.body.style.overflow = "";
-    }
-
-    tabAmt.addEventListener("click", function(){
-      analMode = "amount";
-      tabAmt.classList.add("active"); tabScore.classList.remove("active");
-      drawChart();
-    });
-    tabScore.addEventListener("click", function(){
-      analMode = "score";
-      tabScore.classList.add("active"); tabAmt.classList.remove("active");
-      drawChart();
-    });
-
-    panel.querySelectorAll(".period-tab").forEach(function(t){
-      t.addEventListener("click", function(){
-        panel.querySelectorAll(".period-tab").forEach(function(x){ x.classList.remove("active"); });
-        t.classList.add("active");
-        analPeriod = t.getAttribute("data-period");
-        drawChart();
-      });
-    });
-
-    // ---- data aggregation ----
-    function groupKey(iso){
-      if(analPeriod==="year")  return iso.slice(0,4);
-      if(analPeriod==="month") return iso.slice(0,7);
-      return iso;
-    }
-    function labelFor(key){
-      if(analPeriod==="year")  return key+"年";
-      if(analPeriod==="month"){
-        var p = key.split("-"); return p[0]+"年"+parseInt(p[1],10)+"月";
+    var added = 0, skipped = 0;
+    importedArr.forEach(function(imp){
+      if(!imp || typeof imp !== "object" || !imp.date || !imp.venue || !imp.level){
+        skipped++; return;
       }
-      var d = parseISO(key);
-      return (d.getMonth()+1)+"月"+d.getDate()+"日";
-    }
+      if(imp.id && existingIds[imp.id]){ skipped++; return; }
+      var isDup = entries.some(function(e){ return entriesContentEqual(e, imp); });
+      if(isDup){ skipped++; return; }
 
-    function buildAmountData(){
-      var map = {};
-      entries.forEach(function(e){
-        var k = groupKey(e.date);
-        if(!map[k]) map[k]=0;
-        map[k] += (e.sign==="-"?-1:1) * e.amount;
-      });
-      var keys = Object.keys(map).sort();
-      return {
-        labels: keys.map(labelFor),
-        datasets:[{
-          label:"盈亏 (HK$)",
-          data: keys.map(function(k){ return Math.round(map[k]); }),
-          borderColor:"#C9A24B",
-          backgroundColor:"rgba(201,162,75,0.12)",
-          pointBackgroundColor:"#E0BC6A",
-          pointRadius:4,
-          tension:0.35,
-          fill:true
-        }]
+      var clean = {
+        id: imp.id || (Date.now()+"-"+Math.random().toString(36).slice(2,8)),
+        date: imp.date,
+        session: imp.session || 1,
+        duration: (typeof imp.duration === "number") ? imp.duration : null,
+        venue: imp.venue,
+        level: imp.level,
+        scores: imp.scores || {},
+        sign: imp.sign === "-" ? "-" : "+",
+        amount: typeof imp.amount === "number" ? imp.amount : parseFloat(imp.amount) || 0,
+        hands: Array.isArray(imp.hands) ? imp.hands.slice(0,5) : []
       };
+      entries.push(clean);
+      if(clean.id) existingIds[clean.id] = true;
+      added++;
+    });
+
+    if(added > 0){ saveEntries(); render(); }
+    return { added: added, skipped: skipped };
+  }
+
+  // ---------- Stat pages (金额 / 分数 / 赢率 / 关键牌局) ----------
+  var statPage = document.getElementById("statPage");
+  var spBack = document.getElementById("spBack");
+  var spTitle = document.getElementById("spTitle");
+  var spBody = document.getElementById("spBody");
+  var navBtns = document.querySelectorAll(".nav-btn");
+
+  var STAT_TITLES = {
+    amount: "金额趋势",
+    score: "分数趋势",
+    winrate: "赢率趋势",
+    hands: "关键牌局"
+  };
+
+  // current stat kind and period for the open page
+  var currentStatKind = null;
+  var currentStatPeriod = "day"; // "year" | "month" | "day"
+
+  navBtns.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      currentStatPeriod = "day";
+      openStatPage(btn.getAttribute("data-stat"));
+    });
+  });
+  spBack.addEventListener("click", closeStatPage);
+
+  function openStatPage(kind){
+    currentStatKind = kind;
+    spTitle.textContent = STAT_TITLES[kind] || "";
+    if(kind === "hands"){
+      renderHandsOverview();
+    } else {
+      renderChartPage(kind, currentStatPeriod);
     }
+    statPage.classList.add("open");
+  }
+  function closeStatPage(){
+    statPage.classList.remove("open");
+  }
 
-    var SCORE_COLORS = ["#8B6BB0","#C9A24B","#5A9A8A","#C2645C","#6A8EC2"];
-    var CRITERIA_LOCAL = [
-      { key:"observe", name:"观察" },
-      { key:"aggro",   name:"进攻" },
-      { key:"discip",  name:"弃牌" },
-      { key:"emotion", name:"情绪" },
-      { key:"review",  name:"复盘" }
-    ];
+  function fmtSignedMoney(n){
+    return (n>=0?"+":"−")+"HK$"+formatMoney(Math.abs(n));
+  }
+  function fmtDateShort(iso){
+    var d = parseISO(iso);
+    return (d.getMonth()+1)+"/"+d.getDate();
+  }
 
-    function buildScoreData(){
-      var maps = {};
-      CRITERIA_LOCAL.forEach(function(c){ maps[c.key]={}; });
-      var totalMap = {};
-      entries.forEach(function(e){
-        var k = groupKey(e.date);
-        if(!maps[CRITERIA_LOCAL[0].key][k]){
-          CRITERIA_LOCAL.forEach(function(c){ maps[c.key][k]=[]; });
-          totalMap[k]=[];
+  // ---- period bucketing helpers ----
+  function periodKey(iso, period){
+    var d = parseISO(iso);
+    if(period === "year")  return d.getFullYear()+"";
+    if(period === "month") return d.getFullYear()+"-"+pad(d.getMonth()+1);
+    return iso; // day
+  }
+  function periodLabel(key, period){
+    if(period === "year")  return key+"年";
+    if(period === "month"){
+      var p = key.split("-");
+      return p[0]+"/"+(parseInt(p[1],10));
+    }
+    // day: show M/D
+    var d = parseISO(key);
+    return (d.getMonth()+1)+"/"+d.getDate();
+  }
+
+  // ---- generic multi-series SVG chart ----
+  // series: [{label, color, points:[{label, y}]}]
+  // Each series is one line. x axis ticks = unified label set across all series.
+  // returns SVG string.
+  var SERIES_COLORS = ["#E0BC6A","#8B6BB0","#6B9EB0","#B0846B","#6BB07A","#C96A60"];
+
+  function buildMultiSeriesSVG(allLabels, seriesList, opts){
+    opts = opts || {};
+    var W = 320, H = 180, padTop = 20, padBottom = 20, padLeft = 8, padRight = 8;
+    if(!allLabels.length){
+      return '<div class="chart-empty"><div class="ce-glyph">♠︎ ♦︎</div>还没有足够的数据</div>';
+    }
+    var allValues = [];
+    seriesList.forEach(function(s){
+      s.points.forEach(function(p){ allValues.push(p.y); });
+    });
+    if(opts.includeZero !== false) allValues.push(0);
+    var minY = Math.min.apply(null, allValues);
+    var maxY = Math.max.apply(null, allValues);
+    if(minY === maxY){ minY -= 1; maxY += 1; }
+
+    var plotW = W - padLeft - padRight;
+    var plotH = H - padTop - padBottom;
+    var n = allLabels.length;
+
+    function xPos(i){ return n === 1 ? W/2 : padLeft + (i/(n-1)) * plotW; }
+    function yPos(v){ return padTop + (1 - (v - minY)/(maxY - minY)) * plotH; }
+
+    var showZeroLine = minY < 0 && maxY > 0;
+    var zeroY = yPos(0);
+    var defs = '<defs>';
+
+    var seriesSvg = "";
+    seriesList.forEach(function(s, si){
+      // build index map: label -> y value
+      var map = {};
+      s.points.forEach(function(p){ map[p.label] = p.y; });
+
+      // only draw where we have data (skip gaps)
+      var segs = [];
+      var curSeg = [];
+      allLabels.forEach(function(lbl, i){
+        if(map[lbl] !== undefined){
+          curSeg.push({i:i, y:map[lbl]});
+        } else {
+          if(curSeg.length) segs.push(curSeg);
+          curSeg = [];
         }
-        CRITERIA_LOCAL.forEach(function(c){ maps[c.key][k].push(e.scores[c.key]||0); });
-        var t=0; CRITERIA_LOCAL.forEach(function(c){ t+=e.scores[c.key]||0; });
-        totalMap[k].push(t);
       });
-      var keys = Object.keys(totalMap).sort();
-      var avg = function(arr){ return arr.length ? Math.round(arr.reduce(function(a,b){return a+b;},0)/arr.length*10)/10 : null; };
-      var datasets = CRITERIA_LOCAL.map(function(c,i){
-        return {
-          label: c.name,
-          data: keys.map(function(k){ return avg(maps[c.key][k]); }),
-          borderColor: SCORE_COLORS[i],
-          backgroundColor: "transparent",
-          pointBackgroundColor: SCORE_COLORS[i],
-          pointRadius:3,
-          tension:0.35,
-          fill:false
-        };
-      });
-      datasets.push({
-        label:"总分",
-        data: keys.map(function(k){ return avg(totalMap[k]); }),
-        borderColor:"#E8E4D8",
-        backgroundColor:"rgba(232,228,216,0.06)",
-        pointBackgroundColor:"#E8E4D8",
-        pointRadius:4,
-        borderWidth:2.5,
-        tension:0.35,
-        fill:true
-      });
-      return { labels: keys.map(labelFor), datasets: datasets };
-    }
+      if(curSeg.length) segs.push(curSeg);
 
-    function drawChart(){
-      if(entries.length===0){ emptyEl.style.display="flex"; canvas.style.display="none"; legendEl.innerHTML=""; return; }
-      emptyEl.style.display="none"; canvas.style.display="block";
+      var gid = "tg"+si+"_"+Math.random().toString(36).slice(2,6);
+      defs += '<linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1">'+
+        '<stop offset="0%" stop-color="'+s.color+'" stop-opacity="'+(si===0?0.28:0.0)+'"/>'+
+        '<stop offset="100%" stop-color="'+s.color+'" stop-opacity="0"/>'+
+        '</linearGradient>';
 
-      var data = analMode==="amount" ? buildAmountData() : buildScoreData();
-
-      // legend
-      legendEl.innerHTML = "";
-      data.datasets.forEach(function(ds){
-        var item = document.createElement("div"); item.className="legend-item";
-        var dot  = document.createElement("div"); dot.className="legend-dot";
-        dot.style.background = ds.borderColor;
-        var lbl  = document.createElement("span"); lbl.textContent = ds.label;
-        item.appendChild(dot); item.appendChild(lbl);
-        legendEl.appendChild(item);
-      });
-
-      // destroy previous chart
-      if(chartInst){ chartInst.destroy(); chartInst=null; }
-
-      // scale canvas to parent
-      var wrap = canvas.parentElement;
-      canvas.width  = wrap.clientWidth  * (window.devicePixelRatio||1);
-      canvas.height = wrap.clientHeight * (window.devicePixelRatio||1);
-      canvas.style.width  = wrap.clientWidth  + "px";
-      canvas.style.height = wrap.clientHeight + "px";
-      ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
-
-      var w = wrap.clientWidth;
-      var h = wrap.clientHeight;
-      var pad = { top:16, right:14, bottom:44, left: analMode==="amount" ? 70 : 42 };
-      var innerW = w - pad.left - pad.right;
-      var innerH = h - pad.top  - pad.bottom;
-
-      // flatten all data points
-      var allVals = [];
-      data.datasets.forEach(function(ds){ ds.data.forEach(function(v){ if(v!==null) allVals.push(v); }); });
-      if(!allVals.length){ emptyEl.style.display="flex"; canvas.style.display="none"; return; }
-
-      var minV = Math.min.apply(null,allVals);
-      var maxV = Math.max.apply(null,allVals);
-      if(minV===maxV){ minV -= 1; maxV += 1; }
-      // nice padding
-      var range = maxV - minV;
-      minV -= range*0.12; maxV += range*0.12;
-
-      var n = data.labels.length;
-      var xStep = n>1 ? innerW/(n-1) : innerW/2;
-
-      function xOf(i){ return pad.left + (n>1 ? i*xStep : innerW/2); }
-      function yOf(v){ return pad.top + innerH - (v - minV)/(maxV - minV)*innerH; }
-
-      ctx.clearRect(0,0,w,h);
-      ctx.font = "11px 'IBM Plex Mono', monospace";
-      ctx.fillStyle = "rgba(90,122,106,0.9)";
-
-      // draw grid + y-axis labels
-      var yTicks = 5;
-      ctx.strokeStyle = "rgba(44,56,48,0.7)";
-      ctx.lineWidth   = 1;
-      for(var t=0;t<=yTicks;t++){
-        var frac = t/yTicks;
-        var val  = minV + frac*(maxV-minV);
-        var yy   = pad.top + innerH*(1-frac);
-        ctx.beginPath(); ctx.moveTo(pad.left,yy); ctx.lineTo(pad.left+innerW,yy); ctx.stroke();
-        var label = analMode==="amount" ? (val>=0?"+":"")+Math.round(val).toLocaleString() : val.toFixed(1);
-        ctx.fillText(label, 0, yy+4);
-      }
-
-      // draw x-axis labels
-      var maxLabels = Math.floor(innerW/52);
-      var step = Math.max(1, Math.ceil(n/maxLabels));
-      for(var i=0;i<n;i++){
-        if(i%step!==0 && i!==n-1) continue;
-        var xx = xOf(i);
-        ctx.fillText(data.labels[i], xx, pad.top+innerH+18);
-      }
-
-      // draw zero line for amount
-      if(analMode==="amount" && minV<0 && maxV>0){
-        var yz = yOf(0);
-        ctx.save();
-        ctx.strokeStyle = "rgba(201,162,75,0.3)";
-        ctx.setLineDash([4,4]);
-        ctx.lineWidth=1;
-        ctx.beginPath(); ctx.moveTo(pad.left,yz); ctx.lineTo(pad.left+innerW,yz); ctx.stroke();
-        ctx.restore();
-      }
-
-      // draw datasets
-      data.datasets.forEach(function(ds){
-        if(!ds.data.some(function(v){ return v!==null; })) return;
-        ctx.save();
-        ctx.strokeStyle = ds.borderColor;
-        ctx.lineWidth = ds.borderWidth || 2;
-        ctx.lineJoin = "round";
-
-        if(ds.fill && ds.backgroundColor !== "transparent"){
-          ctx.beginPath();
-          var first=true;
-          ds.data.forEach(function(v,i){
-            if(v===null) return;
-            var x=xOf(i), y=yOf(v);
-            if(first){ ctx.moveTo(x,y); first=false; }
-            else { ctx.lineTo(x,y); }
-          });
-          var lastIdx = ds.data.length-1;
-          while(lastIdx>=0 && ds.data[lastIdx]===null) lastIdx--;
-          if(lastIdx>=0){
-            ctx.lineTo(xOf(lastIdx), yOf(minV));
-            ctx.lineTo(xOf(0), yOf(minV));
-          }
-          ctx.closePath();
-          ctx.fillStyle = ds.backgroundColor;
-          ctx.fill();
+      segs.forEach(function(seg){
+        var pathD = seg.map(function(pt, k){
+          return (k===0?"M":"L")+xPos(pt.i).toFixed(1)+","+yPos(pt.y).toFixed(1);
+        }).join(" ");
+        if(si===0 && seg.length>1){
+          var fx = xPos(seg[0].i).toFixed(1);
+          var lx = xPos(seg[seg.length-1].i).toFixed(1);
+          var areaD = pathD+" L"+lx+","+zeroY.toFixed(1)+" L"+fx+","+zeroY.toFixed(1)+" Z";
+          seriesSvg += '<path d="'+areaD+'" fill="url(#'+gid+')" class="trend-area"/>';
         }
-
-        ctx.beginPath();
-        var prevX,prevY, first2=true;
-        ds.data.forEach(function(v,i){
-          if(v===null){ first2=true; return; }
-          var x=xOf(i), y=yOf(v);
-          if(first2){ ctx.moveTo(x,y); first2=false; }
-          else { ctx.lineTo(x,y); }
-          prevX=x; prevY=y;
-        });
-        ctx.stroke();
-
-        // dots
-        var pr = ds.pointRadius||3;
-        ctx.fillStyle = ds.pointBackgroundColor || ds.borderColor;
-        ds.data.forEach(function(v,i){
-          if(v===null) return;
-          ctx.beginPath();
-          ctx.arc(xOf(i),yOf(v),pr,0,Math.PI*2);
-          ctx.fill();
-        });
-        ctx.restore();
+        seriesSvg += '<path d="'+pathD+'" stroke="'+s.color+'" class="trend-line" stroke-opacity="'+(si===0?1:0.8)+'"/>';
+        // dot at last point of each segment
+        var last = seg[seg.length-1];
+        seriesSvg += '<circle cx="'+xPos(last.i).toFixed(1)+'" cy="'+yPos(last.y).toFixed(1)+'" r="3.5" fill="'+s.color+'" class="trend-dot" stroke="'+s.color+'"/>';
       });
-    }
+    });
 
-    // redraw on resize
-    window.addEventListener("resize", function(){ if(panel.classList.contains("open")) drawChart(); });
-  })();
+    defs += '</defs>';
 
-  // ============================================================
-  // HANDS LOG PANEL
-  // ============================================================
-  (function(){
-    var overlay = document.getElementById("handsLogOverlay");
-    var panel   = document.getElementById("handsLogPanel");
-    var backBtn = document.getElementById("handsLogBack");
-    var scroll  = document.getElementById("handsLogScroll");
-
-    document.getElementById("handsLogBtn").addEventListener("click", openHandsLog);
-    backBtn.addEventListener("click", closeHandsLog);
-    overlay.addEventListener("click", closeHandsLog);
-
-    function openHandsLog(){
-      overlay.classList.add("open");
-      panel.classList.add("open");
-      document.body.style.overflow = "hidden";
-      renderHandsLog();
-    }
-    function closeHandsLog(){
-      overlay.classList.remove("open");
-      panel.classList.remove("open");
-      document.body.style.overflow = "";
-    }
-
-    function renderHandsLog(){
-      scroll.innerHTML = "";
-      // collect all entries that have hands, newest first
-      var withHands = entries
-        .filter(function(e){ return e.hands && e.hands.length>0; })
-        .slice()
-        .sort(function(a,b){
-          if(a.date!==b.date) return a.date>b.date ? -1 : 1;
-          return b.session - a.session;
-        });
-
-      if(!withHands.length){
-        var emp = document.createElement("div"); emp.className="hl-empty";
-        emp.textContent="还没有关键牌局记录"; scroll.appendChild(emp); return;
+    // x-axis: show first, middle, last label
+    var axisLabels = "";
+    if(n >= 2){
+      axisLabels = '<text x="'+xPos(0).toFixed(1)+'" y="'+(H-2)+'" class="chart-axis-text" text-anchor="start">'+escapeHtml(periodLabel(allLabels[0], opts.period||"day"))+'</text>';
+      if(n > 2){
+        var mid = Math.floor((n-1)/2);
+        axisLabels += '<text x="'+xPos(mid).toFixed(1)+'" y="'+(H-2)+'" class="chart-axis-text" text-anchor="middle">'+escapeHtml(periodLabel(allLabels[mid], opts.period||"day"))+'</text>';
       }
-
-      withHands.forEach(function(e){
-        var el = document.createElement("div"); el.className="hl-entry";
-        var header = document.createElement("div"); header.className="hl-header";
-        var meta   = document.createElement("div"); meta.className="hl-meta";
-        var dateDiv= document.createElement("div"); dateDiv.className="hl-date";
-        dateDiv.textContent = formatCN(e.date)+"  Session "+e.session;
-        var sub    = document.createElement("div"); sub.className="hl-sub";
-        sub.textContent = VENUE_LABEL[e.venue]+" · "+e.level;
-        meta.appendChild(dateDiv); meta.appendChild(sub);
-        var cnt    = document.createElement("div"); cnt.className="hl-count";
-        cnt.textContent = e.hands.length+"手";
-        var arrow  = document.createElement("div"); arrow.className="hl-arrow";
-        arrow.textContent = "›";
-        header.appendChild(meta); header.appendChild(cnt); header.appendChild(arrow);
-        el.appendChild(header);
-
-        var body = document.createElement("div"); body.className="hl-body";
-        e.hands.forEach(function(h,i){
-          var wrap2 = document.createElement("div");
-          var num   = document.createElement("div"); num.className="hl-hand-num";
-          num.textContent="第 "+(i+1)+" 手";
-          var txt   = document.createElement("div"); txt.className="hl-hand";
-          txt.textContent = h;
-          wrap2.appendChild(num); wrap2.appendChild(txt);
-          body.appendChild(wrap2);
-        });
-        el.appendChild(body);
-
-        header.addEventListener("click", function(){
-          el.classList.toggle("expanded");
-        });
-
-        scroll.appendChild(el);
-      });
+      axisLabels += '<text x="'+xPos(n-1).toFixed(1)+'" y="'+(H-2)+'" class="chart-axis-text" text-anchor="end">'+escapeHtml(periodLabel(allLabels[n-1], opts.period||"day"))+'</text>';
     }
-  })();
 
-  // ---------- Mobile zoom prevention ----------
-  document.addEventListener('touchmove', function(e){
-    if(e.scale && e.scale !== 1){ e.preventDefault(); }
-  }, { passive: false });
-  document.addEventListener('gesturestart', function(e){ e.preventDefault(); });
-  document.addEventListener('gesturechange', function(e){ e.preventDefault(); });
-  document.addEventListener('gestureend', function(e){ e.preventDefault(); });
+    return '<svg viewBox="0 0 '+W+' '+H+'" class="trend-svg" preserveAspectRatio="none">'+
+      defs+
+      (showZeroLine ? '<line x1="'+padLeft+'" y1="'+zeroY.toFixed(1)+'" x2="'+(W-padRight)+'" y2="'+zeroY.toFixed(1)+'" class="zero-line"/>' : '')+
+      seriesSvg+
+      axisLabels+
+      '</svg>';
+  }
+
+  // ---- aggregate entries by period ----
+  // returns { labels:[], buckets:{ label: [entry,...] } }
+  function bucketByPeriod(chrono, period){
+    var labels = [];
+    var seen = {};
+    var buckets = {};
+    chrono.forEach(function(e){
+      var k = periodKey(e.date, period);
+      if(!seen[k]){ seen[k]=true; labels.push(k); buckets[k]=[]; }
+      buckets[k].push(e);
+    });
+    return { labels:labels, buckets:buckets };
+  }
+
+  // ---- build period-aggregated amount series (cumulative running total) ----
+  function buildAmountSeries(chrono, period){
+    var agg = bucketByPeriod(chrono, period);
+    var running = 0;
+    var pts = agg.labels.map(function(k){
+      agg.buckets[k].forEach(function(e){
+        running += (e.sign==="-"?-1:1)*e.amount;
+      });
+      return { label:k, y: running };
+    });
+    return [{ label:"累计盈亏（港币）", color: SERIES_COLORS[0], points: pts }];
+  }
+
+  // ---- build period-aggregated score series (5 dims + total) ----
+  function buildScoreSeries(chrono, period){
+    var agg = bucketByPeriod(chrono, period);
+    // for each bucket: average of the scores across all entries in that bucket
+    var seriesData = {}; // key -> {sum, count}
+    var totalData  = {}; // key -> {sum, count}
+    CRITERIA.forEach(function(c){ seriesData[c.key]={}; });
+
+    agg.labels.forEach(function(k){
+      CRITERIA.forEach(function(c){ seriesData[c.key][k]={sum:0,count:0}; });
+      totalData[k]={sum:0,count:0};
+      agg.buckets[k].forEach(function(e){
+        CRITERIA.forEach(function(c){
+          seriesData[c.key][k].sum += (e.scores[c.key]||0);
+          seriesData[c.key][k].count++;
+        });
+        totalData[k].sum += computeTotal(e.scores);
+        totalData[k].count++;
+      });
+    });
+
+    var result = [];
+    CRITERIA.forEach(function(c, ci){
+      var pts = agg.labels.map(function(k){
+        var d = seriesData[c.key][k];
+        return { label:k, y: d.count>0 ? Math.round(d.sum/d.count*10)/10 : 0 };
+      });
+      result.push({ label:c.name, color:SERIES_COLORS[ci], points:pts });
+    });
+    // total score series
+    var totalPts = agg.labels.map(function(k){
+      var d = totalData[k];
+      return { label:k, y: d.count>0 ? Math.round(d.sum/d.count*10)/10 : 0 };
+    });
+    result.push({ label:"总分", color:"#E8E4D8", points:totalPts });
+    return result;
+  }
+
+  // ---- build period-aggregated winrate series (5 score dims) ----
+  // Win rate formula: for each bucket, compute cumulative winrate up to & including that bucket
+  function buildWinrateSeries(chrono, period){
+    var agg = bucketByPeriod(chrono, period);
+    // cumulative totals
+    var cum = { amt5050:0, dur5050:0, amt100200:0, dur100200:0 };
+    // per-criterion cumulative sums (just average per period, not cumulative for scores)
+    var criterionCum = {}; // c.key -> {sum, count}
+    CRITERIA.forEach(function(c){ criterionCum[c.key]={sum:0,count:0}; });
+
+    var winratePts = [];
+    agg.labels.forEach(function(k){
+      agg.buckets[k].forEach(function(e){
+        if(typeof e.duration === "number"){
+          var amt = (e.sign==="-"?-1:1)*e.amount;
+          if(e.level==="50/100"){ cum.amt5050+=amt; cum.dur5050+=e.duration; }
+          else if(e.level==="100/200"){ cum.amt100200+=amt; cum.dur100200+=e.duration; }
+        }
+        CRITERIA.forEach(function(c){
+          criterionCum[c.key].sum += (e.scores[c.key]||0);
+          criterionCum[c.key].count++;
+        });
+      });
+      var wr = (cum.dur5050>0 ? cum.amt5050/(cum.dur5050*30) : 0) +
+               (cum.dur100200>0 ? cum.amt100200/(cum.dur100200*60) : 0);
+      winratePts.push({ label:k, y: Math.round(wr*100)/100 });
+    });
+
+    var result = [{ label:"赢率（bb/百手）", color:SERIES_COLORS[0], points:winratePts }];
+
+    // also append 5 score dim series
+    CRITERIA.forEach(function(c, ci){
+      var cumS=0, cumC=0;
+      var pts = agg.labels.map(function(k){
+        agg.buckets[k].forEach(function(e){ cumS+=(e.scores[c.key]||0); cumC++; });
+        return { label:k, y: cumC>0 ? Math.round(cumS/cumC*10)/10 : 0 };
+      });
+      // reset cumS/cumC inside the loop above is wrong; rebuild correctly
+      result.push({ label:c.name, color:SERIES_COLORS[ci+1], points:[] });
+    });
+
+    // redo the score series correctly
+    result.splice(1);
+    CRITERIA.forEach(function(c, ci){
+      var cCum=0, cCount=0;
+      var pts = agg.labels.map(function(k){
+        agg.buckets[k].forEach(function(e){ cCum+=(e.scores[c.key]||0); cCount++; });
+        return { label:k, y: cCount>0 ? Math.round(cCum/cCount*10)/10 : 0 };
+      });
+      result.push({ label:c.name, color:SERIES_COLORS[ci+1], points:pts });
+    });
+
+    return result;
+  }
+
+  // ---- period toggle + chart rendering ----
+  function renderChartPage(kind, period){
+    var chrono = getChronologicalEntries();
+
+    // build period toggle HTML
+    var toggleHtml = '<div class="period-toggle">'+
+      ['year','month','day'].map(function(p){
+        return '<button class="period-btn'+(p===period?' active':'')+'" data-period="'+p+'">'+
+          {year:"年",month:"月",day:"日"}[p]+'</button>';
+      }).join('')+
+      '</div>';
+
+    spBody.innerHTML = toggleHtml + '<div id="spChartContent"></div>';
+
+    // wire up period buttons
+    Array.prototype.forEach.call(spBody.querySelectorAll(".period-btn"), function(btn){
+      btn.addEventListener("click", function(){
+        currentStatPeriod = btn.getAttribute("data-period");
+        renderChartPage(kind, currentStatPeriod);
+      });
+    });
+
+    var contentEl = document.getElementById("spChartContent");
+
+    if(!chrono.length){
+      contentEl.innerHTML = '<div class="chart-empty"><div class="ce-glyph">♠︎ ♦︎</div>还没有记录</div>';
+      return;
+    }
+
+    var agg = bucketByPeriod(chrono, period);
+    var allLabels = agg.labels;
+
+    if(kind === "amount"){
+      var series = buildAmountSeries(chrono, period);
+      var lastVal = series[0].points.length ? series[0].points[series[0].points.length-1].y : 0;
+
+      contentEl.innerHTML =
+        '<div class="sp-current">'+
+          '<div class="sp-current-label">当前累计</div>'+
+          '<div class="sp-current-val'+(lastVal<0?' neg':'')+'">'+fmtSignedMoney(lastVal)+'</div>'+
+        '</div>'+
+        '<div class="chart-wrap" id="chartWrap1"></div>'+
+        '<div class="sp-chart-meta">纵坐标为港币（HKD）</div>';
+
+      document.getElementById("chartWrap1").innerHTML =
+        buildMultiSeriesSVG(allLabels, series, {period:period, includeZero:true});
+
+    } else if(kind === "score"){
+      var allSeriesScore = buildScoreSeries(chrono, period);
+      // separate total from dim series
+      var dimSeries = allSeriesScore.slice(0, CRITERIA.length);
+      var totalSeries = [allSeriesScore[CRITERIA.length]];
+
+      var lastTotal = totalSeries[0].points.length ? totalSeries[0].points[totalSeries[0].points.length-1].y : 0;
+
+      var legendHtml = '<div class="series-legend">'+
+        dimSeries.map(function(s){ return '<span class="legend-item"><span class="legend-dot" style="background:'+s.color+'"></span>'+s.label+'</span>'; }).join('')+
+        '</div>';
+
+      contentEl.innerHTML =
+        '<div class="sp-current">'+
+          '<div class="sp-current-label">当前平均总分</div>'+
+          '<div class="sp-current-val">'+lastTotal.toFixed(1)+' / 10</div>'+
+        '</div>'+
+        '<div class="sp-section-title">五维分项趋势</div>'+
+        '<div class="chart-wrap" id="chartWrap1"></div>'+
+        legendHtml+
+        '<div class="sp-section-title">总分趋势</div>'+
+        '<div class="chart-wrap" id="chartWrap2"></div>';
+
+      document.getElementById("chartWrap1").innerHTML =
+        buildMultiSeriesSVG(allLabels, dimSeries, {period:period, includeZero:false});
+      document.getElementById("chartWrap2").innerHTML =
+        buildMultiSeriesSVG(allLabels, totalSeries, {period:period, includeZero:false});
+
+    } else if(kind === "winrate"){
+      var allSeriesWr = buildWinrateSeries(chrono, period);
+      var wrSeries = [allSeriesWr[0]];
+      var scoreSeries = allSeriesWr.slice(1);
+
+      var lastWr = wrSeries[0].points.length ? wrSeries[0].points[wrSeries[0].points.length-1].y : null;
+      var wrValStr = lastWr === null ? "—" : (lastWr>=0?"+":"−")+Math.abs(lastWr).toFixed(2)+" bb/百手";
+      var wrValClass = "sp-current-val"+(lastWr!==null && lastWr<0?" neg":"");
+
+      var scoreLegendHtml = '<div class="series-legend">'+
+        scoreSeries.map(function(s){ return '<span class="legend-item"><span class="legend-dot" style="background:'+s.color+'"></span>'+s.label+'</span>'; }).join('')+
+        '</div>';
+
+      contentEl.innerHTML =
+        '<div class="sp-current">'+
+          '<div class="sp-current-label">当前赢率</div>'+
+          '<div class="'+wrValClass+'">'+wrValStr+'</div>'+
+        '</div>'+
+        '<div class="sp-section-title">赢率趋势（bb/百手）</div>'+
+        '<div class="chart-wrap" id="chartWrap1"></div>'+
+        '<div class="sp-section-title">五维分项趋势</div>'+
+        '<div class="chart-wrap" id="chartWrap2"></div>'+
+        scoreLegendHtml;
+
+      document.getElementById("chartWrap1").innerHTML =
+        buildMultiSeriesSVG(allLabels, wrSeries, {period:period, includeZero:true});
+      document.getElementById("chartWrap2").innerHTML =
+        buildMultiSeriesSVG(allLabels, scoreSeries, {period:period, includeZero:false});
+    }
+  }
+
+  // ---- 关键牌局总览：flatten all hands across all entries, newest first ----
+  function renderHandsOverview(){
+    var chrono = getChronologicalEntries();
+    var flat = [];
+    chrono.forEach(function(e){
+      (e.hands || []).forEach(function(text, idx){
+        flat.push({ entryId: e.id, handIdx: idx, text: text, date: e.date, session: e.session, venue: e.venue, level: e.level });
+      });
+    });
+    // newest first
+    flat.reverse();
+
+    if(!flat.length){
+      spBody.innerHTML = '<div class="hands-overview-empty"><div class="ce-glyph">♣︎ ♥︎</div>还没有记录任何关键牌局<br>在记录里的"关键牌局"栏可以添加。</div>';
+      return;
+    }
+
+    spBody.innerHTML = "";
+    flat.forEach(function(item){
+      var card = document.createElement("div");
+      card.className = "hov-card venue-" + item.venue;
+      card.innerHTML =
+        '<div class="hov-meta">'+
+          '<span class="hov-date">'+formatCN(item.date)+'</span>'+
+          '<span class="hov-tag">'+VENUE_LABEL[item.venue]+'</span>'+
+          '<span class="hov-tag">'+item.level+'</span>'+
+        '</div>'+
+        '<div class="hov-text">'+escapeHtml(item.text)+'</div>';
+      card.addEventListener("click", function(){
+        openHandEditorDirect(item.entryId, item.handIdx);
+      });
+      spBody.appendChild(card);
+    });
+  }
 
   // ---------- Init ----------
   render();
