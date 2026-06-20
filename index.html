@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>牌局记录</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Spectral:ital@1&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0F1411;
+    --card: #1B2420;
+    --card-raised: #212C26;
+    --line: #2C3830;
+    --ink: #E8E4D8;
+    --ink-dim: #9CAA9F;
+    --ink-faint: #5A7A6A;
+    --gold: #C9A24B;
+    --gold-bright: #E0BC6A;
+    --loss: #B5524A;
+    --loss-bright: #C96A60;
+    --suit-red: #C2645C;
+    --venetian: #8B6BB0;
+    --mgm: #C9A24B;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body{
+    margin:0; padding:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    overscroll-behavior-y: contain;
+  }
+
+  body{
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(201,162,75,0.07), transparent),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
+  }
+
+  .serif{ font-family: 'Spectral', serif; }
+
+  /* ---------- App shell ---------- */
+  #app{
+    max-width: 560px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 100px;
+  }
+
+  header.top{
+    padding: 28px 20px 18px;
+    position: relative;
+  }
+  header.top::after{
+    content:"";
+    position:absolute; left:20px; right:20px; bottom:0;
+    height:1px;
+    background: linear-gradient(90deg, transparent, var(--line) 15%, var(--line) 85%, transparent);
+  }
+  .eyebrow{
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin: 0 0 6px;
+  }
+  h1.title{
+    font-family: 'Spectral', serif;
+    font-weight: 600;
+    font-size: 28px;
+    margin: 0;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  h1.title em{
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .summary-row{
+    display:flex; gap: 10px;
+    margin-top: 18px;
+  }
+  .summary-chip{
+    flex:1;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  .summary-chip .label{
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .summary-chip .val{
+    font-size: 17px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .val.pos{ color: var(--gold-bright); }
+  .val.neg{ color: var(--loss-bright); }
+
+  /* ---------- Timeline list ---------- */
+  #list{
+    padding: 22px 16px 10px;
+    display:flex;
+    flex-direction: column-reverse; /* oldest visually first via column-reverse + DOM order */
+    gap: 10px;
+  }
+
+  .day-group{
+    display:flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .day-label{
+    font-family:'Spectral', serif;
+    font-size: 13px;
+    color: var(--ink-faint);
+    padding: 6px 4px 2px;
+    letter-spacing: 0.02em;
+  }
+
+  .entry{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .15s ease, border-color .15s ease;
+  }
+  .entry:active{ transform: scale(0.98); }
+  .entry::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0;
+    width: 3px;
+  }
+  .entry.venue-venetian::before{ background: var(--venetian); }
+  .entry.venue-mgm::before{ background: var(--mgm); }
+
+  .entry .ring{
+    flex-shrink:0;
+    width: 50px; height:50px;
+    position: relative;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .entry .ring svg{ width:50px; height:50px; transform: rotate(-90deg); }
+  .entry .ring .track{ fill:none; stroke: var(--line); stroke-width:4; }
+  .entry .ring .prog{ fill:none; stroke-width:4; stroke-linecap: round; }
+  .entry .ring .score-text{
+    position:absolute;
+    font-size: 13px;
+    font-weight:600;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  .entry .mid{
+    flex:1;
+    min-width:0;
+  }
+  .entry .date-line{
+    font-family:'Spectral', serif;
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .entry .meta-line{
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 3px;
+    letter-spacing: 0.03em;
+  }
+  .entry .meta-line .dot{ margin: 0 5px; opacity:.5; }
+
+  .entry .amount{
+    flex-shrink:0;
+    text-align:right;
+    font-size: 17px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .entry .amount .unit{
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--ink-faint);
+    margin-right: 2px;
+  }
+
+  /* ---------- Empty state ---------- */
+  #empty{
+    padding: 70px 30px 30px;
+    text-align:center;
+    color: var(--ink-faint);
+    display:none;
+  }
+  #empty .glyph{
+    font-size: 34px;
+    margin-bottom: 14px;
+    opacity: .55;
+  }
+  #empty .et{
+    font-family:'Spectral', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink-dim);
+    margin-bottom: 6px;
+  }
+  #empty .es{
+    font-size: 12.5px;
+    line-height:1.6;
+  }
+
+  /* ---------- FAB ---------- */
+  #fab{
+    position: fixed;
+    right: max(20px, calc((100vw - 560px)/2 + 20px));
+    bottom: 26px;
+    width: 58px; height:58px;
+    border-radius: 50%;
+    background: linear-gradient(155deg, var(--gold-bright), var(--gold) 65%);
+    border: none;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 8px 24px rgba(201,162,75,0.35), 0 2px 8px rgba(0,0,0,0.4);
+    cursor: pointer;
+    z-index: 50;
+    transition: transform .15s ease;
+  }
+  #fab:active{ transform: scale(0.92); }
+  #fab svg{ width:26px; height:26px; }
+
+  /* ---------- Sheet (bottom drawer) ---------- */
+  .sheet-overlay{
+    position: fixed; inset:0;
+    background: rgba(7,10,8,0.6);
+    backdrop-filter: blur(2px);
+    z-index: 100;
+    opacity:0;
+    pointer-events:none;
+    transition: opacity .25s ease;
+  }
+  .sheet-overlay.open{ opacity:1; pointer-events:auto; }
+
+  .sheet{
+    position: fixed;
+    left:0; right:0; bottom:0;
+    max-width: 560px;
+    margin: 0 auto;
+    max-height: 92vh;
+    background: var(--bg);
+    border-radius: 22px 22px 0 0;
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+    z-index: 101;
+    transform: translateY(100%);
+    transition: transform .32s cubic-bezier(.32,.72,0,1);
+    display:flex;
+    flex-direction: column;
+  }
+  .sheet.open{ transform: translateY(0); }
+
+  .sheet-handle{
+    width: 36px; height:4px;
+    background: var(--line);
+    border-radius:2px;
+    margin: 12px auto 4px;
+    flex-shrink:0;
+  }
+
+  .sheet-head{
+    padding: 10px 20px 14px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    flex-shrink:0;
+  }
+  .sheet-head h2{
+    font-family:'Spectral', serif;
+    font-size: 19px;
+    font-weight: 600;
+    margin:0;
+  }
+  .sheet-close{
+    width:30px; height:30px;
+    border-radius:50%;
+    background: var(--card);
+    border:1px solid var(--line);
+    color: var(--ink-dim);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-size: 15px;
+  }
+
+  .sheet-body{
+    overflow-y: auto;
+    padding: 4px 20px 24px;
+    flex:1;
+  }
+
+  .field{
+    margin-bottom: 22px;
+  }
+  .field-label{
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 9px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
+
+  /* Date control */
+  .date-control{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 13px 14px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    cursor:pointer;
+  }
+  .date-control .dtext{
+    font-family:'Spectral', serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .date-control .dicon{ color: var(--ink-faint); font-size:16px; }
+
+  input[type="date"].native-date{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+    width:1px; height:1px;
+  }
+
+  /* Session control */
+  .session-row{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 8px 8px;
+  }
+  .stepper-btn{
+    width: 38px; height:38px;
+    border-radius: 9px;
+    background: var(--card-raised);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 18px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    user-select:none;
+  }
+  .stepper-btn:active{ background: var(--line); }
+  .session-val{
+    flex:1;
+    text-align:center;
+    font-size: 18px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .session-hint{
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    margin-top: 7px;
+    line-height:1.5;
+  }
+
+  /* Pill toggle group */
+  .pill-group{
+    display:flex;
+    gap: 9px;
+  }
+  .pill{
+    flex:1;
+    padding: 12px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink-dim);
+    text-align:center;
+    font-family: 'Spectral', serif;
+    font-size: 14.5px;
+    font-weight: 500;
+    cursor:pointer;
+    position:relative;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .pill .check{
+    position:absolute; top:7px; right:9px;
+    width:14px; height:14px;
+    opacity:0;
+    transition: opacity .15s ease;
+  }
+  .pill.selected .check{ opacity:1; }
+  .pill[data-venue="venetian"].selected{
+    border-color: var(--venetian);
+    color: var(--ink);
+    background: rgba(139,107,176,0.12);
+  }
+  .pill[data-venue="venetian"].selected .check{ color: var(--venetian); }
+  .pill[data-venue="mgm"].selected{
+    border-color: var(--mgm);
+    color: var(--ink);
+    background: rgba(201,162,75,0.1);
+  }
+  .pill[data-venue="mgm"].selected .check{ color: var(--mgm); }
+  .pill[data-level].selected{
+    border-color: var(--gold);
+    color: var(--ink);
+    background: rgba(201,162,75,0.1);
+  }
+  .pill[data-level].selected .check{ color: var(--gold); }
+  .pill.small{ font-family:'IBM Plex Mono', monospace; font-size:14px; font-weight:600; }
+
+  /* Sliders */
+  .slider-block{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 6px 16px 4px;
+  }
+  .slider-item{
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .slider-item:last-child{ border-bottom:none; }
+  .slider-item .si-top{
+    display:flex;
+    justify-content: space-between;
+    align-items:baseline;
+    margin-bottom: 10px;
+  }
+  .slider-item .si-name{
+    font-family:'Spectral', serif;
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+  .slider-item .si-val{
+    font-size: 14px;
+    font-weight:600;
+    color: var(--gold-bright);
+    font-variant-numeric: tabular-nums;
+    min-width: 34px;
+    text-align:right;
+  }
+
+  .rng{
+    -webkit-appearance:none;
+    appearance:none;
+    width:100%;
+    height: 4px;
+    background: var(--line);
+    border-radius:2px;
+    outline:none;
+    margin:0;
+    position:relative;
+  }
+  .rng::-webkit-slider-runnable-track{
+    height:4px;
+    background: var(--line);
+    border-radius:2px;
+  }
+  .rng::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:18px; height:18px;
+    margin-top:-7px;
+    background: var(--gold-bright);
+    border-radius: 4px;
+    transform: rotate(45deg);
+    border: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    cursor:pointer;
+  }
+  .rng::-moz-range-track{
+    height:4px;
+    background: var(--line);
+    border-radius:2px;
+  }
+  .rng::-moz-range-thumb{
+    width:14px; height:14px;
+    background: var(--gold-bright);
+    border-radius:4px;
+    transform: rotate(45deg);
+    border:none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    cursor:pointer;
+  }
+
+  .total-card{
+    margin-top: 16px;
+    background: linear-gradient(135deg, rgba(201,162,75,0.14), rgba(201,162,75,0.04));
+    border: 1px solid rgba(201,162,75,0.35);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
+  .total-card .tt-label{
+    font-family:'Spectral', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-dim);
+  }
+  .total-card .tt-val{
+    font-size: 24px;
+    font-weight:700;
+    color: var(--gold-bright);
+    font-variant-numeric: tabular-nums;
+  }
+  .total-card .tt-val .tt-max{
+    font-size: 14px;
+    color: var(--ink-faint);
+    font-weight:500;
+  }
+
+  /* Amount field */
+  .amount-row{
+    display:flex;
+    gap: 10px;
+  }
+  .sign-toggle{
+    display:flex;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  .sign-btn{
+    width: 46px; height: 100%;
+    min-height: 50px;
+    display:flex; align-items:center; justify-content:center;
+    background: var(--card);
+    color: var(--ink-faint);
+    font-size: 19px;
+    font-weight:600;
+    cursor:pointer;
+    border:none;
+  }
+  .sign-btn + .sign-btn{ border-left: 1px solid var(--line); }
+  .sign-btn.active.plus{ background: rgba(201,162,75,0.18); color: var(--gold-bright); }
+  .sign-btn.active.minus{ background: rgba(181,82,74,0.18); color: var(--loss-bright); }
+
+  .amount-input-wrap{
+    flex:1;
+    display:flex;
+    align-items:center;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 0 14px;
+  }
+  .hkd-sym{
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size: 16px;
+    color: var(--ink-faint);
+    margin-right: 8px;
+  }
+  .amount-input-wrap input{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color: var(--ink);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 18px;
+    font-weight:600;
+    padding: 13px 0;
+    min-width:0;
+    font-variant-numeric: tabular-nums;
+  }
+  .amount-input-wrap input::placeholder{ color: var(--ink-faint); font-weight:400; }
+  /* hide number spinners */
+  .amount-input-wrap input::-webkit-outer-spin-button,
+  .amount-input-wrap input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .amount-input-wrap input[type=number]{ -moz-appearance: textfield; }
+
+  /* Save button */
+  .sheet-footer{
+    padding: 6px 20px 28px;
+    flex-shrink:0;
+  }
+  .save-btn{
+    width:100%;
+    padding: 16px;
+    border-radius: var(--radius);
+    border:none;
+    background: linear-gradient(155deg, var(--gold-bright), var(--gold) 70%);
+    color: #1A1408;
+    font-family:'Spectral', serif;
+    font-weight:600;
+    font-size: 16.5px;
+    letter-spacing: 0.02em;
+    cursor:pointer;
+    box-shadow: 0 6px 18px rgba(201,162,75,0.25);
+  }
+  .save-btn:active{ transform: scale(0.99); }
+
+  .delete-btn{
+    width:100%;
+    padding: 13px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(181,82,74,0.4);
+    background: rgba(181,82,74,0.08);
+    color: var(--loss-bright);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top: 10px;
+  }
+
+  /* ---------- Key hands (关键牌局) ---------- */
+  .hands-drag-zone{
+    position: relative;
+    height: 0;
+    transition: height .2s ease;
+  }
+  .hand-card{
+    position: absolute;
+    left:0; right:0; top:0;
+    height: 50px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    display:flex;
+    align-items:center;
+    gap: 4px;
+    padding: 0 6px 0 2px;
+    cursor: pointer;
+    touch-action: pan-y;
+  }
+  .hand-card.dragging{
+    box-shadow: 0 10px 26px rgba(0,0,0,0.45);
+    border-color: var(--gold);
+    background: var(--card-raised);
+    transform: scale(1.015);
+  }
+  .hand-handle{
+    flex-shrink:0;
+    width: 34px;
+    height: 100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--ink-faint);
+    font-size: 15px;
+    letter-spacing: -1px;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+  }
+  .hand-handle:active{ cursor: grabbing; color: var(--ink-dim); }
+  .hand-preview{
+    flex:1;
+    min-width:0;
+    font-family:'Spectral', serif;
+    font-size: 13.5px;
+    color: var(--ink-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .hand-index{
+    flex-shrink:0;
+    font-size: 10px;
+    color: var(--ink-faint);
+    font-family:'IBM Plex Mono', monospace;
+    width: 16px;
+    text-align:center;
+  }
+  .hand-arrow{
+    flex-shrink:0;
+    color: var(--ink-faint);
+    font-size: 16px;
+    padding-right: 4px;
+  }
+
+  .hand-add{
+    margin-top: 8px;
+    height: 46px;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 7px;
+    color: var(--ink-faint);
+    font-family:'Spectral', serif;
+    font-size: 13.5px;
+    cursor:pointer;
+  }
+  .hand-add:active{ background: var(--card); }
+  .hand-add .plus-icon{
+    font-size: 16px;
+    line-height:1;
+    color: var(--gold);
+  }
+  .hand-add.disabled{
+    display:none;
+  }
+
+  /* ---------- Full-screen hand editor ---------- */
+  .hand-editor{
+    position: fixed;
+    inset: 0;
+    max-width: 560px;
+    margin: 0 auto;
+    background: var(--bg);
+    z-index: 200;
+    display:flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.32,.72,0,1);
+  }
+  .hand-editor.open{ transform: translateY(0); }
+
+  .he-topbar{
+    position: relative;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .he-title{
+    position:absolute;
+    left:50%; top:50%;
+    transform: translate(-50%,-50%);
+    font-family:'Spectral', serif;
+    font-size: 14.5px;
+    color: var(--ink-faint);
+    pointer-events:none;
+  }
+  .he-delete, .he-save{
+    border:none;
+    background:none;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 14.5px;
+    font-weight:600;
+    cursor:pointer;
+    padding: 7px 4px;
+    z-index:1;
+  }
+  .he-delete{ color: var(--loss-bright); }
+  .he-save{ color: var(--gold-bright); }
+
+  .he-suits{
+    flex-shrink:0;
+    display:flex;
+    gap: 9px;
+    padding: 16px 16px 4px;
+  }
+  .suit-btn{
+    flex:1;
+    aspect-ratio: 1.5;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: var(--card);
+    font-size: 22px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .suit-btn:active{ background: var(--card-raised); }
+  .suit-btn.suit-black{ color: var(--ink); }
+  .suit-btn.suit-red{ color: var(--suit-red); }
+
+  .he-textarea{
+    flex:1;
+    width:100%;
+    background: transparent;
+    border:none;
+    outline:none;
+    resize:none;
+    padding: 18px 20px 28px;
+    color: var(--ink);
+    font-family:'Spectral', serif;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  .he-textarea::placeholder{ color: var(--ink-faint); }
+
+  /* tiny calendar (custom, since native date input styling is unreliable on mobile webviews) */
+  .cal-pop{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-top: 8px;
+    display:none;
+  }
+  .cal-pop.open{ display:block; }
+  .cal-head{
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+  .cal-head .cal-nav{
+    width:30px; height:30px;
+    border-radius:50%;
+    background: var(--card-raised);
+    border:1px solid var(--line);
+    color: var(--ink-dim);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-size:14px;
+  }
+  .cal-head .cal-ym{
+    font-family:'Spectral', serif;
+    font-size: 14.5px;
+    font-weight:600;
+  }
+  .cal-grid{
+    display:grid;
+    grid-template-columns: repeat(7,1fr);
+    gap: 4px;
+  }
+  .cal-dow{
+    text-align:center;
+    font-size: 10px;
+    color: var(--ink-faint);
+    padding-bottom: 6px;
+  }
+  .cal-day{
+    aspect-ratio: 1;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 13px;
+    border-radius: 8px;
+    cursor:pointer;
+    color: var(--ink-dim);
+  }
+  .cal-day.muted{ color: var(--ink-faint); opacity:.35; }
+  .cal-day:hover{ background: var(--card-raised); }
+  .cal-day.today{ color: var(--gold-bright); font-weight:600; }
+  .cal-day.selected{ background: var(--gold); color:#1A1408; font-weight:700; }
+
+  ::selection{ background: var(--gold); color:#1A1408; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header class="top">
+    <p class="eyebrow">Personal Log</p>
+    <h1 class="title">牌局 <em>记录</em></h1>
+    <div class="summary-row">
+      <div class="summary-chip">
+        <div class="label">总场次</div>
+        <div class="val" id="statCount">0</div>
+      </div>
+      <div class="summary-chip">
+        <div class="label">总盈亏</div>
+        <div class="val" id="statTotal">HK$0</div>
+      </div>
+      <div class="summary-chip">
+        <div class="label">平均分</div>
+        <div class="val" id="statAvg">—</div>
+      </div>
+    </div>
+  </header>
+
+  <div id="list"></div>
+
+  <div id="empty">
+    <div class="glyph">♠︎ ♥︎</div>
+    <div class="et">桌面还是空的</div>
+    <div class="es">点击右下角的「+」，记下今天这一局。</div>
+  </div>
+</div>
+
+<button id="fab" aria-label="添加记录">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#1A1408" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<div class="sheet-overlay" id="sheetOverlay"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2 id="sheetTitle">新增记录</h2>
+    <div class="sheet-close" id="sheetClose">✕</div>
+  </div>
+
+  <div class="sheet-body">
+
+    <div class="field">
+      <div class="field-label">时间</div>
+      <div class="date-control" id="dateControl">
+        <span class="dtext" id="dateText">2026年6月20日</span>
+        <span class="dicon">📅</span>
+      </div>
+      <div class="cal-pop" id="calPop">
+        <div class="cal-head">
+          <div class="cal-nav" id="calPrev">‹</div>
+          <div class="cal-ym" id="calYm">2026年6月</div>
+          <div class="cal-nav" id="calNext">›</div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">Session</div>
+      <div class="session-row">
+        <div class="stepper-btn" id="sessMinus">−</div>
+        <div class="session-val" id="sessVal">1</div>
+        <div class="stepper-btn" id="sessPlus">+</div>
+      </div>
+      <div class="session-hint" id="sessHint">这是当天的第 1 场记录</div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">场馆</div>
+      <div class="pill-group">
+        <div class="pill" data-venue="venetian">
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          威尼斯人
+        </div>
+        <div class="pill" data-venue="mgm">
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          MGM
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">级别</div>
+      <div class="pill-group">
+        <div class="pill small" data-level="50/100">
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          50/100
+        </div>
+        <div class="pill small" data-level="100/200">
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          100/200
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">本局复盘</div>
+      <div class="slider-block" id="sliderBlock"></div>
+      <div class="total-card">
+        <span class="tt-label">总分</span>
+        <span class="tt-val"><span id="totalScore">5.0</span><span class="tt-max">/10</span></span>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">金额</div>
+      <div class="amount-row">
+        <div class="sign-toggle">
+          <button class="sign-btn plus active" id="signPlus">+</button>
+          <button class="sign-btn minus" id="signMinus">−</button>
+        </div>
+        <div class="amount-input-wrap">
+          <span class="hkd-sym">HK$</span>
+          <input type="number" id="amountInput" inputmode="decimal" min="0" step="1" placeholder="0">
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <span>关键牌局</span>
+        <span id="handsCount">0/5</span>
+      </div>
+      <div class="hands-drag-zone" id="handsDragZone"></div>
+      <div class="hand-add" id="handAddBtn">
+        <span class="plus-icon">+</span>
+        <span>记一手关键牌局</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sheet-footer">
+    <button class="save-btn" id="saveBtn">保存记录</button>
+    <button class="delete-btn" id="deleteBtn" style="display:none;">删除这条记录</button>
+  </div>
+</div>
+
+<div class="hand-editor" id="handEditor">
+  <div class="he-topbar">
+    <button class="he-delete" id="heDelete">Delete</button>
+    <span class="he-title" id="heTitle">关键牌局</span>
+    <button class="he-save" id="heSave">Save</button>
+  </div>
+  <div class="he-suits">
+    <button class="suit-btn suit-black" data-suit="♠️">♠️</button>
+    <button class="suit-btn suit-red" data-suit="♥️">♥️</button>
+    <button class="suit-btn suit-black" data-suit="♣️">♣️</button>
+    <button class="suit-btn suit-red" data-suit="♦️">♦️</button>
+  </div>
+  <textarea class="he-textarea" id="heTextarea" placeholder="位置、底池、对手范围、关键决策……把这手牌记清楚。" rows="6"></textarea>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Constants ----------
+  var STORAGE_KEY = "poker_log_entries_v1";
+  var CRITERIA = [
+    { key:"observe", name:"观察细致程度" },
+    { key:"aggro",   name:"进攻合理程度" },
+    { key:"discip",  name:"弃牌纪律程度" },
+    { key:"emotion", name:"情绪稳定程度" },
+    { key:"review",  name:"复盘清晰程度" }
+  ];
+  var VENUE_LABEL = { venetian:"威尼斯人", mgm:"MGM" };
+
+  // ---------- State ----------
+  var entries = loadEntries();
+  var editingId = null;       // null = creating new
+  var draft = null;           // current form state
+  var calViewYear, calViewMonth; // calendar nav state (0-indexed month)
+
+  // ---------- Persistence ----------
+  function loadEntries(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return [];
+      var arr = JSON.parse(raw);
+      if(!Array.isArray(arr)) return [];
+      return arr;
+    }catch(e){ return []; }
+  }
+  function saveEntries(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+    catch(e){ console.error("save failed", e); }
+  }
+
+  // ---------- Date helpers ----------
+  function pad(n){ return n<10 ? "0"+n : ""+n; }
+  function toISO(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function todayISO(){ return toISO(new Date()); }
+  function parseISO(iso){
+    var p = iso.split("-");
+    return new Date(parseInt(p[0],10), parseInt(p[1],10)-1, parseInt(p[2],10));
+  }
+  function formatCN(iso){
+    var d = parseISO(iso);
+    return d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日";
+  }
+  var WEEKDAY_CN = ["周日","周一","周二","周三","周四","周五","周六"];
+
+  // ---------- Derived ----------
+  function sessionsOnDate(iso, excludeId){
+    return entries.filter(function(e){ return e.date===iso && e.id!==excludeId; });
+  }
+  function nextSessionFor(iso, excludeId){
+    var existing = sessionsOnDate(iso, excludeId).map(function(e){ return e.session; });
+    var n = 1;
+    while(existing.indexOf(n) !== -1) n++;
+    return n;
+  }
+  function computeTotal(scores){
+    var sum = 0;
+    CRITERIA.forEach(function(c){ sum += scores[c.key]; });
+    return Math.round(sum*10)/10;
+  }
+
+  // ---------- Default draft ----------
+  function freshDraft(){
+    var iso = todayISO();
+    var scores = {};
+    CRITERIA.forEach(function(c){ scores[c.key] = 1.0; });
+    return {
+      id: null,
+      date: iso,
+      session: nextSessionFor(iso, null),
+      venue: null,
+      level: null,
+      scores: scores,
+      sign: "+",
+      amount: "",
+      hands: []
+    };
+  }
+
+  // ---------- Rendering: list ----------
+  var listEl = document.getElementById("list");
+  var emptyEl = document.getElementById("empty");
+
+  function render(){
+    renderStats();
+    renderList();
+  }
+
+  function renderStats(){
+    var count = entries.length;
+    document.getElementById("statCount").textContent = count;
+    var totalAmt = 0, totalScore = 0;
+    entries.forEach(function(e){
+      totalAmt += (e.sign==="-" ? -1 : 1) * e.amount;
+      totalScore += computeTotal(e.scores);
+    });
+    var totalEl = document.getElementById("statTotal");
+    totalEl.textContent = (totalAmt>=0?"+":"−")+"HK$"+formatMoney(Math.abs(totalAmt));
+    totalEl.className = "val " + (totalAmt>0?"pos":(totalAmt<0?"neg":""));
+    var avgEl = document.getElementById("statAvg");
+    avgEl.textContent = count ? (totalScore/count).toFixed(1) : "—";
+  }
+
+  function formatMoney(n){
+    n = Math.round(n*100)/100;
+    var parts = n.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  }
+
+  function renderList(){
+    // sort ascending by date then session, so DOM order is oldest->newest;
+    // combined with column-reverse the newest renders at the bottom visually,
+    // and the page naturally opens scrolled to the latest entry at the bottom.
+    var sorted = entries.slice().sort(function(a,b){
+      if(a.date !== b.date) return a.date < b.date ? -1 : 1;
+      return a.session - b.session;
+    });
+
+    listEl.innerHTML = "";
+    emptyEl.style.display = sorted.length ? "none" : "block";
+
+    // group by date for day labels
+    var groups = [];
+    var lastDate = null;
+    sorted.forEach(function(e){
+      if(e.date !== lastDate){
+        groups.push({ date:e.date, items:[] });
+        lastDate = e.date;
+      }
+      groups[groups.length-1].items.push(e);
+    });
+
+    // since #list is column-reverse, append groups in normal order
+    // (first group = earliest date) and the browser will flip visual order.
+    groups.forEach(function(g){
+      var groupEl = document.createElement("div");
+      groupEl.className = "day-group";
+
+      var label = document.createElement("div");
+      label.className = "day-label";
+      label.textContent = formatCN(g.date) + (g.items.length>1 ? "（"+g.items.length+"局）" : "");
+      groupEl.appendChild(label);
+
+      g.items.forEach(function(e){
+        groupEl.appendChild(renderEntryCard(e));
+      });
+
+      listEl.appendChild(groupEl);
+    });
+  }
+
+  function renderEntryCard(e){
+    var total = computeTotal(e.scores);
+    var pct = total/10;
+    var card = document.createElement("div");
+    card.className = "entry venue-"+e.venue;
+    card.setAttribute("data-id", e.id);
+
+    var amt = e.amount;
+    var isPos = e.sign !== "-";
+    var color = total>=7 ? "var(--gold-bright)" : (total>=4 ? "var(--ink-dim)" : "var(--loss-bright)");
+
+    var r = 21, circ = 2*Math.PI*r;
+    var dash = circ*pct;
+
+    card.innerHTML =
+      '<div class="ring">'+
+        '<svg viewBox="0 0 50 50">'+
+          '<circle class="track" cx="25" cy="25" r="'+r+'"/>'+
+          '<circle class="prog" cx="25" cy="25" r="'+r+'" stroke="'+color+'" '+
+            'stroke-dasharray="'+dash.toFixed(1)+' '+circ.toFixed(1)+'"/>'+
+        '</svg>'+
+        '<div class="score-text">'+total.toFixed(1)+'</div>'+
+      '</div>'+
+      '<div class="mid">'+
+        '<div class="date-line">'+formatCN(e.date)+'</div>'+
+        '<div class="meta-line">Session '+e.session+'<span class="dot">·</span>'+VENUE_LABEL[e.venue]+'<span class="dot">·</span>'+e.level+'</div>'+
+      '</div>'+
+      '<div class="amount" style="color:'+(isPos?'var(--gold-bright)':'var(--loss-bright)')+'">'+
+        '<span class="unit">HK$</span>'+(isPos?'+':'−')+formatMoney(amt)+
+      '</div>';
+
+    card.addEventListener("click", function(){ openSheetForEdit(e.id); });
+    return card;
+  }
+
+  // ---------- Sheet (form) ----------
+  var sheet = document.getElementById("sheet");
+  var sheetOverlay = document.getElementById("sheetOverlay");
+  var sheetTitle = document.getElementById("sheetTitle");
+  var deleteBtn = document.getElementById("deleteBtn");
+
+  function openSheetForCreate(){
+    editingId = null;
+    draft = freshDraft();
+    sheetTitle.textContent = "新增记录";
+    deleteBtn.style.display = "none";
+    populateForm();
+    showSheet();
+  }
+
+  function openSheetForEdit(id){
+    var e = entries.find(function(x){ return x.id===id; });
+    if(!e) return;
+    editingId = id;
+    draft = {
+      id: e.id,
+      date: e.date,
+      session: e.session,
+      venue: e.venue,
+      level: e.level,
+      scores: Object.assign({}, e.scores),
+      sign: e.sign,
+      amount: e.amount,
+      hands: (e.hands || []).slice()
+    };
+    sheetTitle.textContent = "编辑记录";
+    deleteBtn.style.display = "block";
+    populateForm();
+    showSheet();
+  }
+
+  function showSheet(){
+    sheetOverlay.classList.add("open");
+    sheet.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function hideSheet(){
+    sheetOverlay.classList.remove("open");
+    sheet.classList.remove("open");
+    document.body.style.overflow = "";
+    closeCalendar();
+  }
+
+  document.getElementById("fab").addEventListener("click", openSheetForCreate);
+  document.getElementById("sheetClose").addEventListener("click", hideSheet);
+  sheetOverlay.addEventListener("click", hideSheet);
+
+  // ---------- Form: date ----------
+  var dateText = document.getElementById("dateText");
+  var dateControl = document.getElementById("dateControl");
+  var calPop = document.getElementById("calPop");
+
+  dateControl.addEventListener("click", function(){
+    if(calPop.classList.contains("open")) { closeCalendar(); return; }
+    var d = parseISO(draft.date);
+    calViewYear = d.getFullYear();
+    calViewMonth = d.getMonth();
+    renderCalendar();
+    calPop.classList.add("open");
+  });
+
+  function closeCalendar(){ calPop.classList.remove("open"); }
+
+  document.getElementById("calPrev").addEventListener("click", function(){
+    calViewMonth--;
+    if(calViewMonth<0){ calViewMonth=11; calViewYear--; }
+    renderCalendar();
+  });
+  document.getElementById("calNext").addEventListener("click", function(){
+    calViewMonth++;
+    if(calViewMonth>11){ calViewMonth=0; calViewYear++; }
+    renderCalendar();
+  });
+
+  function renderCalendar(){
+    document.getElementById("calYm").textContent = calViewYear+"年"+(calViewMonth+1)+"月";
+    var grid = document.getElementById("calGrid");
+    grid.innerHTML = "";
+    WEEKDAY_CN.forEach(function(w){
+      var el = document.createElement("div");
+      el.className = "cal-dow";
+      el.textContent = w.replace("周","");
+      grid.appendChild(el);
+    });
+
+    var firstOfMonth = new Date(calViewYear, calViewMonth, 1);
+    var startWeekday = firstOfMonth.getDay();
+    var daysInMonth = new Date(calViewYear, calViewMonth+1, 0).getDate();
+    var daysInPrevMonth = new Date(calViewYear, calViewMonth, 0).getDate();
+    var todayIso = todayISO();
+
+    var totalCells = Math.ceil((startWeekday+daysInMonth)/7)*7;
+
+    for(var i=0;i<totalCells;i++){
+      var cell = document.createElement("div");
+      cell.className = "cal-day";
+      var dayNum, cellMonth = calViewMonth, cellYear = calViewYear, muted=false;
+
+      if(i < startWeekday){
+        dayNum = daysInPrevMonth - startWeekday + i + 1;
+        cellMonth = calViewMonth-1; muted = true;
+        if(cellMonth<0){ cellMonth=11; cellYear--; }
+      } else if(i >= startWeekday+daysInMonth){
+        dayNum = i - (startWeekday+daysInMonth) + 1;
+        cellMonth = calViewMonth+1; muted = true;
+        if(cellMonth>11){ cellMonth=0; cellYear++; }
+      } else {
+        dayNum = i - startWeekday + 1;
+      }
+
+      var iso = cellYear+"-"+pad(cellMonth+1)+"-"+pad(dayNum);
+      cell.textContent = dayNum;
+      if(muted) cell.classList.add("muted");
+      if(iso === todayIso) cell.classList.add("today");
+      if(iso === draft.date) cell.classList.add("selected");
+
+      (function(iso){
+        cell.addEventListener("click", function(){
+          draft.date = iso;
+          draft.session = nextSessionFor(iso, editingId);
+          dateText.textContent = formatCN(iso);
+          updateSessionUI();
+          closeCalendar();
+        });
+      })(iso);
+
+      grid.appendChild(cell);
+    }
+  }
+
+  // ---------- Form: session ----------
+  var sessVal = document.getElementById("sessVal");
+  var sessHint = document.getElementById("sessHint");
+
+  function updateSessionUI(){
+    sessVal.textContent = draft.session;
+    var others = sessionsOnDate(draft.date, editingId).length;
+    if(others===0){
+      sessHint.textContent = "这是当天的第 "+draft.session+" 场记录";
+    } else {
+      sessHint.textContent = "当天已有 "+others+" 场记录 · 当前为第 "+draft.session+" 场";
+    }
+  }
+
+  document.getElementById("sessMinus").addEventListener("click", function(){
+    if(draft.session>1){ draft.session--; updateSessionUI(); }
+  });
+  document.getElementById("sessPlus").addEventListener("click", function(){
+    draft.session++; updateSessionUI();
+  });
+
+  // ---------- Form: venue / level pills ----------
+  var venuePills = document.querySelectorAll(".pill[data-venue]");
+  var levelPills = document.querySelectorAll(".pill[data-level]");
+
+  venuePills.forEach(function(p){
+    p.addEventListener("click", function(){
+      draft.venue = p.getAttribute("data-venue");
+      venuePills.forEach(function(x){ x.classList.toggle("selected", x===p); });
+    });
+  });
+  levelPills.forEach(function(p){
+    p.addEventListener("click", function(){
+      draft.level = p.getAttribute("data-level");
+      levelPills.forEach(function(x){ x.classList.toggle("selected", x===p); });
+    });
+  });
+
+  // ---------- Form: sliders ----------
+  var sliderBlock = document.getElementById("sliderBlock");
+  CRITERIA.forEach(function(c){
+    var item = document.createElement("div");
+    item.className = "slider-item";
+    item.innerHTML =
+      '<div class="si-top">'+
+        '<span class="si-name">'+c.name+'</span>'+
+        '<span class="si-val" id="val-'+c.key+'">1.0</span>'+
+      '</div>'+
+      '<input type="range" class="rng" id="rng-'+c.key+'" min="0" max="2" step="0.1" value="1.0">';
+    sliderBlock.appendChild(item);
+
+    var input = item.querySelector("input");
+    input.addEventListener("input", function(){
+      var v = Math.round(parseFloat(input.value)*10)/10;
+      draft.scores[c.key] = v;
+      document.getElementById("val-"+c.key).textContent = v.toFixed(1);
+      updateTotalUI();
+    });
+  });
+
+  function updateTotalUI(){
+    var total = computeTotal(draft.scores);
+    document.getElementById("totalScore").textContent = total.toFixed(1);
+  }
+
+  // ---------- Form: amount ----------
+  var signPlus = document.getElementById("signPlus");
+  var signMinus = document.getElementById("signMinus");
+  var amountInput = document.getElementById("amountInput");
+
+  signPlus.addEventListener("click", function(){
+    draft.sign = "+";
+    signPlus.classList.add("active");
+    signMinus.classList.remove("active");
+  });
+  signMinus.addEventListener("click", function(){
+    draft.sign = "-";
+    signMinus.classList.add("active");
+    signPlus.classList.remove("active");
+  });
+  amountInput.addEventListener("input", function(){
+    // enforce non-negative
+    var v = amountInput.value;
+    if(v !== "" && parseFloat(v) < 0){
+      amountInput.value = Math.abs(parseFloat(v));
+    }
+    draft.amount = amountInput.value;
+  });
+
+  // ---------- Form: key hands (关键牌局) ----------
+  var handsDragZone = document.getElementById("handsDragZone");
+  var handAddBtn = document.getElementById("handAddBtn");
+  var handsCount = document.getElementById("handsCount");
+  var handEditor = document.getElementById("handEditor");
+  var heTextarea = document.getElementById("heTextarea");
+  var heSave = document.getElementById("heSave");
+  var heDelete = document.getElementById("heDelete");
+  var suitBtns = document.querySelectorAll(".suit-btn");
+
+  var HAND_ITEM_H = 58; // measured on first render, includes 8px gap
+  var handEditIndex = null;  // null = creating a new hand, else index into draft.hands
+  var dragState = null;
+
+  function escapeHtml(s){
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function handPreviewText(s){
+    var oneLine = String(s).replace(/\s+/g, " ").trim();
+    return oneLine.length > 46 ? oneLine.slice(0,46) + "…" : oneLine;
+  }
+
+  function renderHandsList(){
+    handsDragZone.innerHTML = "";
+    var n = draft.hands.length;
+
+    draft.hands.forEach(function(text, idx){
+      var card = document.createElement("div");
+      card.className = "hand-card";
+      card.style.top = (idx * HAND_ITEM_H) + "px";
+      card.setAttribute("data-idx", idx);
+      card.innerHTML =
+        '<div class="hand-handle" data-idx="'+idx+'">⠿⠿</div>'+
+        '<div class="hand-preview">'+(text ? escapeHtml(handPreviewText(text)) : '<span style="color:var(--ink-faint)">（空）</span>')+'</div>'+
+        '<div class="hand-index">'+(idx+1)+'</div>'+
+        '<div class="hand-arrow">›</div>';
+      card.addEventListener("click", function(ev){
+        if(ev.target.closest(".hand-handle")) return;
+        openHandEditor(idx);
+      });
+      handsDragZone.appendChild(card);
+    });
+
+    // measure real height from first card once rendered
+    requestAnimationFrame(function(){
+      var first = handsDragZone.querySelector(".hand-card");
+      if(first){
+        HAND_ITEM_H = first.offsetHeight + 8;
+        Array.prototype.forEach.call(handsDragZone.querySelectorAll(".hand-card"), function(c, slot){
+          c.style.top = (slot * HAND_ITEM_H) + "px";
+        });
+      }
+      handsDragZone.style.height = n ? (n * HAND_ITEM_H - 8) + "px" : "0px";
+    });
+
+    Array.prototype.forEach.call(handsDragZone.querySelectorAll(".hand-handle"), function(handle){
+      handle.addEventListener("pointerdown", onHandleDown);
+    });
+
+    handAddBtn.classList.toggle("disabled", n >= 5);
+    handsCount.textContent = n + "/5";
+  }
+
+  function onHandleDown(e){
+    e.preventDefault();
+    var handle = e.currentTarget;
+    var origIdx = parseInt(handle.getAttribute("data-idx"), 10);
+    var cardEls = Array.prototype.slice.call(handsDragZone.querySelectorAll(".hand-card"));
+    if(cardEls.length < 2) return; // nothing to reorder
+
+    dragState = {
+      startY: e.clientY,
+      order: cardEls.map(function(_, i){ return i; }), // identity: fresh render order
+      draggedOrigIndex: origIdx,
+      cards: cardEls,
+      pointerId: e.pointerId,
+      handle: handle
+    };
+
+    var draggedCard = cardEls[origIdx];
+    draggedCard.classList.add("dragging");
+    draggedCard.style.transition = "none";
+    draggedCard.style.zIndex = "50";
+
+    try{ handle.setPointerCapture(e.pointerId); }catch(err){}
+    handle.addEventListener("pointermove", onHandleMove);
+    handle.addEventListener("pointerup", onHandleUp);
+    handle.addEventListener("pointercancel", onHandleUp);
+  }
+
+  function onHandleMove(e){
+    if(!dragState) return;
+    var deltaY = e.clientY - dragState.startY;
+    var draggedCard = dragState.cards[dragState.draggedOrigIndex];
+    var originalSlot = dragState.draggedOrigIndex;
+    var rawTop = originalSlot * HAND_ITEM_H + deltaY;
+    var maxTop = (dragState.order.length - 1) * HAND_ITEM_H;
+    rawTop = Math.max(0, Math.min(maxTop, rawTop));
+    draggedCard.style.top = rawTop + "px";
+
+    var targetSlot = Math.round(rawTop / HAND_ITEM_H);
+    var currentPos = dragState.order.indexOf(dragState.draggedOrigIndex);
+    if(targetSlot !== currentPos){
+      dragState.order.splice(currentPos, 1);
+      dragState.order.splice(targetSlot, 0, dragState.draggedOrigIndex);
+      dragState.order.forEach(function(origIdx, slot){
+        if(origIdx === dragState.draggedOrigIndex) return;
+        var c = dragState.cards[origIdx];
+        c.style.transition = "top .18s ease";
+        c.style.top = (slot * HAND_ITEM_H) + "px";
+      });
+    }
+  }
+
+  function onHandleUp(e){
+    if(!dragState) return;
+    var handle = dragState.handle;
+    var draggedCard = dragState.cards[dragState.draggedOrigIndex];
+    draggedCard.classList.remove("dragging");
+    draggedCard.style.zIndex = "";
+
+    handle.removeEventListener("pointermove", onHandleMove);
+    handle.removeEventListener("pointerup", onHandleUp);
+    handle.removeEventListener("pointercancel", onHandleUp);
+    try{ handle.releasePointerCapture(dragState.pointerId); }catch(err){}
+
+    var newHands = dragState.order.map(function(origIdx){ return draft.hands[origIdx]; });
+    draft.hands = newHands;
+    dragState = null;
+    renderHandsList();
+  }
+
+  handAddBtn.addEventListener("click", function(){
+    if(draft.hands.length >= 5) return;
+    openHandEditor(null);
+  });
+
+  function openHandEditor(idx){
+    handEditIndex = idx;
+    heTextarea.value = idx === null ? "" : draft.hands[idx];
+    handEditor.classList.add("open");
+    window.setTimeout(function(){
+      heTextarea.focus();
+      var len = heTextarea.value.length;
+      heTextarea.setSelectionRange(len, len);
+    }, 320);
+  }
+
+  function closeHandEditor(){
+    handEditor.classList.remove("open");
+  }
+
+  suitBtns.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var symbol = btn.getAttribute("data-suit");
+      var start = heTextarea.selectionStart;
+      var end = heTextarea.selectionEnd;
+      var val = heTextarea.value;
+      heTextarea.value = val.slice(0, start) + symbol + val.slice(end);
+      var newPos = start + symbol.length;
+      heTextarea.focus();
+      heTextarea.setSelectionRange(newPos, newPos);
+    });
+  });
+
+  heSave.addEventListener("click", function(){
+    var text = heTextarea.value.trim();
+    if(handEditIndex === null){
+      if(text) draft.hands.push(text);
+    } else {
+      if(text) draft.hands[handEditIndex] = text;
+      else draft.hands.splice(handEditIndex, 1); // saving empty = remove
+    }
+    closeHandEditor();
+    renderHandsList();
+  });
+
+  heDelete.addEventListener("click", function(){
+    if(handEditIndex !== null){
+      draft.hands.splice(handEditIndex, 1);
+    }
+    closeHandEditor();
+    renderHandsList();
+  });
+
+  // ---------- Populate form from draft ----------
+  function populateForm(){
+    dateText.textContent = formatCN(draft.date);
+    updateSessionUI();
+
+    venuePills.forEach(function(p){
+      p.classList.toggle("selected", p.getAttribute("data-venue")===draft.venue);
+    });
+    levelPills.forEach(function(p){
+      p.classList.toggle("selected", p.getAttribute("data-level")===draft.level);
+    });
+
+    CRITERIA.forEach(function(c){
+      var v = draft.scores[c.key];
+      document.getElementById("rng-"+c.key).value = v;
+      document.getElementById("val-"+c.key).textContent = v.toFixed(1);
+    });
+    updateTotalUI();
+
+    if(draft.sign==="-"){
+      signMinus.classList.add("active"); signPlus.classList.remove("active");
+    } else {
+      signPlus.classList.add("active"); signMinus.classList.remove("active");
+    }
+    amountInput.value = draft.amount === "" ? "" : draft.amount;
+
+    renderHandsList();
+    closeCalendar();
+  }
+
+  // ---------- Save / delete ----------
+  document.getElementById("saveBtn").addEventListener("click", function(){
+    if(!draft.venue){ flashInvalid("场馆"); return; }
+    if(!draft.level){ flashInvalid("级别"); return; }
+    var amt = parseFloat(draft.amount);
+    if(isNaN(amt) || amt < 0){ amountInput.focus(); flashInvalidEl(amountInput.parentElement); return; }
+
+    var record = {
+      id: editingId || (Date.now()+"-"+Math.random().toString(36).slice(2,8)),
+      date: draft.date,
+      session: draft.session,
+      venue: draft.venue,
+      level: draft.level,
+      scores: draft.scores,
+      sign: draft.sign,
+      amount: amt,
+      hands: draft.hands.slice()
+    };
+
+    if(editingId){
+      var idx = entries.findIndex(function(e){ return e.id===editingId; });
+      if(idx>-1) entries[idx] = record;
+    } else {
+      entries.push(record);
+    }
+    saveEntries();
+    render();
+    hideSheet();
+  });
+
+  deleteBtn.addEventListener("click", function(){
+    if(!editingId) return;
+    entries = entries.filter(function(e){ return e.id!==editingId; });
+    saveEntries();
+    render();
+    hideSheet();
+  });
+
+  function flashInvalid(fieldName){
+    window.scrollTo(0,0);
+    if(fieldName==="场馆"){
+      pulseEl(venuePills[0].parentElement);
+    } else if(fieldName==="级别"){
+      pulseEl(levelPills[0].parentElement);
+    }
+  }
+  function flashInvalidEl(el){ pulseEl(el); }
+  function pulseEl(el){
+    el.style.transition = "box-shadow .15s ease";
+    el.style.boxShadow = "0 0 0 2px var(--loss-bright)";
+    setTimeout(function(){ el.style.boxShadow = "none"; }, 700);
+  }
+
+  // ---------- Init ----------
+  render();
+
+  // scroll list to bottom (latest entries) on load
+  window.addEventListener("load", function(){
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+})();
+</script>
+</body>
+</html>
