@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>牌局记录</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Spectral:ital@1&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
     --radius-sm: 10px;
   }
 
-  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; overscroll-behavior-x: none; }
 
   html, body{
     margin:0; padding:0;
@@ -35,6 +35,7 @@
     font-family: 'IBM Plex Mono', monospace;
     min-height: 100vh;
     overscroll-behavior-y: contain;
+    touch-action: manipulation;
   }
 
   body{
@@ -89,9 +90,18 @@
   .summary-row{
     display:flex; gap: 10px;
     margin-top: 18px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
   }
+  .summary-row::-webkit-scrollbar{ display:none; }
   .summary-chip{
     flex:1;
+    flex-shrink: 0;
+    min-width: 78px;
+    max-width: 120px;
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
@@ -118,6 +128,7 @@
     display:flex;
     flex-direction: column-reverse; /* oldest visually first via column-reverse + DOM order */
     gap: 10px;
+    -webkit-overflow-scrolling: touch;
   }
 
   .day-group{
@@ -310,12 +321,14 @@
 
   .sheet-body{
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 4px 20px 24px;
     flex:1;
   }
 
   .field{
     margin-bottom: 22px;
+    position: relative;
   }
   .field-label{
     font-size: 11px;
@@ -738,8 +751,13 @@
     flex-direction: column;
     transform: translateY(100%);
     transition: transform .3s cubic-bezier(.32,.72,0,1);
+    overflow: hidden;
   }
   .hand-editor.open{ transform: translateY(0); }
+  @media (min-width: 561px){
+    .hand-editor:not(.open){ transform: translateY(100%) translateX(calc(50vw + 280px)); }
+    .hand-editor.open{ transform: translateY(0) translateX(0); }
+  }
 
   .he-topbar{
     position: relative;
@@ -952,6 +970,11 @@
     overflow: hidden;
   }
   .modal-panel.open{ transform: translateX(0); }
+  /* On wide screens, ensure panel is fully hidden off-screen */
+  @media (min-width: 561px){
+    .modal-panel{ transform: translateX(calc(50vw + 280px)); }
+    .modal-panel.open{ transform: translateX(0); }
+  }
 
   .modal-topbar{
     display: flex;
@@ -1082,6 +1105,7 @@
   .hands-log-scroll{
     flex:1;
     overflow-y:auto;
+    -webkit-overflow-scrolling: touch;
     padding: 14px 16px 24px;
   }
   .hl-entry{
@@ -2054,15 +2078,28 @@
     hideSheet();
   });
 
-  function flashInvalid(fieldName){
-    window.scrollTo(0,0);
-    if(fieldName==="场馆"){
-      pulseEl(venuePills[0].parentElement);
-    } else if(fieldName==="级别"){
-      pulseEl(levelPills[0].parentElement);
+  function scrollSheetTo(el){
+    var sheetBody = document.querySelector('.sheet-body');
+    if(sheetBody && el){
+      var top = el.offsetTop;
+      sheetBody.scrollTo({ top: Math.max(0, top - 80), behavior: 'smooth' });
     }
   }
-  function flashInvalidEl(el){ pulseEl(el); }
+  function flashInvalid(fieldName){
+    if(fieldName==="场馆"){
+      var target = venuePills[0].closest('.field');
+      scrollSheetTo(target);
+      setTimeout(function(){ pulseEl(venuePills[0].parentElement); }, 250);
+    } else if(fieldName==="级别"){
+      var target = levelPills[0].closest('.field');
+      scrollSheetTo(target);
+      setTimeout(function(){ pulseEl(levelPills[0].parentElement); }, 250);
+    }
+  }
+  function flashInvalidEl(el){
+    scrollSheetTo(el.closest('.field'));
+    setTimeout(function(){ pulseEl(el); }, 250);
+  }
   function pulseEl(el){
     el.style.transition = "box-shadow .15s ease";
     el.style.boxShadow = "0 0 0 2px var(--loss-bright)";
@@ -2547,6 +2584,14 @@
       });
     }
   })();
+
+  // ---------- Mobile zoom prevention ----------
+  document.addEventListener('touchmove', function(e){
+    if(e.scale && e.scale !== 1){ e.preventDefault(); }
+  }, { passive: false });
+  document.addEventListener('gesturestart', function(e){ e.preventDefault(); });
+  document.addEventListener('gesturechange', function(e){ e.preventDefault(); });
+  document.addEventListener('gestureend', function(e){ e.preventDefault(); });
 
   // ---------- Init ----------
   render();
