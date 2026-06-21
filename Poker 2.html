@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>哥哥小猫狗的牌局记录</title>
+<title>牌局记录</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Spectral:ital@1&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -17,7 +17,6 @@
     --ink-faint: #5A7A6A;
     --gold: #C9A24B;
     --gold-bright: #E0BC6A;
-    --gold-contrast: #1A1408;
     --loss: #B5524A;
     --loss-bright: #C96A60;
     --suit-red: #C2645C;
@@ -27,7 +26,7 @@
     --radius-sm: 10px;
   }
 
-  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   html, body{
     margin:0; padding:0;
@@ -247,7 +246,7 @@
   #list{
     padding: 22px 16px 10px;
     display:flex;
-    flex-direction: column-reverse; /* oldest visually first via column-reverse + DOM order */
+    flex-direction: column;
     gap: 10px;
   }
 
@@ -486,7 +485,7 @@
     position:absolute;
     left:4px; top:1px;
     width:4px; height:8px;
-    border: solid var(--gold-contrast);
+    border: solid #1A1408;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
     opacity:0;
@@ -526,106 +525,48 @@
   }
   .date-control .dicon{ color: var(--ink-faint); font-size:16px; }
 
-  /* Compact layout for session + venue + level */
-  .compact-row{
+  input[type="date"].native-date{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+    width:1px; height:1px;
+  }
+
+  /* Session control */
+  .session-row{
     display:flex;
-    gap: 8px;
+    align-items:center;
+    gap: 14px;
     background: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
-    padding: 10px;
+    padding: 8px 8px;
   }
-  .compact-section{
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .compact-section:not(:last-child){
-    border-right: 1px solid var(--line);
-  }
-  .compact-stepper{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .stepper-btn-compact{
-    width: 32px;
-    height: 32px;
-    border-radius: 7px;
+  .stepper-btn{
+    width: 38px; height:38px;
+    border-radius: 9px;
     background: var(--card-raised);
     border: 1px solid var(--line);
     color: var(--ink);
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    user-select: none;
+    font-size: 18px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    user-select:none;
   }
-  .stepper-btn-compact:active{ background: var(--line); }
-  .session-val-compact{
-    min-width: 28px;
-    text-align: center;
-    font-size: 16px;
+  .stepper-btn:active{ background: var(--line); }
+  .session-val{
+    flex:1;
+    text-align:center;
+    font-size: 18px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
   }
-  .compact-pills{
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .pill-compact{
-    padding: 8px 10px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    background: var(--card-raised);
-    color: var(--ink-dim);
-    text-align: center;
-    font-family: 'Spectral', serif;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    position: relative;
-    transition: border-color .15s ease, color .15s ease, background .15s ease;
-    white-space: nowrap;
-  }
-  .pill-compact .check-compact{
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    width: 10px;
-    height: 10px;
-    opacity: 0;
-    transition: opacity .15s ease;
-  }
-  .pill-compact.selected .check-compact{ opacity: 1; }
-  .pill-compact[data-venue="venetian"].selected{
-    border-color: var(--venetian);
-    color: var(--ink);
-    background: rgba(139,107,176,0.12);
-  }
-  .pill-compact[data-venue="venetian"].selected .check-compact{ color: var(--venetian); }
-  .pill-compact[data-venue="mgm"].selected{
-    border-color: var(--mgm);
-    color: var(--ink);
-    background: rgba(201,162,75,0.1);
-  }
-  .pill-compact[data-venue="mgm"].selected .check-compact{ color: var(--mgm); }
-  .pill-compact[data-level].selected{
-    border-color: var(--gold);
-    color: var(--ink);
-    background: rgba(201,162,75,0.1);
-  }
-  .pill-compact[data-level].selected .check-compact{ color: var(--gold); }
-  .pill-compact.small{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 7px 8px;
+  .session-hint{
+    font-size: 10.5px;
+    color: var(--ink-faint);
+    margin-top: 7px;
+    line-height:1.5;
   }
 
   /* Duration slider */
@@ -650,6 +591,53 @@
     color: var(--ink-faint);
   }
 
+  /* Pill toggle group */
+  .pill-group{
+    display:flex;
+    gap: 9px;
+  }
+  .pill{
+    flex:1;
+    padding: 12px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink-dim);
+    text-align:center;
+    font-family: 'Spectral', serif;
+    font-size: 14.5px;
+    font-weight: 500;
+    cursor:pointer;
+    position:relative;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .pill .check{
+    position:absolute; top:7px; right:9px;
+    width:14px; height:14px;
+    opacity:0;
+    transition: opacity .15s ease;
+  }
+  .pill.selected .check{ opacity:1; }
+  .pill[data-venue="venetian"].selected{
+    border-color: var(--venetian);
+    color: var(--ink);
+    background: rgba(139,107,176,0.12);
+  }
+  .pill[data-venue="venetian"].selected .check{ color: var(--venetian); }
+  .pill[data-venue="mgm"].selected{
+    border-color: var(--mgm);
+    color: var(--ink);
+    background: rgba(201,162,75,0.1);
+  }
+  .pill[data-venue="mgm"].selected .check{ color: var(--mgm); }
+  .pill[data-level].selected{
+    border-color: var(--gold);
+    color: var(--ink);
+    background: rgba(201,162,75,0.1);
+  }
+  .pill[data-level].selected .check{ color: var(--gold); }
+  .pill.small{ font-family:'IBM Plex Mono', monospace; font-size:14px; font-weight:600; }
+
   /* Sliders */
   .slider-block{
     background: var(--card);
@@ -657,25 +645,11 @@
     border-radius: var(--radius);
     padding: 6px 16px 4px;
   }
-  .slider-row{
-    display: flex;
-    gap: 14px;
+  .slider-item{
     padding: 14px 0;
     border-bottom: 1px solid var(--line);
   }
-  .slider-row:last-child{ border-bottom:none; }
-  .slider-row.has-total{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-  .slider-item{
-    flex: 1;
-    min-width: 0;
-  }
-  .slider-item.full-width{
-    grid-column: 1;
-  }
+  .slider-item:last-child{ border-bottom:none; }
   .slider-item .si-top{
     display:flex;
     justify-content: space-between;
@@ -684,47 +658,16 @@
   }
   .slider-item .si-name{
     font-family:'Spectral', serif;
-    font-size: 13.5px;
+    font-size: 14.5px;
     color: var(--ink);
   }
   .slider-item .si-val{
-    font-size: 13px;
+    font-size: 14px;
     font-weight:600;
     color: var(--gold-bright);
     font-variant-numeric: tabular-nums;
     min-width: 34px;
     text-align:right;
-  }
-
-  .total-inline{
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, rgba(201,162,75,0.14), rgba(201,162,75,0.04));
-    border: 1px solid rgba(201,162,75,0.35);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-  }
-  .total-inline .tt-label{
-    font-family:'Spectral', serif;
-    font-style: italic;
-    font-size: 12px;
-    color: var(--ink-dim);
-    margin-bottom: 4px;
-  }
-  .total-inline .tt-val{
-    font-size: 20px;
-    font-weight:700;
-    color: var(--gold-bright);
-    font-variant-numeric: tabular-nums;
-  }
-  .total-inline .tt-val .tt-max{
-    font-size: 12px;
-    color: var(--ink-faint);
-    font-weight:500;
   }
 
   .rng{
@@ -767,6 +710,34 @@
     border:none;
     box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     cursor:pointer;
+  }
+
+  .total-card{
+    margin-top: 16px;
+    background: linear-gradient(135deg, rgba(201,162,75,0.14), rgba(201,162,75,0.04));
+    border: 1px solid rgba(201,162,75,0.35);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+  }
+  .total-card .tt-label{
+    font-family:'Spectral', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-dim);
+  }
+  .total-card .tt-val{
+    font-size: 24px;
+    font-weight:700;
+    color: var(--gold-bright);
+    font-variant-numeric: tabular-nums;
+  }
+  .total-card .tt-val .tt-max{
+    font-size: 14px;
+    color: var(--ink-faint);
+    font-weight:500;
   }
 
   /* Amount field */
@@ -842,7 +813,7 @@
     border-radius: var(--radius);
     border:none;
     background: linear-gradient(155deg, var(--gold-bright), var(--gold) 70%);
-    color: var(--gold-contrast);
+    color: #1A1408;
     font-family:'Spectral', serif;
     font-weight:600;
     font-size: 16.5px;
@@ -970,53 +941,6 @@
     transition: transform .3s cubic-bezier(.32,.72,0,1);
   }
   .hand-editor.open{ transform: translateY(0); }
-
-  /* Table condition editor (same style as hand editor) */
-  .table-condition-editor{
-    position: fixed;
-    inset: 0;
-    max-width: 560px;
-    margin: 0 auto;
-    background: var(--bg);
-    z-index: 200;
-    display:flex;
-    flex-direction: column;
-    transform: translateY(100%);
-    transition: transform .3s cubic-bezier(.32,.72,0,1);
-  }
-  .table-condition-editor.open{ transform: translateY(0); }
-
-  /* Table condition preview */
-  .table-condition-preview{
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    padding: 13px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    min-height: 48px;
-  }
-  .table-condition-preview:active{
-    background: var(--card-raised);
-  }
-  .tcp-text{
-    font-family: 'Spectral', serif;
-    font-size: 14px;
-    color: var(--ink);
-    flex: 1;
-    line-height: 1.5;
-  }
-  .tcp-text.placeholder{
-    color: var(--ink-faint);
-    font-style: italic;
-  }
-  .tcp-icon{
-    color: var(--ink-faint);
-    font-size: 18px;
-    margin-left: 8px;
-  }
 
   .he-topbar{
     position: relative;
@@ -1206,44 +1130,12 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Multi-series point detail styles */
-  .point-detail.show{
-    display: block; /* Override flex for multi-series layout */
-  }
-  .point-detail.show:has(.pd-date):not(:has(.pd-date-multi)){
-    display: flex; /* Keep flex for single-series */
-  }
-  .pd-date-multi{
-    font-family:'Spectral', serif;
-    font-size: 12.5px;
+  .chart-axis-labels{
+    display:flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 10.5px;
     color: var(--ink-faint);
-    margin-bottom: 8px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--line);
-  }
-  .pd-row{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 0;
-  }
-  .pd-dot{
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .pd-row-label{
-    flex: 1;
-    font-size: 11px;
-    color: var(--ink-dim);
-  }
-  .pd-row-val{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--gold-bright);
-    font-variant-numeric: tabular-nums;
   }
 
   .sp-chart-meta{
@@ -1345,18 +1237,6 @@
     gap: 8px;
     margin-bottom: 7px;
   }
-  .hov-meta-left{
-    display:flex;
-    align-items:center;
-    gap: 8px;
-    flex: 1;
-  }
-  .hov-meta-right{
-    display:flex;
-    align-items:center;
-    gap: 6px;
-    margin-left: auto;
-  }
   .hov-date{
     font-family:'Spectral', serif;
     font-size: 12.5px;
@@ -1369,31 +1249,6 @@
     background: var(--card-raised);
     border-radius: 5px;
     padding: 2px 6px;
-  }
-  .hov-icon-btn{
-    width: 28px;
-    height: 28px;
-    border-radius: 7px;
-    background: var(--card-raised);
-    border: 1px solid var(--line);
-    color: var(--ink-dim);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-  .hov-icon-btn svg{
-    width: 14px;
-    height: 14px;
-    transition: transform 0.2s ease;
-  }
-  .hov-icon-btn:active{
-    opacity: 0.7;
-  }
-  .hov-icon-btn.edit{
-    color: var(--gold-bright);
-    border-color: rgba(201,162,75,0.32);
   }
   .hov-text{
     font-family:'Spectral', serif;
@@ -1411,70 +1266,46 @@
     overflow: visible;
     white-space: pre-wrap;
   }
-  .hov-extra{
-    display: none;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
-  }
-  .hov-extra.show{
-    display: block;
-  }
-  .hov-extra-row{
+  /* icon button column on the right of each hand card */
+  .hov-card{
     display: flex;
-    gap: 12px;
-    margin-bottom: 8px;
+    gap: 10px;
+    align-items: flex-start;
   }
-  .hov-extra-row:last-child{
-    margin-bottom: 0;
-  }
-  .hov-extra-item{
+  .hov-card-body{
     flex: 1;
     min-width: 0;
   }
-  .hov-extra-label{
-    font-size: 9px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 3px;
+  .hov-icon-col{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+    padding-top: 2px;
   }
-  .hov-extra-value{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
+  .hov-icon-btn{
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-raised);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    cursor: pointer;
     color: var(--ink-dim);
-    font-variant-numeric: tabular-nums;
+    transition: border-color .15s, color .15s, background .15s;
   }
-  .hov-extra-value.amount{
+  .hov-icon-btn svg{ display:block; }
+  .hov-icon-btn:active{ opacity:.7; }
+  .hov-icon-btn.edit-btn{
     color: var(--gold-bright);
+    border-color: rgba(201,162,75,0.32);
   }
-  .hov-extra-value.amount.neg{
-    color: var(--loss-bright);
-  }
-  .hov-extra-value.score{
+  .hov-icon-btn.expand-btn.is-expanded{
+    background: rgba(201,162,75,0.1);
+    border-color: rgba(201,162,75,0.3);
     color: var(--gold-bright);
-  }
-  .hov-extra-value.winrate{
-    color: var(--gold-bright);
-  }
-  .hov-extra-value.winrate.neg{
-    color: var(--loss-bright);
-  }
-  .hov-extra-tc{
-    margin-bottom: 10px;
-  }
-  .hov-extra-tc .hov-extra-label{
-    margin-bottom: 4px;
-  }
-  .hov-extra-tc-text{
-    font-family: 'Spectral', serif;
-    font-size: 12px;
-    color: var(--ink-dim);
-    line-height: 1.5;
-  }
-  .hov-extra-tc-text.empty{
-    color: var(--ink-faint);
   }
 
   /* tiny calendar (custom, since native date input styling is unreliable on mobile webviews) */
@@ -1531,128 +1362,9 @@
   .cal-day.muted{ color: var(--ink-faint); opacity:.35; }
   .cal-day:hover{ background: var(--card-raised); }
   .cal-day.today{ color: var(--gold-bright); font-weight:600; }
-  .cal-day.selected{ background: var(--gold); color: var(--gold-contrast); font-weight:700; }
+  .cal-day.selected{ background: var(--gold); color:#1A1408; font-weight:700; }
 
-  ::selection{ background: var(--gold); color: var(--gold-contrast); }
-
-  /* ---------- Analysis modules ---------- */
-  .analysis-section{
-    margin-top: 28px;
-  }
-  .analysis-title{
-    font-family:'Spectral', serif;
-    font-size: 15px;
-    color: var(--ink);
-    font-weight: 600;
-    margin-bottom: 12px;
-    letter-spacing: 0.02em;
-  }
-
-  /* Stats grid - 2x3 cards */
-  .stats-grid{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-  .stat-card{
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 14px 16px;
-  }
-  .stat-card-label{
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 6px;
-  }
-  .stat-card-value{
-    font-family:'IBM Plex Mono', monospace;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--gold-bright);
-    font-variant-numeric: tabular-nums;
-  }
-  .stat-card-value.neg{
-    color: var(--loss-bright);
-  }
-  .stat-card-sub{
-    font-size: 11px;
-    color: var(--ink-faint);
-    margin-top: 4px;
-  }
-
-  /* Analysis table */
-  .analysis-table-wrap{
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    padding: 16px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .analysis-table{
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 400px;
-  }
-  .analysis-table thead th{
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    text-align: left;
-    padding: 8px 12px 12px;
-    border-bottom: 1px solid var(--line);
-    font-weight: 600;
-  }
-  .analysis-table thead th:first-child{
-    padding-left: 0;
-  }
-  .analysis-table thead th:last-child{
-    padding-right: 0;
-  }
-  .analysis-table tbody td{
-    padding: 12px 12px;
-    font-size: 13px;
-    color: var(--ink-dim);
-    border-bottom: 1px solid rgba(44,56,48,0.3);
-  }
-  .analysis-table tbody td:first-child{
-    padding-left: 0;
-    color: var(--ink);
-    font-weight: 500;
-  }
-  .analysis-table tbody td:last-child{
-    padding-right: 0;
-  }
-  .analysis-table tbody tr:last-child td{
-    border-bottom: none;
-  }
-  .analysis-table tbody tr.highlight{
-    background: rgba(201,162,75,0.06);
-  }
-  .analysis-table .num{
-    font-family:'IBM Plex Mono', monospace;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-  .analysis-table .pos{
-    color: var(--gold-bright);
-  }
-  .analysis-table .neg{
-    color: var(--loss-bright);
-  }
-
-  /* Empty state for tables */
-  .analysis-empty{
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--ink-faint);
-    font-size: 13px;
-  }
+  ::selection{ background: var(--gold); color:#1A1408; }
 </style>
 </head>
 <body>
@@ -1682,8 +1394,8 @@
     </div>
     <div class="nav-row">
       <button class="nav-btn" data-stat="amount">金额</button>
-      <button class="nav-btn" data-stat="winrate">赢率</button>
       <button class="nav-btn" data-stat="score">分数</button>
+      <button class="nav-btn" data-stat="winrate">赢率</button>
       <button class="nav-btn" data-stat="hands">关键牌局</button>
     </div>
   </header>
@@ -1700,7 +1412,7 @@
 </div>
 
 <button id="fab" aria-label="添加记录">
-  <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-contrast)" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="#1A1408" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
 </button>
 
 <div class="sheet-overlay" id="sheetOverlay"></div>
@@ -1729,41 +1441,14 @@
       </div>
     </div>
 
-    <div class="field" id="fieldCompact">
-      <div class="field-label">Session · 场馆 · 级别</div>
-      <div class="compact-row">
-        <div class="compact-section">
-          <div class="compact-stepper">
-            <div class="stepper-btn-compact" id="sessMinus">−</div>
-            <div class="session-val-compact" id="sessVal">1</div>
-            <div class="stepper-btn-compact" id="sessPlus">+</div>
-          </div>
-        </div>
-        <div class="compact-section">
-          <div class="compact-pills">
-            <div class="pill-compact" data-venue="venetian">
-              <svg class="check-compact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              威尼斯人
-            </div>
-            <div class="pill-compact" data-venue="mgm">
-              <svg class="check-compact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              MGM
-            </div>
-          </div>
-        </div>
-        <div class="compact-section">
-          <div class="compact-pills">
-            <div class="pill-compact small" data-level="50/100">
-              <svg class="check-compact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              50/100
-            </div>
-            <div class="pill-compact small" data-level="100/200">
-              <svg class="check-compact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              100/200
-            </div>
-          </div>
-        </div>
+    <div class="field">
+      <div class="field-label">Session</div>
+      <div class="session-row">
+        <div class="stepper-btn" id="sessMinus">−</div>
+        <div class="session-val" id="sessVal">1</div>
+        <div class="stepper-btn" id="sessPlus">+</div>
       </div>
+      <div class="session-hint" id="sessHint">这是当天的第 1 场记录</div>
     </div>
 
     <div class="field" id="fieldDuration">
@@ -1777,6 +1462,34 @@
       </div>
     </div>
 
+    <div class="field" id="fieldVenue">
+      <div class="field-label">场馆</div>
+      <div class="pill-group">
+        <div class="pill" data-venue="venetian">
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          威尼斯人
+        </div>
+        <div class="pill" data-venue="mgm">
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          MGM
+        </div>
+      </div>
+    </div>
+
+    <div class="field" id="fieldLevel">
+      <div class="field-label">级别</div>
+      <div class="pill-group">
+        <div class="pill small" data-level="50/100">
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          50/100
+        </div>
+        <div class="pill small" data-level="100/200">
+          <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          100/200
+        </div>
+      </div>
+    </div>
+
     <div class="field">
       <div class="field-label">
         <span>本局复盘</span>
@@ -1787,6 +1500,10 @@
         </label>
       </div>
       <div class="slider-block" id="sliderBlock"></div>
+      <div class="total-card" id="totalCard">
+        <span class="tt-label">总分</span>
+        <span class="tt-val"><span id="totalScore">5.0</span><span class="tt-max">/10</span></span>
+      </div>
     </div>
 
     <div class="field" id="fieldAmount">
@@ -1800,14 +1517,6 @@
           <span class="hkd-sym">HK$</span>
           <input type="number" id="amountInput" inputmode="decimal" min="0" step="1" placeholder="0">
         </div>
-      </div>
-    </div>
-
-    <div class="field">
-      <div class="field-label">桌况</div>
-      <div class="table-condition-preview" id="tableConditionPreview">
-        <span class="tcp-text" id="tcpText">点击输入桌况描述</span>
-        <span class="tcp-icon">›</span>
       </div>
     </div>
 
@@ -1855,15 +1564,6 @@
   <textarea class="he-textarea" id="heTextarea" placeholder="位置、底池、对手范围、关键决策……把这手牌记清楚。" rows="6"></textarea>
 </div>
 
-<div class="table-condition-editor" id="tableConditionEditor">
-  <div class="he-topbar">
-    <button class="he-delete" id="tcDelete" style="visibility:hidden;">Delete</button>
-    <span class="he-title">桌况</span>
-    <button class="he-save" id="tcSave">Save</button>
-  </div>
-  <textarea class="he-textarea" id="tcTextarea" placeholder="记录桌面整体情况：松凶程度、玩家类型、气氛、特殊动态……" rows="6"></textarea>
-</div>
-
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
     <div class="confirm-message" id="confirmMessage">确定要删除吗？</div>
@@ -1903,28 +1603,11 @@
       var arr = JSON.parse(raw);
       if(!Array.isArray(arr)) return [];
       return arr;
-    }catch(e){
-      console.error("Failed to load entries:", e);
-      showToast("⚠️ 数据加载失败");
-      return [];
-    }
+    }catch(e){ return []; }
   }
   function saveEntries(){
-    try{
-      var data = JSON.stringify(entries);
-      localStorage.setItem(STORAGE_KEY, data);
-      return true;
-    }
-    catch(e){
-      console.error("Failed to save entries:", e);
-      // Check if it's a quota exceeded error
-      if(e.name === 'QuotaExceededError' || e.code === 22){
-        showToast("⚠️ 存储空间不足，请导出备份后清理旧数据");
-      } else {
-        showToast("⚠️ 保存失败，数据可能未保存");
-      }
-      return false;
-    }
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+    catch(e){ console.error("save failed", e); }
   }
 
   // ---------- Date helpers ----------
@@ -1958,12 +1641,6 @@
     return Math.round(sum*10)/10;
   }
 
-  // ---------- Constants ----------
-  var HANDS_PER_HOUR = 30;        // Average hands per hour
-  var BB_50_100 = 100;            // Big blind value for 50/100 level (100/100=1bb)
-  var BB_100_200 = 200;           // Big blind value for 100/200 level (200/100=2bb)
-  var MAX_HANDS_PER_SESSION = 5;  // Maximum number of hands allowed per session
-
   // shared chronological sort (ascending: oldest first), used by the list,
   // and by every trend chart's cumulative calculation.
   function getChronologicalEntries(){
@@ -1994,7 +1671,6 @@
       skipReview: false,
       sign: "+",
       amount: "",
-      tableCondition: "",
       hands: []
     };
   }
@@ -2028,10 +1704,8 @@
   }
 
   function renderList(){
-    // sort ascending by date then session, so DOM order is oldest->newest;
-    // combined with column-reverse the newest renders at the bottom visually,
-    // and the page naturally opens scrolled to the latest entry at the bottom.
-    var sorted = getChronologicalEntries();
+    // sort descending: newest entries appear at the top
+    var sorted = getChronologicalEntries().reverse();
 
     listEl.innerHTML = "";
     emptyEl.style.display = sorted.length ? "none" : "block";
@@ -2047,8 +1721,6 @@
       groups[groups.length-1].items.push(e);
     });
 
-    // since #list is column-reverse, append groups in normal order
-    // (first group = earliest date) and the browser will flip visual order.
     groups.forEach(function(g){
       var groupEl = document.createElement("div");
       groupEl.className = "day-group";
@@ -2133,7 +1805,6 @@
       skipReview: !e.scores,
       sign: e.sign,
       amount: e.amount,
-      tableCondition: e.tableCondition || "",
       hands: (e.hands || []).slice()
     };
     sheetTitle.textContent = "编辑记录";
@@ -2146,10 +1817,7 @@
     sheetOverlay.classList.add("open");
     sheet.classList.add("open");
     document.body.style.overflow = "hidden";
-    // always start at the top of the form (date field), regardless of where
-    // the sheet was scrolled to the last time it was open
-    var sheetBodyEl = document.querySelector(".sheet-body");
-    if(sheetBodyEl) sheetBodyEl.scrollTop = 0;
+    sheet.scrollTop = 0;
   }
   function hideSheet(){
     sheetOverlay.classList.remove("open");
@@ -2247,9 +1915,16 @@
 
   // ---------- Form: session ----------
   var sessVal = document.getElementById("sessVal");
+  var sessHint = document.getElementById("sessHint");
 
   function updateSessionUI(){
     sessVal.textContent = draft.session;
+    var others = sessionsOnDate(draft.date, editingId).length;
+    if(others===0){
+      sessHint.textContent = "这是当天的第 "+draft.session+" 场记录";
+    } else {
+      sessHint.textContent = "当天已有 "+others+" 场记录 · 当前为第 "+draft.session+" 场";
+    }
   }
 
   document.getElementById("sessMinus").addEventListener("click", function(){
@@ -2272,75 +1947,47 @@
   });
 
   // ---------- Form: venue / level pills ----------
-  var venuePills = document.querySelectorAll(".pill[data-venue], .pill-compact[data-venue]");
-  var levelPills = document.querySelectorAll(".pill[data-level], .pill-compact[data-level]");
+  var venuePills = document.querySelectorAll(".pill[data-venue]");
+  var levelPills = document.querySelectorAll(".pill[data-level]");
 
   venuePills.forEach(function(p){
     p.addEventListener("click", function(){
       draft.venue = p.getAttribute("data-venue");
-      venuePills.forEach(function(x){ x.classList.toggle("selected", x.getAttribute("data-venue")===draft.venue); });
+      venuePills.forEach(function(x){ x.classList.toggle("selected", x===p); });
     });
   });
   levelPills.forEach(function(p){
     p.addEventListener("click", function(){
       draft.level = p.getAttribute("data-level");
-      levelPills.forEach(function(x){ x.classList.toggle("selected", x.getAttribute("data-level")===draft.level); });
+      levelPills.forEach(function(x){ x.classList.toggle("selected", x===p); });
     });
   });
 
   // ---------- Form: sliders ----------
   var sliderBlock = document.getElementById("sliderBlock");
+  CRITERIA.forEach(function(c){
+    var item = document.createElement("div");
+    item.className = "slider-item";
+    item.innerHTML =
+      '<div class="si-top">'+
+        '<span class="si-name">'+c.name+'</span>'+
+        '<span class="si-val" id="val-'+c.key+'">1.0</span>'+
+      '</div>'+
+      '<input type="range" class="rng" id="rng-'+c.key+'" min="0" max="2" step="0.1" value="1.0">';
+    sliderBlock.appendChild(item);
 
-  // Group criteria into rows: [observe, aggro], [discip, emotion], [review]
-  var criteriaRows = [
-    [CRITERIA[0], CRITERIA[1]], // 观察细致程度, 进攻合理程度
-    [CRITERIA[2], CRITERIA[3]], // 弃牌纪律程度, 情绪稳定程度
-    [CRITERIA[4]]                // 复盘清晰程度
-  ];
-
-  criteriaRows.forEach(function(rowCriteria, rowIdx){
-    var row = document.createElement("div");
-    row.className = rowIdx === criteriaRows.length - 1 ? "slider-row has-total" : "slider-row";
-
-    rowCriteria.forEach(function(c){
-      var item = document.createElement("div");
-      item.className = rowIdx === criteriaRows.length - 1 ? "slider-item full-width" : "slider-item";
-      item.innerHTML =
-        '<div class="si-top">'+
-          '<span class="si-name">'+c.name+'</span>'+
-          '<span class="si-val" id="val-'+c.key+'">1.0</span>'+
-        '</div>'+
-        '<input type="range" class="rng" id="rng-'+c.key+'" min="0" max="8" step="1" value="4">';
-      row.appendChild(item);
-
-      var input = item.querySelector("input");
-      input.addEventListener("input", function(){
-        // Map 0-8 to 0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2
-        var stepValue = parseInt(input.value, 10);
-        var v = stepValue * 0.25;
-        draft.scores[c.key] = v;
-        document.getElementById("val-"+c.key).textContent = v.toFixed(2);
-        updateTotalUI();
-      });
+    var input = item.querySelector("input");
+    input.addEventListener("input", function(){
+      var v = Math.round(parseFloat(input.value)*10)/10;
+      draft.scores[c.key] = v;
+      document.getElementById("val-"+c.key).textContent = v.toFixed(1);
+      updateTotalUI();
     });
-
-    // Add total score card to the last row (review row)
-    if(rowIdx === criteriaRows.length - 1){
-      var totalCard = document.createElement("div");
-      totalCard.id = "totalCard";
-      totalCard.className = "total-inline";
-      totalCard.innerHTML =
-        '<span class="tt-label">总分</span>'+
-        '<span class="tt-val"><span id="totalScore">5.00</span><span class="tt-max">/10</span></span>';
-      row.appendChild(totalCard);
-    }
-
-    sliderBlock.appendChild(row);
   });
 
   function updateTotalUI(){
     var total = computeTotal(draft.scores);
-    document.getElementById("totalScore").textContent = total===null ? "—" : total.toFixed(2);
+    document.getElementById("totalScore").textContent = total===null ? "—" : total.toFixed(1);
   }
 
   // ---------- Form: skip review toggle ("暂不复盘") ----------
@@ -2384,48 +2031,6 @@
     draft.amount = amountInput.value;
   });
 
-  // ---------- Form: table condition ----------
-  var tableConditionPreview = document.getElementById("tableConditionPreview");
-  var tcpText = document.getElementById("tcpText");
-  var tableConditionEditor = document.getElementById("tableConditionEditor");
-  var tcTextarea = document.getElementById("tcTextarea");
-  var tcSave = document.getElementById("tcSave");
-
-  function updateTableConditionPreview(){
-    if(draft.tableCondition && draft.tableCondition.trim()){
-      tcpText.textContent = draft.tableCondition;
-      tcpText.classList.remove("placeholder");
-    } else {
-      tcpText.textContent = "点击输入桌况描述";
-      tcpText.classList.add("placeholder");
-    }
-  }
-
-  tableConditionPreview.addEventListener("click", function(){
-    tcTextarea.value = draft.tableCondition || "";
-    tableConditionEditor.classList.add("open");
-    window.setTimeout(function(){
-      tcTextarea.focus();
-      var len = tcTextarea.value.length;
-      tcTextarea.setSelectionRange(len, len);
-    }, 320);
-  });
-
-  tcSave.addEventListener("click", function(){
-    draft.tableCondition = tcTextarea.value.trim();
-    updateTableConditionPreview();
-    tableConditionEditor.classList.remove("open");
-  });
-
-  // Close on backdrop tap (optional, but consistent with hand editor behavior)
-  tableConditionEditor.addEventListener("click", function(e){
-    if(e.target === tableConditionEditor){
-      draft.tableCondition = tcTextarea.value.trim();
-      updateTableConditionPreview();
-      tableConditionEditor.classList.remove("open");
-    }
-  });
-
   // ---------- Form: key hands (关键牌局) ----------
   var handsDragZone = document.getElementById("handsDragZone");
   var handAddBtn = document.getElementById("handAddBtn");
@@ -2453,7 +2058,6 @@
   function renderHandsList(){
     handsDragZone.innerHTML = "";
     var n = draft.hands.length;
-    var handles = []; // Cache handle references
 
     draft.hands.forEach(function(text, idx){
       var card = document.createElement("div");
@@ -2465,11 +2069,6 @@
         '<div class="hand-preview">'+(text ? escapeHtml(handPreviewText(text)) : '<span style="color:var(--ink-faint)">（空）</span>')+'</div>'+
         '<div class="hand-index">'+(idx+1)+'</div>'+
         '<div class="hand-arrow">›</div>';
-
-      // Cache handle reference before appending
-      var handle = card.querySelector(".hand-handle");
-      handles.push(handle);
-
       card.addEventListener("click", function(ev){
         if(ev.target.closest(".hand-handle")) return;
         openHandEditor(idx);
@@ -2489,13 +2088,12 @@
       handsDragZone.style.height = n ? (n * HAND_ITEM_H - 8) + "px" : "0px";
     });
 
-    // Use cached handles instead of querying again
-    handles.forEach(function(handle){
+    Array.prototype.forEach.call(handsDragZone.querySelectorAll(".hand-handle"), function(handle){
       handle.addEventListener("pointerdown", onHandleDown);
     });
 
-    handAddBtn.classList.toggle("disabled", n >= MAX_HANDS_PER_SESSION);
-    handsCount.textContent = n + "/"+MAX_HANDS_PER_SESSION;
+    handAddBtn.classList.toggle("disabled", n >= 5);
+    handsCount.textContent = n + "/5";
   }
 
   function onHandleDown(e){
@@ -2552,21 +2150,14 @@
   function onHandleUp(e){
     if(!dragState) return;
     var handle = dragState.handle;
-    var pointerId = dragState.pointerId;
     var draggedCard = dragState.cards[dragState.draggedOrigIndex];
+    draggedCard.classList.remove("dragging");
+    draggedCard.style.zIndex = "";
 
-    // Remove event listeners first to prevent memory leaks
     handle.removeEventListener("pointermove", onHandleMove);
     handle.removeEventListener("pointerup", onHandleUp);
     handle.removeEventListener("pointercancel", onHandleUp);
-
-    // Release pointer capture
-    try{ handle.releasePointerCapture(pointerId); }catch(err){}
-
-    // Clean up visual state
-    draggedCard.classList.remove("dragging");
-    draggedCard.style.zIndex = "";
-    draggedCard.style.transition = ""; // Reset transition to default
+    try{ handle.releasePointerCapture(dragState.pointerId); }catch(err){}
 
     var newHands = dragState.order.map(function(origIdx){ return draft.hands[origIdx]; });
     draft.hands = newHands;
@@ -2699,10 +2290,8 @@
 
     CRITERIA.forEach(function(c){
       var v = draft.scores[c.key];
-      // Convert value (0-2) to step (0-8): step = value / 0.25
-      var stepValue = Math.round(v / 0.25);
-      document.getElementById("rng-"+c.key).value = stepValue;
-      document.getElementById("val-"+c.key).textContent = v.toFixed(2);
+      document.getElementById("rng-"+c.key).value = v;
+      document.getElementById("val-"+c.key).textContent = v.toFixed(1);
     });
     updateTotalUI();
     skipReviewCheck.checked = draft.skipReview;
@@ -2715,7 +2304,6 @@
     }
     amountInput.value = draft.amount === "" ? "" : draft.amount;
 
-    updateTableConditionPreview();
     renderHandsList();
     closeCalendar();
   }
@@ -2727,8 +2315,9 @@
 
     // checks in top-to-bottom form order; stop at the first unfilled field
     var checks = [
-      { ok: !!draft.venue && !!draft.level, el: document.getElementById("fieldCompact") },
       { ok: draft.durationSet, el: document.getElementById("fieldDuration") },
+      { ok: !!draft.venue,     el: document.getElementById("fieldVenue") },
+      { ok: !!draft.level,     el: document.getElementById("fieldLevel") },
       { ok: amountValid,       el: document.getElementById("fieldAmount") }
     ];
     for(var i=0;i<checks.length;i++){
@@ -2748,7 +2337,6 @@
       sign: draft.sign,
       amount: amt,
       duration: draft.duration,
-      tableCondition: draft.tableCondition || "",
       hands: draft.hands.slice()
     };
 
@@ -2896,7 +2484,6 @@
         scores: (imp.scores && typeof imp.scores === "object") ? imp.scores : null,
         sign: imp.sign === "-" ? "-" : "+",
         amount: typeof imp.amount === "number" ? imp.amount : parseFloat(imp.amount) || 0,
-        tableCondition: imp.tableCondition || "",
         hands: Array.isArray(imp.hands) ? imp.hands.slice(0,5) : []
       };
       entries.push(clean);
@@ -2924,7 +2511,7 @@
 
   // current stat kind and period for the open page
   var currentStatKind = null;
-  var currentStatPeriod = "day"; // "year" | "month" | "week" | "day"
+  var currentStatPeriod = "day"; // "year" | "month" | "day"
 
   navBtns.forEach(function(btn){
     btn.addEventListener("click", function(){
@@ -2970,14 +2557,6 @@
     var d = parseISO(iso);
     if(period === "year")  return d.getFullYear()+"";
     if(period === "month") return d.getFullYear()+"-"+pad(d.getMonth()+1);
-    if(period === "week"){
-      // ISO 8601 week: Monday = start of week, Sunday = end
-      // Find the Monday of the week this date belongs to
-      var day = d.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-      var diff = day === 0 ? -6 : 1 - day; // if Sunday (0), go back 6 days; otherwise go back to Monday
-      var monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diff);
-      return toISO(monday); // return the Monday's ISO date as the week key
-    }
     return iso; // day
   }
   function periodLabel(key, period){
@@ -2985,11 +2564,6 @@
     if(period === "month"){
       var p = key.split("-");
       return p[0]+"/"+(parseInt(p[1],10));
-    }
-    if(period === "week"){
-      // key is the Monday ISO date, display as "M/D"
-      var monday = parseISO(key);
-      return (monday.getMonth()+1)+"/"+monday.getDate();
     }
     // day: show M/D
     var d = parseISO(key);
@@ -3043,21 +2617,23 @@
     }
 
     var seriesSvg = "";
+    var hitAreas = "";
     seriesList.forEach(function(s, si){
       // build index map: label -> y value
       var map = {};
       s.points.forEach(function(p){ map[p.label] = p.y; });
 
-      // only draw where we have data (skip gaps)
+      // only draw where we have data; if connectGaps=true, skip missing labels instead of breaking the line
       var segs = [];
       var curSeg = [];
       allLabels.forEach(function(lbl, i){
         if(map[lbl] !== undefined){
           curSeg.push({i:i, y:map[lbl], label:lbl});
-        } else {
+        } else if(!opts.connectGaps) {
           if(curSeg.length) segs.push(curSeg);
           curSeg = [];
         }
+        // if connectGaps: missing labels are simply skipped, current segment continues
       });
       if(curSeg.length) segs.push(curSeg);
 
@@ -3077,12 +2653,16 @@
           var areaD = pathD+" L"+lx+","+zeroY.toFixed(1)+" L"+fx+","+zeroY.toFixed(1)+" Z";
           seriesSvg += '<path d="'+areaD+'" fill="url(#'+gid+')" class="trend-area"/>';
         }
-        seriesSvg += '<path d="'+pathD+'" stroke="'+s.color+'" class="trend-line" stroke-opacity="'+(si===0?1:0.85)+'"/>';
+        seriesSvg += '<path d="'+pathD+'" stroke="'+s.color+'" class="trend-line" stroke-opacity="'+(si===0?1:0.8)+'"/>';
 
-        // small visible dot at every point (purely visual; click targets are the column strips below)
+        // a small visible dot + a larger invisible tap target at every point on the primary series
         seg.forEach(function(pt){
           var px = xPos(pt.i).toFixed(1), py = yPos(pt.y).toFixed(1);
-          seriesSvg += '<circle cx="'+px+'" cy="'+py+'" r="'+(si===0?3:2.4)+'" fill="'+s.color+'" class="trend-dot" stroke="'+s.color+'"/>';
+          seriesSvg += '<circle cx="'+px+'" cy="'+py+'" r="3" fill="'+s.color+'" class="trend-dot" stroke="'+s.color+'"/>';
+          if(si===0){
+            hitAreas += '<circle cx="'+px+'" cy="'+py+'" r="11" class="chart-point-hit" '+
+              'data-label="'+escapeHtml(pt.label)+'" data-value="'+pt.y+'"/>';
+          }
         });
       });
     });
@@ -3101,17 +2681,6 @@
     } else {
       axisLabels = '<text x="'+xPos(0).toFixed(1)+'" y="'+(H-4)+'" class="chart-axis-text" text-anchor="middle">'+escapeHtml(periodLabel(allLabels[0], opts.period||"day"))+'</text>';
     }
-
-    // click targets: one full-height vertical strip per x position (not per series/point) —
-    // this lets the user reveal every series' value at that period in one tap, and is far
-    // easier to hit accurately on a phone than tiny per-point circles.
-    var hitAreas = "";
-    var stripW = n > 1 ? Math.max(16, plotW / n) : plotW;
-    allLabels.forEach(function(lbl, i){
-      var hx = xPos(i) - stripW/2;
-      hitAreas += '<rect x="'+hx.toFixed(1)+'" y="'+padTop+'" width="'+stripW.toFixed(1)+'" height="'+plotH+'" '+
-        'class="chart-point-hit" data-label="'+escapeHtml(lbl)+'" data-x="'+xPos(i).toFixed(1)+'"/>';
-    });
 
     return '<svg viewBox="0 0 '+W+' '+H+'" class="trend-svg" preserveAspectRatio="none">'+
       defs+
@@ -3134,46 +2703,28 @@
     return (rounded%1===0) ? rounded.toFixed(0) : rounded.toFixed(1);
   }
 
-  // wire up click handling for the per-period hit strips drawn by buildMultiSeriesSVG.
+  // wire up click handling for the invisible tap targets drawn by buildMultiSeriesSVG.
   // wrapEl: the container the chart SVG was injected into (id string)
-  // detailEl: the container to show the clicked period's detail in (id string)
-  // seriesList: ALL series shown in that chart (single-series charts pass a 1-item array)
-  // opts.valueFmt: optional formatter for the value(s) shown in the detail panel
-  function wireChartPointClicks(wrapId, detailId, seriesList, opts){
+  // detailEl: the container to show the clicked point's detail in (id string)
+  // series: the primary series array used to build labels (for period text)
+  // opts.valueFmt: optional formatter for the value shown in the detail line
+  function wireChartPointClicks(wrapId, detailId, series, opts){
     opts = opts || {};
     var wrapEl = document.getElementById(wrapId);
     var detailEl = document.getElementById(detailId);
     if(!wrapEl || !detailEl) return;
     var period = currentStatPeriod;
     var hits = wrapEl.querySelectorAll(".chart-point-hit");
-
     Array.prototype.forEach.call(hits, function(hit){
       hit.addEventListener("click", function(){
         Array.prototype.forEach.call(hits, function(h){ h.classList.remove("active"); });
         hit.classList.add("active");
         var label = hit.getAttribute("data-label");
-
-        if(seriesList.length <= 1){
-          // single series: compact "date — value" line
-          var pt = seriesList.length ? seriesList[0].points.filter(function(p){ return p.label===label; })[0] : null;
-          var valStr = pt ? (typeof opts.valueFmt === "function" ? opts.valueFmt(pt.y) : pt.y) : "—";
-          detailEl.innerHTML =
-            '<span class="pd-date">'+escapeHtml(periodLabel(label, period))+'</span>'+
-            '<span class="pd-val">'+escapeHtml(String(valStr))+'</span>';
-        } else {
-          // multi series: date header + one row per series with its color dot
-          var rows = seriesList.map(function(s){
-            var pt = s.points.filter(function(p){ return p.label===label; })[0];
-            var valStr = pt ? (typeof opts.valueFmt === "function" ? opts.valueFmt(pt.y) : pt.y) : "—";
-            return '<div class="pd-row">'+
-              '<span class="pd-dot" style="background:'+s.color+'"></span>'+
-              '<span class="pd-row-label">'+escapeHtml(s.label)+'</span>'+
-              '<span class="pd-row-val">'+escapeHtml(String(valStr))+'</span>'+
-            '</div>';
-          }).join("");
-          detailEl.innerHTML =
-            '<div class="pd-date-multi">'+escapeHtml(periodLabel(label, period))+'</div>'+rows;
-        }
+        var value = parseFloat(hit.getAttribute("data-value"));
+        var valStr = typeof opts.valueFmt === "function" ? opts.valueFmt(value) : value;
+        detailEl.innerHTML =
+          '<span class="pd-date">'+escapeHtml(periodLabel(label, period))+'</span>'+
+          '<span class="pd-val">'+escapeHtml(String(valStr))+'</span>';
         detailEl.classList.add("show");
       });
     });
@@ -3209,62 +2760,66 @@
   // ---- build period-aggregated score series (5 dims + total) ----
   function buildScoreSeries(chrono, period){
     var agg = bucketByPeriod(chrono, period);
-    // for each bucket: average across all *reviewed* entries in that bucket
+    // for each bucket: average of the total score across all *reviewed* entries in that bucket
     // (entries saved with "暂不复盘" have scores === null and are excluded entirely)
-    var dimData = {};   // c.key -> { periodLabel -> {sum,count} }
-    var totalData = {}; // periodLabel -> {sum,count}
-    CRITERIA.forEach(function(c){ dimData[c.key] = {}; });
+    var totalData = {}; // key -> {sum, count}
 
     agg.labels.forEach(function(k){
-      CRITERIA.forEach(function(c){ dimData[c.key][k] = {sum:0,count:0}; });
       totalData[k] = {sum:0, count:0};
       agg.buckets[k].forEach(function(e){
-        if(!e.scores) return; // skipped review, exclude entirely
         var t = computeTotal(e.scores);
-        if(t === null) return;
-        CRITERIA.forEach(function(c){
-          dimData[c.key][k].sum += (e.scores[c.key]||0);
-          dimData[c.key][k].count++;
-        });
+        if(t === null) return; // skipped review, exclude from the score trend
         totalData[k].sum += t;
         totalData[k].count++;
       });
     });
 
-    // only emit a point for periods that have at least one reviewed entry;
-    // periods with none are left out so the chart shows a gap, not a misleading 0.
-    var dimSeries = CRITERIA.map(function(c, ci){
-      var pts = agg.labels
-        .map(function(k){
-          var d = dimData[c.key][k];
-          return d.count>0 ? { label:k, y: Math.round(d.sum/d.count*10)/10 } : null;
-        })
-        .filter(function(p){ return p !== null; });
-      return { label:c.name, color:SERIES_COLORS[ci % SERIES_COLORS.length], points:pts };
+    // per-criterion data
+    var criterionData = {};
+    CRITERIA.forEach(function(c){ criterionData[c.key] = {}; });
+    agg.labels.forEach(function(k){
+      CRITERIA.forEach(function(c){ criterionData[c.key][k] = {sum:0,count:0}; });
+      agg.buckets[k].forEach(function(e){
+        if(!e.scores) return;
+        CRITERIA.forEach(function(c){
+          criterionData[c.key][k].sum += (e.scores[c.key]||0);
+          criterionData[c.key][k].count++;
+        });
+      });
     });
 
+    // only emit a point for periods that have at least one reviewed entry
     var totalPts = agg.labels
       .map(function(k){
         var d = totalData[k];
         return d.count>0 ? { label:k, y: Math.round(d.sum/d.count*10)/10 } : null;
       })
       .filter(function(p){ return p !== null; });
-    var totalSeries = { label:"总分", color:"#E8E4D8", points:totalPts };
 
-    return { dims: dimSeries, total: [totalSeries] };
+    var dimSeries = CRITERIA.map(function(c, ci){
+      var pts = agg.labels
+        .map(function(k){
+          var d = criterionData[c.key][k];
+          return d.count>0 ? { label:k, y: Math.round(d.sum/d.count*10)/10 } : null;
+        })
+        .filter(function(p){ return p !== null; });
+      return { label:c.name, color:SERIES_COLORS[ci+1], points:pts };
+    });
+
+    return {
+      dimSeries: dimSeries,
+      totalSeries: [{ label:"总分", color:SERIES_COLORS[0], points:totalPts }]
+    };
   }
 
-  // ---- build period-aggregated winrate series - separate by level ----
+  // ---- build period-aggregated winrate series (5 score dims) ----
   // Win rate formula: for each bucket, compute cumulative winrate up to & including that bucket
-  // Returns separate series for 50/100 and 100/200 levels
   function buildWinrateSeries(chrono, period){
     var agg = bucketByPeriod(chrono, period);
     // cumulative totals (cumulative up to & including each period bucket)
     var cum = { amt5050:0, dur5050:0, amt100200:0, dur100200:0 };
 
-    var winratePts5050 = [];
-    var winratePts100200 = [];
-
+    var winratePts = [];
     agg.labels.forEach(function(k){
       agg.buckets[k].forEach(function(e){
         if(typeof e.duration === "number"){
@@ -3273,26 +2828,12 @@
           else if(e.level==="100/200"){ cum.amt100200+=amt; cum.dur100200+=e.duration; }
         }
       });
-
-      // 50/100: bb/百手 = 盈利 / (时长*HANDS_PER_HOUR) / (BB_50_100/100)
-      // which is: 盈利 / (时长*30*1) = 盈利 / (时长*30)
-      if(cum.dur5050 > 0){
-        var wr5050 = cum.amt5050 / (cum.dur5050 * HANDS_PER_HOUR * 1);
-        winratePts5050.push({ label:k, y: Math.round(wr5050*100)/100 });
-      }
-
-      // 100/200: bb/百手 = 盈利 / (时长*HANDS_PER_HOUR) / (BB_100_200/100)
-      // which is: 盈利 / (时长*30*2) = 盈利 / (时长*60)
-      if(cum.dur100200 > 0){
-        var wr100200 = cum.amt100200 / (cum.dur100200 * HANDS_PER_HOUR * 2);
-        winratePts100200.push({ label:k, y: Math.round(wr100200*100)/100 });
-      }
+      var wr = (cum.dur5050>0 ? cum.amt5050/(cum.dur5050*30) : 0) +
+               (cum.dur100200>0 ? cum.amt100200/(cum.dur100200*60) : 0);
+      winratePts.push({ label:k, y: Math.round(wr*100)/100 });
     });
 
-    return {
-      level5050: [{ label:"50/100", color:SERIES_COLORS[0], points:winratePts5050 }],
-      level100200: [{ label:"100/200", color:SERIES_COLORS[1], points:winratePts100200 }]
-    };
+    return [{ label:"赢率（bb/百手）", color:SERIES_COLORS[0], points:winratePts }];
   }
 
   // ---- period toggle + chart rendering ----
@@ -3301,9 +2842,9 @@
 
     // build period toggle HTML
     var toggleHtml = '<div class="period-toggle">'+
-      ['year','month','week','day'].map(function(p){
+      ['year','month','day'].map(function(p){
         return '<button class="period-btn'+(p===period?' active':'')+'" data-period="'+p+'">'+
-          {year:"年",month:"月",week:"周",day:"日"}[p]+'</button>';
+          {year:"年",month:"月",day:"日"}[p]+'</button>';
       }).join('')+
       '</div>';
 
@@ -3338,108 +2879,60 @@
         '</div>'+
         '<div class="chart-wrap" id="chartWrap1"></div>'+
         '<div class="point-detail" id="pointDetail1"></div>'+
-        '<div class="sp-chart-meta">计算方式：累计盈亏 = Σ(每局金额)，纵坐标为港币（HKD）</div>'+
-        '<div id="amountAnalysis"></div>';
+        '<div class="sp-chart-meta">纵坐标为港币（HKD）</div>';
 
       document.getElementById("chartWrap1").innerHTML =
         buildMultiSeriesSVG(allLabels, series, {period:period, includeZero:true, valueFmt:fmtAxisMoney});
       wireChartPointClicks("chartWrap1", "pointDetail1", series, {valueFmt: fmtSignedMoney});
 
-      // Render analysis modules
-      renderAmountAnalysis(chrono, period);
-
     } else if(kind === "score"){
-      var scoreData = buildScoreSeries(chrono, period);
+      var scoreResult = buildScoreSeries(chrono, period);
+      var dimSeries = scoreResult.dimSeries;
+      var totalSeries = scoreResult.totalSeries;
 
-      // collect all unique labels that have score data (union of all series' labels)
-      var scoreLabelsSet = {};
-      scoreData.total.concat(scoreData.dims).forEach(function(s){
-        s.points.forEach(function(p){ scoreLabelsSet[p.label] = true; });
-      });
-      var scoreLabels = Object.keys(scoreLabelsSet).sort();
+      var legendHtml = '<div class="series-legend">'+
+        dimSeries.map(function(s){
+          return '<span class="legend-item"><span class="legend-dot" style="background:'+s.color+'"></span>'+s.label+'</span>';
+        }).join('')+
+        '</div>';
 
       contentEl.innerHTML =
-        '<div class="sp-section-title">总分趋势</div>'+
+        '<div class="sp-section-title">五维分项趋势</div>'+
         '<div class="chart-wrap" id="chartWrap1"></div>'+
         '<div class="point-detail" id="pointDetail1"></div>'+
-        '<div class="sp-section-title">五维分项趋势</div>'+
+        legendHtml+
+        '<div class="sp-section-title" style="margin-top:22px">总分趋势</div>'+
         '<div class="chart-wrap" id="chartWrap2"></div>'+
-        '<div class="point-detail" id="pointDetail2"></div>'+
-        '<div class="series-legend" id="dimLegend"></div>';
+        '<div class="point-detail" id="pointDetail2"></div>';
 
       document.getElementById("chartWrap1").innerHTML =
-        buildMultiSeriesSVG(scoreLabels, scoreData.total, {period:period, includeZero:false, valueFmt:function(v){ return v.toFixed(1); }});
-      wireChartPointClicks("chartWrap1", "pointDetail1", scoreData.total, {valueFmt:function(v){ return v.toFixed(1)+" / 10"; }});
+        buildMultiSeriesSVG(allLabels, dimSeries, {period:period, includeZero:false, connectGaps:true, valueFmt:function(v){ return v.toFixed(1); }});
+      wireChartPointClicks("chartWrap1", "pointDetail1", dimSeries, {valueFmt:function(v){ return v.toFixed(1); }});
 
       document.getElementById("chartWrap2").innerHTML =
-        buildMultiSeriesSVG(scoreLabels, scoreData.dims, {period:period, includeZero:false, valueFmt:function(v){ return v.toFixed(1); }});
-      wireChartPointClicks("chartWrap2", "pointDetail2", scoreData.dims, {valueFmt:function(v){ return v.toFixed(1)+" / 2"; }});
-
-      // render legend for the 5 dimensions
-      var legendHtml = scoreData.dims.map(function(s){
-        return '<div class="legend-item">'+
-          '<div class="legend-dot" style="background:'+s.color+'"></div>'+
-          '<span>'+escapeHtml(s.label)+'</span>'+
-        '</div>';
-      }).join('');
-      document.getElementById("dimLegend").innerHTML = legendHtml;
+        buildMultiSeriesSVG(allLabels, totalSeries, {period:period, includeZero:false, connectGaps:true, valueFmt:function(v){ return v.toFixed(1); }});
+      wireChartPointClicks("chartWrap2", "pointDetail2", totalSeries, {valueFmt:function(v){ return v.toFixed(1)+" / 10"; }});
 
     } else if(kind === "winrate"){
-      var wrData = buildWinrateSeries(chrono, period);
-      var wrSeries5050 = wrData.level5050;
-      var wrSeries100200 = wrData.level100200;
+      var allSeriesWr = buildWinrateSeries(chrono, period);
+      var wrSeries = [allSeriesWr[0]];
 
-      // Calculate current overall WR (weighted by bb)
-      var lastWr5050 = wrSeries5050[0].points.length ? wrSeries5050[0].points[wrSeries5050[0].points.length-1].y : null;
-      var lastWr100200 = wrSeries100200[0].points.length ? wrSeries100200[0].points[wrSeries100200[0].points.length-1].y : null;
-
-      // Display both values or show only available one
-      var wrValStr = "";
-      if(lastWr5050 !== null && lastWr100200 !== null){
-        wrValStr = "50/100: "+(lastWr5050>=0?"+":"−")+Math.abs(lastWr5050).toFixed(2)+" · 100/200: "+(lastWr100200>=0?"+":"−")+Math.abs(lastWr100200).toFixed(2);
-      } else if(lastWr5050 !== null){
-        wrValStr = "50/100: "+(lastWr5050>=0?"+":"−")+Math.abs(lastWr5050).toFixed(2)+" bb/百手";
-      } else if(lastWr100200 !== null){
-        wrValStr = "100/200: "+(lastWr100200>=0?"+":"−")+Math.abs(lastWr100200).toFixed(2)+" bb/百手";
-      } else {
-        wrValStr = "—";
-      }
+      var lastWr = wrSeries[0].points.length ? wrSeries[0].points[wrSeries[0].points.length-1].y : null;
+      var wrValStr = lastWr === null ? "—" : (lastWr>=0?"+":"−")+Math.abs(lastWr).toFixed(2)+" bb/百手";
+      var wrValClass = "sp-current-val"+(lastWr!==null && lastWr<0?" neg":"");
 
       contentEl.innerHTML =
         '<div class="sp-current">'+
-          '<div class="sp-current-label">当前赢率（bb/百手）</div>'+
-          '<div class="sp-current-val" style="font-size:20px;">'+wrValStr+'</div>'+
+          '<div class="sp-current-label">当前赢率</div>'+
+          '<div class="'+wrValClass+'">'+wrValStr+'</div>'+
         '</div>'+
-        '<div class="sp-section-title">50/100 赢率趋势</div>'+
+        '<div class="sp-section-title">赢率趋势（bb/百手）</div>'+
         '<div class="chart-wrap" id="chartWrap1"></div>'+
-        '<div class="point-detail" id="pointDetail1"></div>'+
-        '<div class="sp-chart-meta">计算方式：盈利 / (时长 × '+HANDS_PER_HOUR+'手/小时 × 1bb) = bb/百手（bb='+BB_50_100+'）</div>'+
-        '<div class="sp-section-title" style="margin-top:28px;">100/200 赢率趋势</div>'+
-        '<div class="chart-wrap" id="chartWrap2"></div>'+
-        '<div class="point-detail" id="pointDetail2"></div>'+
-        '<div class="sp-chart-meta">计算方式：盈利 / (时长 × '+HANDS_PER_HOUR+'手/小时 × 2bb) = bb/百手（bb='+BB_100_200+'）</div>'+
-        '<div id="winrateAnalysis"></div>';
+        '<div class="point-detail" id="pointDetail1"></div>';
 
-      // Render 50/100 chart
-      if(wrSeries5050[0].points.length > 0){
-        document.getElementById("chartWrap1").innerHTML =
-          buildMultiSeriesSVG(wrSeries5050[0].points.map(function(p){return p.label;}), wrSeries5050, {period:period, includeZero:true, valueFmt:function(v){ return v.toFixed(1); }});
-        wireChartPointClicks("chartWrap1", "pointDetail1", wrSeries5050, {valueFmt:function(v){ return (v>=0?"+":"−")+Math.abs(v).toFixed(2)+" bb/百手"; }});
-      } else {
-        document.getElementById("chartWrap1").innerHTML = '<div class="chart-empty"><div class="ce-glyph">♠︎ ♦︎</div>暂无50/100数据</div>';
-      }
-
-      // Render 100/200 chart
-      if(wrSeries100200[0].points.length > 0){
-        document.getElementById("chartWrap2").innerHTML =
-          buildMultiSeriesSVG(wrSeries100200[0].points.map(function(p){return p.label;}), wrSeries100200, {period:period, includeZero:true, valueFmt:function(v){ return v.toFixed(1); }});
-        wireChartPointClicks("chartWrap2", "pointDetail2", wrSeries100200, {valueFmt:function(v){ return (v>=0?"+":"−")+Math.abs(v).toFixed(2)+" bb/百手"; }});
-      } else {
-        document.getElementById("chartWrap2").innerHTML = '<div class="chart-empty"><div class="ce-glyph">♠︎ ♦︎</div>暂无100/200数据</div>';
-      }
-
-      // Render analysis modules
-      renderWinrateAnalysis(chrono, period);
+      document.getElementById("chartWrap1").innerHTML =
+        buildMultiSeriesSVG(allLabels, wrSeries, {period:period, includeZero:true, valueFmt:function(v){ return v.toFixed(1); }});
+      wireChartPointClicks("chartWrap1", "pointDetail1", wrSeries, {valueFmt:function(v){ return (v>=0?"+":"−")+Math.abs(v).toFixed(2)+" bb/百手"; }});
     }
   }
 
@@ -3449,16 +2942,7 @@
     var flat = [];
     chrono.forEach(function(e){
       (e.hands || []).forEach(function(text, idx){
-        flat.push({
-          entryId: e.id,
-          handIdx: idx,
-          text: text,
-          date: e.date,
-          session: e.session,
-          venue: e.venue,
-          level: e.level,
-          entry: e  // keep reference to full entry for extra info
-        });
+        flat.push({ entryId: e.id, handIdx: idx, text: text, date: e.date, session: e.session, venue: e.venue, level: e.level });
       });
     });
     // newest first
@@ -3471,83 +2955,38 @@
 
     spBody.innerHTML = "";
     flat.forEach(function(item){
-      var e = item.entry;
-
-      // Calculate extra info
-      var amount = e.amount;
-      var isPos = e.sign !== "-";
-      var amountStr = (isPos?"+":"−")+"HK$"+formatMoney(amount);
-
-      var total = computeTotal(e.scores);
-      var scoreStr = total !== null ? total.toFixed(2) + " / 10" : "未复盘";
-
-      // Calculate winrate for this specific entry
-      var wrStr = "—";
-      if(typeof e.duration === "number" && e.duration > 0){
-        var amt = (e.sign==="-"?-1:1)*e.amount;
-        var bbMultiplier = e.level==="50/100" ? 1 : 2; // 50/100: bb=100 (1x), 100/200: bb=200 (2x)
-        var wr = amt / (e.duration * 30 * bbMultiplier);
-        wrStr = (wr>=0?"+":"−")+Math.abs(wr).toFixed(2)+" bb/百手";
-      }
-
-      var tcStr = (e.tableCondition && e.tableCondition.trim()) ? e.tableCondition : "";
-
       var card = document.createElement("div");
       card.className = "hov-card venue-" + item.venue;
+      // SVG icons
+      var expandIcon = '<svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">'+
+        '<path d="M3 5.5l4.5 4 4.5-4"/></svg>';
+      var collapseIcon = '<svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">'+
+        '<path d="M3 9.5l4.5-4 4.5 4"/></svg>';
+      var editIcon = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+
+        '<path d="M9.5 2l2.5 2.5-7 7H2.5V9L9.5 2z"/></svg>';
+
       card.innerHTML =
-        '<div class="hov-meta">'+
-          '<div class="hov-meta-left">'+
+        '<div class="hov-card-body">'+
+          '<div class="hov-meta">'+
             '<span class="hov-date">'+formatCN(item.date)+'</span>'+
             '<span class="hov-tag">'+VENUE_LABEL[item.venue]+'</span>'+
             '<span class="hov-tag">'+item.level+'</span>'+
           '</div>'+
-          '<div class="hov-meta-right">'+
-            '<button class="hov-icon-btn hov-expand-btn" aria-label="展开">'+
-              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'+
-            '</button>'+
-            '<button class="hov-icon-btn hov-edit-btn edit" aria-label="编辑">'+
-              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'+
-            '</button>'+
-          '</div>'+
+          '<div class="hov-text">'+escapeHtml(item.text)+'</div>'+
         '</div>'+
-        '<div class="hov-text">'+escapeHtml(item.text)+'</div>'+
-        '<div class="hov-extra">'+
-          (tcStr ?
-            '<div class="hov-extra-tc">'+
-              '<div class="hov-extra-label">桌况</div>'+
-              '<div class="hov-extra-tc-text">'+escapeHtml(tcStr)+'</div>'+
-            '</div>'
-            : '')+
-          '<div class="hov-extra-row">'+
-            '<div class="hov-extra-item">'+
-              '<div class="hov-extra-label">金额</div>'+
-              '<div class="hov-extra-value amount'+(isPos?'':' neg')+'">'+amountStr+'</div>'+
-            '</div>'+
-            '<div class="hov-extra-item">'+
-              '<div class="hov-extra-label">赢率</div>'+
-              '<div class="hov-extra-value winrate'+(wrStr.indexOf("−")!==-1?' neg':'')+'">'+wrStr+'</div>'+
-            '</div>'+
-            '<div class="hov-extra-item">'+
-              '<div class="hov-extra-label">总分</div>'+
-              '<div class="hov-extra-value score">'+scoreStr+'</div>'+
-            '</div>'+
-          '</div>'+
+        '<div class="hov-icon-col">'+
+          '<button class="hov-icon-btn expand-btn" title="展开/收起">'+expandIcon+'</button>'+
+          '<button class="hov-icon-btn edit-btn" title="编辑">'+editIcon+'</button>'+
         '</div>';
 
       var textEl = card.querySelector(".hov-text");
-      var extraEl = card.querySelector(".hov-extra");
-      var expandBtn = card.querySelector(".hov-expand-btn");
-      var editBtn = card.querySelector(".hov-edit-btn");
+      var expandBtn = card.querySelector(".expand-btn");
+      var editBtn = card.querySelector(".edit-btn");
 
       expandBtn.addEventListener("click", function(){
         var nowExpanded = textEl.classList.toggle("expanded");
-        extraEl.classList.toggle("show", nowExpanded);
-        var icon = expandBtn.querySelector("svg");
-        if(nowExpanded){
-          icon.style.transform = "rotate(180deg)";
-        } else {
-          icon.style.transform = "rotate(0deg)";
-        }
+        expandBtn.classList.toggle("is-expanded", nowExpanded);
+        expandBtn.innerHTML = nowExpanded ? collapseIcon : expandIcon;
       });
       editBtn.addEventListener("click", function(){
         openHandEditorDirect(item.entryId, item.handIdx);
@@ -3557,458 +2996,10 @@
     });
   }
 
-  // ---- 金额分析模块 ----
-  function renderAmountAnalysis(chrono, period){
-    var container = document.getElementById("amountAnalysis");
-    if(!chrono.length){
-      container.innerHTML = '';
-      return;
-    }
-
-    var html = '';
-
-    // 1. 核心统计卡片
-    var totalProfit = 0;
-    var totalDuration = 0;
-    var sessionCount = chrono.length;
-    var maxProfit = -Infinity;
-    var maxLoss = Infinity;
-
-    chrono.forEach(function(e){
-      var amt = (e.sign==="-"?-1:1)*e.amount;
-      totalProfit += amt;
-      if(typeof e.duration === "number") totalDuration += e.duration;
-      if(amt > maxProfit) maxProfit = amt;
-      if(amt < maxLoss) maxLoss = amt;
-    });
-
-    var hourlyRate = totalDuration > 0 ? totalProfit / totalDuration : 0;
-    var avgProfit = sessionCount > 0 ? totalProfit / sessionCount : 0;
-
-    html += '<div class="analysis-section">'+
-      '<div class="analysis-title">核心统计</div>'+
-      '<div class="stats-grid">'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">总盈利</div>'+
-          '<div class="stat-card-value'+(totalProfit<0?' neg':'')+'">'+fmtSignedMoney(totalProfit)+'</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">总时长</div>'+
-          '<div class="stat-card-value">'+totalDuration.toFixed(1)+'h</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">时薪</div>'+
-          '<div class="stat-card-value'+(hourlyRate<0?' neg':'')+'">'+Math.round(hourlyRate)+'/h</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">平均Session盈利</div>'+
-          '<div class="stat-card-value'+(avgProfit<0?' neg':'')+'">'+fmtSignedMoney(avgProfit)+'</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">最大单次盈利</div>'+
-          '<div class="stat-card-value">'+fmtSignedMoney(maxProfit > -Infinity ? maxProfit : 0)+'</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">最大单次亏损</div>'+
-          '<div class="stat-card-value neg">'+fmtSignedMoney(maxLoss < Infinity ? maxLoss : 0)+'</div>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
-
-    // 2. 场地盈利分析
-    var venueStats = {};
-    chrono.forEach(function(e){
-      if(!venueStats[e.venue]){
-        venueStats[e.venue] = {count:0, profit:0, duration:0};
-      }
-      var amt = (e.sign==="-"?-1:1)*e.amount;
-      venueStats[e.venue].count++;
-      venueStats[e.venue].profit += amt;
-      if(typeof e.duration === "number") venueStats[e.venue].duration += e.duration;
-    });
-
-    var venueRows = Object.keys(venueStats).map(function(venue){
-      var s = venueStats[venue];
-      var hourly = s.duration > 0 ? s.profit / s.duration : 0;
-      return {venue:venue, count:s.count, profit:s.profit, duration:s.duration, hourly:hourly};
-    }).sort(function(a,b){ return b.profit - a.profit; });
-
-    html += '<div class="analysis-section">'+
-      '<div class="analysis-title">场地分析</div>'+
-      '<div class="analysis-table-wrap">'+
-        '<table class="analysis-table">'+
-          '<thead><tr>'+
-            '<th>场地</th><th>Session数</th><th>盈亏</th><th>时长</th><th>时薪</th>'+
-          '</tr></thead>'+
-          '<tbody>';
-
-    venueRows.forEach(function(row, idx){
-      html += '<tr'+(idx===0 && row.profit>0?' class="highlight"':'')+'>'+
-        '<td>'+VENUE_LABEL[row.venue]+'</td>'+
-        '<td class="num">'+row.count+'</td>'+
-        '<td class="num '+(row.profit>=0?'pos':'neg')+'">'+fmtSignedMoney(row.profit)+'</td>'+
-        '<td class="num">'+row.duration.toFixed(1)+'h</td>'+
-        '<td class="num '+(row.hourly>=0?'pos':'neg')+'">'+Math.round(row.hourly)+'/h</td>'+
-      '</tr>';
-    });
-
-    html += '</tbody></table></div></div>';
-
-    // 3. 盲注级别分析
-    var levelStats = {};
-    chrono.forEach(function(e){
-      if(!levelStats[e.level]){
-        levelStats[e.level] = {count:0, profit:0, duration:0};
-      }
-      var amt = (e.sign==="-"?-1:1)*e.amount;
-      levelStats[e.level].count++;
-      levelStats[e.level].profit += amt;
-      if(typeof e.duration === "number") levelStats[e.level].duration += e.duration;
-    });
-
-    var levelRows = Object.keys(levelStats).map(function(level){
-      var s = levelStats[level];
-      var hourly = s.duration > 0 ? s.profit / s.duration : 0;
-      return {level:level, count:s.count, profit:s.profit, duration:s.duration, hourly:hourly};
-    }).sort(function(a,b){ return b.profit - a.profit; });
-
-    html += '<div class="analysis-section">'+
-      '<div class="analysis-title">级别分析</div>'+
-      '<div class="analysis-table-wrap">'+
-        '<table class="analysis-table">'+
-          '<thead><tr>'+
-            '<th>盲注</th><th>场次</th><th>盈亏</th><th>时长</th><th>时薪</th>'+
-          '</tr></thead>'+
-          '<tbody>';
-
-    levelRows.forEach(function(row, idx){
-      html += '<tr'+(idx===0 && row.profit>0?' class="highlight"':'')+'>'+
-        '<td>'+row.level+'</td>'+
-        '<td class="num">'+row.count+'</td>'+
-        '<td class="num '+(row.profit>=0?'pos':'neg')+'">'+fmtSignedMoney(row.profit)+'</td>'+
-        '<td class="num">'+row.duration.toFixed(1)+'h</td>'+
-        '<td class="num '+(row.hourly>=0?'pos':'neg')+'">'+Math.round(row.hourly)+'/h</td>'+
-      '</tr>';
-    });
-
-    html += '</tbody></table></div></div>';
-
-    // 4. 时间维度分析
-    var agg = bucketByPeriod(chrono, period);
-    var timeRows = [];
-    agg.labels.forEach(function(label){
-      var bucket = agg.buckets[label];
-      var profit = 0;
-      var duration = 0;
-      bucket.forEach(function(e){
-        profit += (e.sign==="-"?-1:1)*e.amount;
-        if(typeof e.duration === "number") duration += e.duration;
-      });
-      var hourly = duration > 0 ? profit / duration : 0;
-      timeRows.push({label:label, profit:profit, duration:duration, hourly:hourly});
-    });
-
-    html += '<div class="analysis-section">'+
-      '<div class="analysis-title">时间统计</div>'+
-      '<div class="analysis-table-wrap">'+
-        '<table class="analysis-table">'+
-          '<thead><tr>'+
-            '<th>时间</th><th>盈亏</th><th>时长</th><th>时薪</th>'+
-          '</tr></thead>'+
-          '<tbody>';
-
-    timeRows.forEach(function(row){
-      html += '<tr>'+
-        '<td>'+periodLabel(row.label, period)+'</td>'+
-        '<td class="num '+(row.profit>=0?'pos':'neg')+'">'+fmtSignedMoney(row.profit)+'</td>'+
-        '<td class="num">'+row.duration.toFixed(1)+'h</td>'+
-        '<td class="num '+(row.hourly>=0?'pos':'neg')+'">'+Math.round(row.hourly)+'/h</td>'+
-      '</tr>';
-    });
-
-    html += '</tbody></table></div></div>';
-
-    // 5. 盈亏稳定性分析
-    var profitSessions = 0;
-    var lossSessions = 0;
-    var maxWinStreak = 0;
-    var maxLoseStreak = 0;
-    var currentWinStreak = 0;
-    var currentLoseStreak = 0;
-    var profits = [];
-
-    chrono.forEach(function(e){
-      var amt = (e.sign==="-"?-1:1)*e.amount;
-      profits.push(amt);
-      if(amt >= 0){
-        profitSessions++;
-        currentWinStreak++;
-        currentLoseStreak = 0;
-        if(currentWinStreak > maxWinStreak) maxWinStreak = currentWinStreak;
-      } else {
-        lossSessions++;
-        currentLoseStreak++;
-        currentWinStreak = 0;
-        if(currentLoseStreak > maxLoseStreak) maxLoseStreak = currentLoseStreak;
-      }
-    });
-
-    var profitRate = sessionCount > 0 ? (profitSessions / sessionCount * 100).toFixed(1) : 0;
-    var lossRate = sessionCount > 0 ? (lossSessions / sessionCount * 100).toFixed(1) : 0;
-
-    // 计算标准差
-    var mean = profits.reduce(function(a,b){return a+b;}, 0) / profits.length;
-    var variance = profits.reduce(function(acc, val){ return acc + Math.pow(val - mean, 2); }, 0) / profits.length;
-    var stdDev = Math.sqrt(variance);
-
-    // 最大回撤
-    var peak = -Infinity;
-    var maxDrawdown = 0;
-    var running = 0;
-    chrono.forEach(function(e){
-      running += (e.sign==="-"?-1:1)*e.amount;
-      if(running > peak) peak = running;
-      var drawdown = peak - running;
-      if(drawdown > maxDrawdown) maxDrawdown = drawdown;
-    });
-
-    html += '<div class="analysis-section">'+
-      '<div class="analysis-title">稳定性</div>'+
-      '<div class="analysis-table-wrap">'+
-        '<table class="analysis-table">'+
-          '<tbody>'+
-            '<tr><td>盈利Session占比</td><td class="num pos">'+profitRate+'%</td></tr>'+
-            '<tr><td>亏损Session占比</td><td class="num neg">'+lossRate+'%</td></tr>'+
-            '<tr><td>连赢纪录</td><td class="num">'+maxWinStreak+'次</td></tr>'+
-            '<tr><td>连输纪录</td><td class="num">'+maxLoseStreak+'次</td></tr>'+
-            '<tr><td>平均波动</td><td class="num">±'+Math.round(stdDev)+'</td></tr>'+
-            '<tr><td>最大回撤</td><td class="num neg">'+fmtSignedMoney(-maxDrawdown)+'</td></tr>'+
-          '</tbody>'+
-        '</table>'+
-      '</div>'+
-    '</div>';
-
-    container.innerHTML = html;
-  }
-
-  // ---- 赢率分析模块 ----
-  function renderWinrateAnalysis(chrono, period){
-    var container = document.getElementById("winrateAnalysis");
-    if(!chrono.length){
-      container.innerHTML = '';
-      return;
-    }
-
-    var html = '';
-
-    // 分别计算两个级别的数据
-    var data5050 = { hands:0, profit:0, bb:0 };
-    var data100200 = { hands:0, profit:0, bb:0 };
-
-    chrono.forEach(function(e){
-      if(typeof e.duration === "number" && e.duration > 0){
-        var hands = e.duration * HANDS_PER_HOUR; // 每小时约30手
-        var amt = (e.sign==="-"?-1:1)*e.amount;
-
-        if(e.level==="50/100"){
-          data5050.hands += hands;
-          data5050.profit += amt;
-          data5050.bb += hands * 1; // 50/100 的 bb 是 100，即 1 × 100
-        } else if(e.level==="100/200"){
-          data100200.hands += hands;
-          data100200.profit += amt;
-          data100200.bb += hands * 2; // 100/200 的 bb 是 200，即 2 × 100
-        }
-      }
-    });
-
-    var wr5050 = data5050.bb > 0 ? (data5050.profit / data5050.bb) : 0;
-    var wr100200 = data100200.bb > 0 ? (data100200.profit / data100200.bb) : 0;
-
-    // 1. 赢率统计卡片 - 分级别显示
-    html += '<div class="analysis-section">'+
-      '<div class="analysis-title">赢率统计（按级别）</div>'+
-      '<div class="stats-grid">'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">50/100 赢率</div>'+
-          '<div class="stat-card-value'+(wr5050<0?' neg':'')+'">'+
-            (wr5050>=0?'+':'−')+Math.abs(wr5050).toFixed(2)+
-          '</div>'+
-          '<div class="stat-card-sub">bb/百手</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">50/100 手数</div>'+
-          '<div class="stat-card-value">'+Math.round(data5050.hands)+'</div>'+
-          '<div class="stat-card-sub">约 '+Math.round(data5050.hands/100)+'百手</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">50/100 盈利</div>'+
-          '<div class="stat-card-value'+(data5050.profit<0?' neg':'')+'">'+fmtSignedMoney(data5050.profit)+'</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">100/200 赢率</div>'+
-          '<div class="stat-card-value'+(wr100200<0?' neg':'')+'">'+
-            (wr100200>=0?'+':'−')+Math.abs(wr100200).toFixed(2)+
-          '</div>'+
-          '<div class="stat-card-sub">bb/百手</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">100/200 手数</div>'+
-          '<div class="stat-card-value">'+Math.round(data100200.hands)+'</div>'+
-          '<div class="stat-card-sub">约 '+Math.round(data100200.hands/100)+'百手</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">100/200 盈利</div>'+
-          '<div class="stat-card-value'+(data100200.profit<0?' neg':'')+'">'+fmtSignedMoney(data100200.profit)+'</div>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
-
-    // 2. 周期赢率表 - 分级别
-    var agg = bucketByPeriod(chrono, period);
-    var timeRows5050 = [];
-    var timeRows100200 = [];
-
-    agg.labels.forEach(function(label){
-      var bucket = agg.buckets[label];
-      var p5050 = { hands:0, profit:0, bb:0 };
-      var p100200 = { hands:0, profit:0, bb:0 };
-
-      bucket.forEach(function(e){
-        if(typeof e.duration === "number" && e.duration > 0){
-          var hands = e.duration * 30;
-          var amt = (e.sign==="-"?-1:1)*e.amount;
-
-          if(e.level==="50/100"){
-            p5050.hands += hands;
-            p5050.profit += amt;
-            p5050.bb += hands * 1;
-          } else if(e.level==="100/200"){
-            p100200.hands += hands;
-            p100200.profit += amt;
-            p100200.bb += hands * 2;
-          }
-        }
-      });
-
-      if(p5050.bb > 0){
-        var wr = p5050.profit / p5050.bb;
-        timeRows5050.push({label:label, hands:p5050.hands, profit:p5050.profit, wr:wr});
-      }
-
-      if(p100200.bb > 0){
-        var wr = p100200.profit / p100200.bb;
-        timeRows100200.push({label:label, hands:p100200.hands, profit:p100200.profit, wr:wr});
-      }
-    });
-
-    // 50/100 table
-    if(timeRows5050.length > 0){
-      html += '<div class="analysis-section">'+
-        '<div class="analysis-title">50/100 赢率明细</div>'+
-        '<div class="analysis-table-wrap">'+
-          '<table class="analysis-table">'+
-            '<thead><tr>'+
-              '<th>时间</th><th>手数</th><th>盈利</th><th>bb/百手</th>'+
-            '</tr></thead>'+
-            '<tbody>';
-
-      timeRows5050.forEach(function(row){
-        html += '<tr>'+
-          '<td>'+periodLabel(row.label, period)+'</td>'+
-          '<td class="num">'+Math.round(row.hands)+'</td>'+
-          '<td class="num '+(row.profit>=0?'pos':'neg')+'">'+fmtSignedMoney(row.profit)+'</td>'+
-          '<td class="num '+(row.wr>=0?'pos':'neg')+'">'+(row.wr>=0?'+':'−')+Math.abs(row.wr).toFixed(2)+'</td>'+
-        '</tr>';
-      });
-
-      html += '</tbody></table></div></div>';
-    }
-
-    // 100/200 table
-    if(timeRows100200.length > 0){
-      html += '<div class="analysis-section">'+
-        '<div class="analysis-title">100/200 赢率明细</div>'+
-        '<div class="analysis-table-wrap">'+
-          '<table class="analysis-table">'+
-            '<thead><tr>'+
-              '<th>时间</th><th>手数</th><th>盈利</th><th>bb/百手</th>'+
-            '</tr></thead>'+
-            '<tbody>';
-
-      timeRows100200.forEach(function(row){
-        html += '<tr>'+
-          '<td>'+periodLabel(row.label, period)+'</td>'+
-          '<td class="num">'+Math.round(row.hands)+'</td>'+
-          '<td class="num '+(row.profit>=0?'pos':'neg')+'">'+fmtSignedMoney(row.profit)+'</td>'+
-          '<td class="num '+(row.wr>=0?'pos':'neg')+'">'+(row.wr>=0?'+':'−')+Math.abs(row.wr).toFixed(2)+'</td>'+
-        '</tr>';
-      });
-
-      html += '</tbody></table></div></div>';
-    }
-
-    // 3. 赢率稳定性 - 合并统计（但分别显示两个级别的情况）
-    var allTimeRows = timeRows5050.concat(timeRows100200);
-
-    if(allTimeRows.length > 0){
-      var positiveWRPeriods = 0;
-      var negativeWRPeriods = 0;
-      var maxPosStreak = 0;
-      var maxNegStreak = 0;
-      var currentPosStreak = 0;
-      var currentNegStreak = 0;
-      var wrs = [];
-
-      allTimeRows.forEach(function(row){
-        wrs.push(row.wr);
-        if(row.wr >= 0){
-          positiveWRPeriods++;
-          currentPosStreak++;
-          currentNegStreak = 0;
-          if(currentPosStreak > maxPosStreak) maxPosStreak = currentPosStreak;
-        } else {
-          negativeWRPeriods++;
-          currentNegStreak++;
-          currentPosStreak = 0;
-          if(currentNegStreak > maxNegStreak) maxNegStreak = currentNegStreak;
-        }
-      });
-
-      var posWRRate = allTimeRows.length > 0 ? (positiveWRPeriods / allTimeRows.length * 100).toFixed(1) : 0;
-      var negWRRate = allTimeRows.length > 0 ? (negativeWRPeriods / allTimeRows.length * 100).toFixed(1) : 0;
-
-      var avgWR = wrs.length > 0 ? wrs.reduce(function(a,b){return a+b;}, 0) / wrs.length : 0;
-      var wrVariance = wrs.length > 0 ? wrs.reduce(function(acc, val){ return acc + Math.pow(val - avgWR, 2); }, 0) / wrs.length : 0;
-      var wrStdDev = Math.sqrt(wrVariance);
-
-      html += '<div class="analysis-section">'+
-        '<div class="analysis-title">稳定性分析</div>'+
-        '<div class="analysis-table-wrap">'+
-          '<table class="analysis-table">'+
-            '<tbody>'+
-              '<tr><td>正赢率周期占比</td><td class="num pos">'+posWRRate+'%</td></tr>'+
-              '<tr><td>负赢率周期占比</td><td class="num neg">'+negWRRate+'%</td></tr>'+
-              '<tr><td>平均赢率</td><td class="num '+(avgWR>=0?'pos':'neg')+'">'+(avgWR>=0?'+':'−')+Math.abs(avgWR).toFixed(2)+' bb/百手</td></tr>'+
-              '<tr><td>赢率标准差</td><td class="num">±'+wrStdDev.toFixed(2)+'</td></tr>'+
-              '<tr><td>最大连续正赢率周期</td><td class="num">'+maxPosStreak+'</td></tr>'+
-              '<tr><td>最大连续负赢率周期</td><td class="num">'+maxNegStreak+'</td></tr>'+
-            '</tbody>'+
-          '</table>'+
-        '</div>'+
-      '</div>';
-    }
-
-    container.innerHTML = html;
-  }
-
   // ---------- Init ----------
   render();
 
-  // scroll list to bottom (latest entries) on load
-  window.addEventListener("load", function(){
-    window.scrollTo(0, document.body.scrollHeight);
-  });
+
 })();
 </script>
 </body>
