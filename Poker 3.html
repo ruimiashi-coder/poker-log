@@ -35,7 +35,6 @@
     color: var(--ink);
     font-family: 'IBM Plex Mono', monospace;
     min-height: 100vh;
-    min-height: 100dvh;
     overscroll-behavior-y: contain;
   }
 
@@ -52,7 +51,6 @@
     max-width: 560px;
     margin: 0 auto;
     min-height: 100vh;
-    min-height: 100dvh;
     position: relative;
     padding-bottom: 100px;
   }
@@ -443,7 +441,6 @@
 
   .sheet-body{
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
     padding: 4px 20px 24px;
     flex:1;
   }
@@ -632,13 +629,13 @@
   }
 
   /* Duration slider */
-  .duration-val, .buyin-val{
+  .duration-val{
     font-size: 12.5px;
     font-weight: 600;
     color: var(--ink-faint);
     transition: color .15s ease;
   }
-  .duration-val.set, .buyin-val.set{ color: var(--gold-bright); }
+  .duration-val.set{ color: var(--gold-bright); }
   .duration-card{
     background: var(--card);
     border: 1px solid var(--line);
@@ -651,64 +648,6 @@
     margin-top: 9px;
     font-size: 10.5px;
     color: var(--ink-faint);
-  }
-  .buyin-hint{
-    text-align: center;
-    font-size: 10px;
-    color: var(--ink-faint);
-    margin-top: 8px;
-    line-height: 1.4;
-  }
-
-  /* Rebuy control */
-  .rebuy-control{
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    opacity: 0.3;
-    pointer-events: none;
-    transition: opacity .2s ease;
-  }
-  .rebuy-control.active{
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .rebuy-btn{
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--card-raised);
-    border: 1px solid var(--line);
-    color: var(--ink);
-    font-size: 20px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
-    user-select: none;
-    transition: background .15s ease;
-  }
-  .rebuy-btn:active{
-    background: var(--line);
-  }
-  .rebuy-btn:disabled{
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-  .rebuy-val{
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--gold-bright);
-    font-variant-numeric: tabular-nums;
-    min-width: 60px;
-    text-align: center;
   }
 
   /* Sliders */
@@ -1225,16 +1164,8 @@
     border: 1px solid var(--line);
     border-radius: var(--radius);
     padding: 18px 14px 14px;
-    -webkit-tap-highlight-color: transparent;
   }
-  .trend-svg{
-    width:100%;
-    height:auto;
-    display:block;
-    touch-action: pan-y;
-    -webkit-user-select: none;
-    user-select: none;
-  }
+  .trend-svg{ width:100%; height:auto; display:block; touch-action: pan-y; }
   .trend-line{ fill:none; stroke-width: 2.4; stroke-linecap:round; stroke-linejoin:round; }
   .trend-area{ stroke:none; }
   .zero-line{ stroke: var(--ink-faint); stroke-width:1; stroke-dasharray: 3 3; opacity:.5; }
@@ -1647,12 +1578,6 @@
   .stat-card-value.neg{
     color: var(--loss-bright);
   }
-  .stat-card-hint{
-    font-size: 9px;
-    color: var(--ink-faint);
-    margin-top: 4px;
-    opacity: 0.7;
-  }
   .stat-card-sub{
     font-size: 11px;
     color: var(--ink-faint);
@@ -1878,40 +1803,6 @@
       </div>
     </div>
 
-    <div class="field" id="fieldBuyIn">
-      <div class="field-label">
-        <span>Buy-in</span>
-        <span class="buyin-val" id="buyinVal">100 bb</span>
-      </div>
-      <div class="duration-card">
-        <input type="range" class="rng" id="buyinRng" min="0" max="4" step="1" value="0">
-        <div class="duration-ticks">
-          <span>100bb</span>
-          <span>150bb</span>
-          <span>200bb</span>
-          <span>250bb</span>
-          <span>300bb</span>
-        </div>
-        <div class="buyin-hint" id="buyinHint">当前盲注 50/100，100bb = HK$10,000</div>
-      </div>
-    </div>
-
-    <div class="field" id="fieldRebuy">
-      <div class="field-label">
-        <span>Rebuy</span>
-        <label class="skip-review-toggle" id="skipRebuyLabel">
-          <input type="checkbox" id="skipRebuyCheck" checked>
-          <span class="srt-box"></span>
-          <span class="srt-text">不记录</span>
-        </label>
-      </div>
-      <div class="rebuy-control" id="rebuyControl">
-        <button class="rebuy-btn" id="rebuyMinus">−</button>
-        <div class="rebuy-val" id="rebuyVal">0</div>
-        <button class="rebuy-btn" id="rebuyPlus">+</button>
-      </div>
-    </div>
-
     <div class="field">
       <div class="field-label">桌况</div>
       <div class="table-condition-preview" id="tableConditionPreview">
@@ -2067,10 +1958,14 @@
     return Math.round(sum*10)/10;
   }
 
-  var HANDS_PER_HOUR = 30;
-  var MAX_HANDS_PER_SESSION = 5;
-  var BUYIN_OPTIONS = [100, 150, 200, 250, 300];
+  // ---------- Constants ----------
+  var HANDS_PER_HOUR = 30;        // Average hands per hour
+  var BB_50_100 = 100;            // Big blind value for 50/100 level (100/100=1bb)
+  var BB_100_200 = 200;           // Big blind value for 100/200 level (200/100=2bb)
+  var MAX_HANDS_PER_SESSION = 5;  // Maximum number of hands allowed per session
 
+  // shared chronological sort (ascending: oldest first), used by the list,
+  // and by every trend chart's cumulative calculation.
   function getChronologicalEntries(){
     return entries.slice().sort(function(a,b){
       if(a.date !== b.date) return a.date < b.date ? -1 : 1;
@@ -2078,11 +1973,7 @@
     });
   }
 
-  function getBuyinAmount(level, bbMultiplier){
-    var bb = level === "50/100" ? 100 : 200;
-    return bb * bbMultiplier;
-  }
-
+  // ---------- Default draft ----------
   function freshScores(){
     var scores = {};
     CRITERIA.forEach(function(c){ scores[c.key] = 1.0; });
@@ -2104,15 +1995,8 @@
       sign: "+",
       amount: "",
       tableCondition: "",
-      hands: [],
-      buyin: 100,
-      rebuy: 0,
-      skipRebuy: true
+      hands: []
     };
-  }
-
-  function getDefaultBuyin(level){
-    return level === "50/100" ? 100 : 150;
   }
 
   // ---------- Rendering: list ----------
@@ -2132,9 +2016,8 @@
       totalAmt += (e.sign==="-" ? -1 : 1) * e.amount;
     });
     var totalEl = document.getElementById("statTotal");
-    var sign = totalAmt >= 0 ? "+" : "−";
-    totalEl.textContent = sign + "HK$" + formatMoney(Math.abs(totalAmt));
-    totalEl.className = "val " + (totalAmt > 0 ? "pos" : (totalAmt < 0 ? "neg" : ""));
+    totalEl.textContent = (totalAmt>=0?"+":"−")+"HK$"+formatMoney(Math.abs(totalAmt));
+    totalEl.className = "val " + (totalAmt>0?"pos":(totalAmt<0?"neg":""));
   }
 
   function formatMoney(n){
@@ -2251,10 +2134,7 @@
       sign: e.sign,
       amount: e.amount,
       tableCondition: e.tableCondition || "",
-      hands: (e.hands || []).slice(),
-      buyin: (typeof e.buyin === "number") ? e.buyin : getDefaultBuyin(e.level),
-      rebuy: (typeof e.rebuy === "number") ? e.rebuy : 0,
-      skipRebuy: (typeof e.rebuy !== "number")
+      hands: (e.hands || []).slice()
     };
     sheetTitle.textContent = "编辑记录";
     deleteBtn.style.display = "block";
@@ -2266,10 +2146,11 @@
     sheetOverlay.classList.add("open");
     sheet.classList.add("open");
     document.body.style.overflow = "hidden";
+    // always start at the top of the form (date field), regardless of where
+    // the sheet was scrolled to the last time it was open
     var sheetBodyEl = document.querySelector(".sheet-body");
     if(sheetBodyEl) sheetBodyEl.scrollTop = 0;
   }
-
   function hideSheet(){
     sheetOverlay.classList.remove("open");
     sheet.classList.remove("open");
@@ -2404,79 +2285,7 @@
     p.addEventListener("click", function(){
       draft.level = p.getAttribute("data-level");
       levelPills.forEach(function(x){ x.classList.toggle("selected", x.getAttribute("data-level")===draft.level); });
-
-      // Auto-adjust buyin when level changes
-      var newDefaultBuyin = getDefaultBuyin(draft.level);
-      draft.buyin = newDefaultBuyin;
-      var buyinIdx = BUYIN_OPTIONS.indexOf(newDefaultBuyin);
-      if(buyinIdx !== -1){
-        buyinRng.value = buyinIdx;
-        buyinVal.textContent = newDefaultBuyin + " bb";
-        buyinVal.classList.add("set");
-      }
-
-      updateBuyinHint();
     });
-  });
-
-  // ---------- Form: buy-in ----------
-  var buyinRng = document.getElementById("buyinRng");
-  var buyinVal = document.getElementById("buyinVal");
-  var buyinHint = document.getElementById("buyinHint");
-
-  function updateBuyinHint(){
-    var bb = BUYIN_OPTIONS[parseInt(buyinRng.value, 10)];
-    var amount = getBuyinAmount(draft.level, bb);
-    buyinHint.textContent = "当前盲注 " + draft.level + "，" + bb + "bb = HK$" + formatMoney(amount);
-  }
-
-  buyinRng.addEventListener("input", function(){
-    var idx = parseInt(buyinRng.value, 10);
-    var bb = BUYIN_OPTIONS[idx];
-    draft.buyin = bb;
-    buyinVal.textContent = bb + " bb";
-    buyinVal.classList.add("set");
-    updateBuyinHint();
-  });
-
-  // ---------- Form: rebuy ----------
-  var skipRebuyCheck = document.getElementById("skipRebuyCheck");
-  var rebuyControl = document.getElementById("rebuyControl");
-  var rebuyVal = document.getElementById("rebuyVal");
-  var rebuyMinus = document.getElementById("rebuyMinus");
-  var rebuyPlus = document.getElementById("rebuyPlus");
-
-  function updateRebuyUI(){
-    rebuyVal.textContent = draft.rebuy;
-    rebuyMinus.disabled = draft.rebuy <= 0;
-    rebuyPlus.disabled = draft.rebuy >= 10;
-  }
-
-  function toggleRebuyControl(skip){
-    rebuyControl.classList.toggle("active", !skip);
-  }
-
-  skipRebuyCheck.addEventListener("change", function(){
-    draft.skipRebuy = skipRebuyCheck.checked;
-    toggleRebuyControl(draft.skipRebuy);
-    if(draft.skipRebuy){
-      draft.rebuy = 0;
-      updateRebuyUI();
-    }
-  });
-
-  rebuyMinus.addEventListener("click", function(){
-    if(draft.rebuy > 0){
-      draft.rebuy--;
-      updateRebuyUI();
-    }
-  });
-
-  rebuyPlus.addEventListener("click", function(){
-    if(draft.rebuy < 10){
-      draft.rebuy++;
-      updateRebuyUI();
-    }
   });
 
   // ---------- Form: sliders ----------
@@ -2583,15 +2392,19 @@
   var tcSave = document.getElementById("tcSave");
 
   function updateTableConditionPreview(){
-    var hasContent = draft.tableCondition && draft.tableCondition.trim();
-    tcpText.textContent = hasContent ? draft.tableCondition : "点击输入桌况描述";
-    tcpText.classList.toggle("placeholder", !hasContent);
+    if(draft.tableCondition && draft.tableCondition.trim()){
+      tcpText.textContent = draft.tableCondition;
+      tcpText.classList.remove("placeholder");
+    } else {
+      tcpText.textContent = "点击输入桌况描述";
+      tcpText.classList.add("placeholder");
+    }
   }
 
   tableConditionPreview.addEventListener("click", function(){
     tcTextarea.value = draft.tableCondition || "";
     tableConditionEditor.classList.add("open");
-    setTimeout(function(){
+    window.setTimeout(function(){
       tcTextarea.focus();
       var len = tcTextarea.value.length;
       tcTextarea.setSelectionRange(len, len);
@@ -2640,6 +2453,7 @@
   function renderHandsList(){
     handsDragZone.innerHTML = "";
     var n = draft.hands.length;
+    var handles = []; // Cache handle references
 
     draft.hands.forEach(function(text, idx){
       var card = document.createElement("div");
@@ -2652,8 +2466,9 @@
         '<div class="hand-index">'+(idx+1)+'</div>'+
         '<div class="hand-arrow">›</div>';
 
+      // Cache handle reference before appending
       var handle = card.querySelector(".hand-handle");
-      handle.addEventListener("pointerdown", onHandleDown);
+      handles.push(handle);
 
       card.addEventListener("click", function(ev){
         if(ev.target.closest(".hand-handle")) return;
@@ -2662,6 +2477,7 @@
       handsDragZone.appendChild(card);
     });
 
+    // measure real height from first card once rendered
     requestAnimationFrame(function(){
       var first = handsDragZone.querySelector(".hand-card");
       if(first){
@@ -2671,6 +2487,11 @@
         });
       }
       handsDragZone.style.height = n ? (n * HAND_ITEM_H - 8) + "px" : "0px";
+    });
+
+    // Use cached handles instead of querying again
+    handles.forEach(function(handle){
+      handle.addEventListener("pointerdown", onHandleDown);
     });
 
     handAddBtn.classList.toggle("disabled", n >= MAX_HANDS_PER_SESSION);
@@ -2778,7 +2599,7 @@
 
   function showHandEditor(){
     handEditor.classList.add("open");
-    setTimeout(function(){
+    window.setTimeout(function(){
       heTextarea.focus();
       var len = heTextarea.value.length;
       heTextarea.setSelectionRange(len, len);
@@ -2876,19 +2697,9 @@
       p.classList.toggle("selected", p.getAttribute("data-level")===draft.level);
     });
 
-    var buyinIdx = BUYIN_OPTIONS.indexOf(draft.buyin);
-    if(buyinIdx === -1) buyinIdx = 0;
-    buyinRng.value = buyinIdx;
-    buyinVal.textContent = BUYIN_OPTIONS[buyinIdx] + " bb";
-    buyinVal.classList.add("set");
-    updateBuyinHint();
-
-    skipRebuyCheck.checked = draft.skipRebuy;
-    toggleRebuyControl(draft.skipRebuy);
-    updateRebuyUI();
-
     CRITERIA.forEach(function(c){
       var v = draft.scores[c.key];
+      // Convert value (0-2) to step (0-8): step = value / 0.25
       var stepValue = Math.round(v / 0.25);
       document.getElementById("rng-"+c.key).value = stepValue;
       document.getElementById("val-"+c.key).textContent = v.toFixed(2);
@@ -2938,9 +2749,7 @@
       amount: amt,
       duration: draft.duration,
       tableCondition: draft.tableCondition || "",
-      hands: draft.hands.slice(),
-      buyin: draft.buyin,
-      rebuy: draft.skipRebuy ? null : draft.rebuy
+      hands: draft.hands.slice()
     };
 
     if(editingId){
@@ -2971,7 +2780,6 @@
     pulseEl(el);
   }
   function pulseEl(el){
-    if(!el) return;
     el.style.transition = "box-shadow .15s ease, border-color .15s ease";
     el.style.boxShadow = "0 0 0 2px var(--loss-bright)";
     el.style.borderRadius = el.style.borderRadius || "16px";
@@ -3026,7 +2834,6 @@
     var a = document.createElement("a");
     a.href = url;
     a.download = "poker-log-" + todayISO() + ".json";
-    a.style.display = "none";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -3090,9 +2897,7 @@
         sign: imp.sign === "-" ? "-" : "+",
         amount: typeof imp.amount === "number" ? imp.amount : parseFloat(imp.amount) || 0,
         tableCondition: imp.tableCondition || "",
-        hands: Array.isArray(imp.hands) ? imp.hands.slice(0,5) : [],
-        buyin: (typeof imp.buyin === "number") ? imp.buyin : getDefaultBuyin(imp.level),
-        rebuy: (typeof imp.rebuy === "number") ? imp.rebuy : null
+        hands: Array.isArray(imp.hands) ? imp.hands.slice(0,5) : []
       };
       entries.push(clean);
       if(clean.id) existingIds[clean.id] = true;
@@ -3923,141 +3728,7 @@
 
     html += '</tbody></table></div></div>';
 
-    // 5. Buy-in 和 Rebuy 分析
-    var buyinStats = {
-      totalBuyin: 0,
-      totalBuyinAmount: 0,
-      rebuyCount: 0,
-      rebuyTotalTimes: 0,
-      oneTimeCount: 0,
-      rebuyProfit: 0,
-      noRebuyProfit: 0,
-      rebuySessionCount: 0,
-      noRebuySessionCount: 0,
-      buyinByLevel: {},
-      recordedRebuyCount: 0  // 记录了rebuy的总场次（不包括"不记录"）
-    };
-
-    chrono.forEach(function(e){
-      var amt = (e.sign==="-"?-1:1)*e.amount;
-      var bb = e.buyin || 100;
-      var buyinAmount = getBuyinAmount(e.level, bb);
-
-      buyinStats.totalBuyin += bb;
-      buyinStats.totalBuyinAmount += buyinAmount;
-
-      if(!buyinStats.buyinByLevel[e.level]){
-        buyinStats.buyinByLevel[e.level] = {total:0, count:0};
-      }
-      buyinStats.buyinByLevel[e.level].total += bb;
-      buyinStats.buyinByLevel[e.level].count++;
-
-      // 只统计明确记录了rebuy的数据（typeof e.rebuy === "number"）
-      if(typeof e.rebuy === "number"){
-        buyinStats.recordedRebuyCount++;
-        if(e.rebuy > 0){
-          buyinStats.rebuySessionCount++;
-          buyinStats.rebuyTotalTimes += e.rebuy;
-          buyinStats.rebuyProfit += amt;
-        } else {
-          // rebuy === 0，明确记录为0次
-          buyinStats.noRebuySessionCount++;
-          buyinStats.noRebuyProfit += amt;
-          buyinStats.oneTimeCount++;
-        }
-      }
-      // e.rebuy === null 的数据不参与任何rebuy统计
-    });
-
-    var avgBuyin = sessionCount > 0 ? buyinStats.totalBuyin / sessionCount : 0;
-    var rebuyRate = buyinStats.recordedRebuyCount > 0 ? (buyinStats.rebuySessionCount / buyinStats.recordedRebuyCount * 100) : 0;
-    var avgRebuyTimes = buyinStats.rebuySessionCount > 0 ? buyinStats.rebuyTotalTimes / buyinStats.rebuySessionCount : 0;
-    var oneTimeRate = buyinStats.recordedRebuyCount > 0 ? (buyinStats.oneTimeCount / buyinStats.recordedRebuyCount * 100) : 0;
-    var avgRebuyProfit = buyinStats.rebuySessionCount > 0 ? buyinStats.rebuyProfit / buyinStats.rebuySessionCount : 0;
-    var avgNoRebuyProfit = buyinStats.noRebuySessionCount > 0 ? buyinStats.noRebuyProfit / buyinStats.noRebuySessionCount : 0;
-    var avgExposure = sessionCount > 0 ? buyinStats.totalBuyinAmount / sessionCount : 0;
-
-    html += '<div class="analysis-section">'+
-      '<div class="analysis-title">Buy-in & Rebuy 分析</div>'+
-      '<div class="stats-grid">'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">平均买入</div>'+
-          '<div class="stat-card-value">'+avgBuyin.toFixed(0)+' bb</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">Rebuy率</div>'+
-          '<div class="stat-card-value">'+rebuyRate.toFixed(1)+'%</div>'+
-          '<div class="stat-card-hint">'+buyinStats.recordedRebuyCount+'场有记录</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">平均Rebuy次数</div>'+
-          '<div class="stat-card-value">'+avgRebuyTimes.toFixed(2)+'</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">一枪率</div>'+
-          '<div class="stat-card-value">'+oneTimeRate.toFixed(1)+'%</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">平均资金暴露</div>'+
-          '<div class="stat-card-value">HK$'+formatMoney(avgExposure)+'</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">Rebuy场均盈利</div>'+
-          '<div class="stat-card-value'+(avgRebuyProfit<0?' neg':'')+'">'+fmtSignedMoney(avgRebuyProfit)+'</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">无Rebuy场均盈利</div>'+
-          '<div class="stat-card-value'+(avgNoRebuyProfit<0?' neg':'')+'">'+fmtSignedMoney(avgNoRebuyProfit)+'</div>'+
-        '</div>'+
-        '<div class="stat-card">'+
-          '<div class="stat-card-label">Rebuy盈利差</div>'+
-          '<div class="stat-card-value'+(avgNoRebuyProfit-avgRebuyProfit<0?' neg':'')+'">'+fmtSignedMoney(avgNoRebuyProfit-avgRebuyProfit)+'</div>'+
-        '</div>'+
-      '</div>'+
-    '</div>';
-
-    // 6. Rebuy与盈利关联分析（只统计明确记录了rebuy的数据）
-    var rebuyCorrelation = {};
-    for(var i=0; i<=10; i++){
-      rebuyCorrelation[i] = {count:0, profit:0};
-    }
-
-    chrono.forEach(function(e){
-      if(typeof e.rebuy === "number"){
-        var amt = (e.sign==="-"?-1:1)*e.amount;
-        var rebuy = e.rebuy;
-        if(rebuy >= 0 && rebuy <= 10){
-          rebuyCorrelation[rebuy].count++;
-          rebuyCorrelation[rebuy].profit += amt;
-        }
-      }
-    });
-
-    html += '<div class="analysis-section">'+
-      '<div class="analysis-title">Rebuy次数与盈利关联</div>'+
-      '<div class="analysis-table-wrap">'+
-        '<table class="analysis-table">'+
-          '<thead><tr>'+
-            '<th>Rebuy次数</th><th>场次</th><th>总盈亏</th><th>场均盈亏</th>'+
-          '</tr></thead>'+
-          '<tbody>';
-
-    for(var r=0; r<=10; r++){
-      var stat = rebuyCorrelation[r];
-      if(stat.count > 0){
-        var avgProfit = stat.profit / stat.count;
-        html += '<tr>'+
-          '<td>'+r+'次</td>'+
-          '<td class="num">'+stat.count+'</td>'+
-          '<td class="num '+(stat.profit>=0?'pos':'neg')+'">'+fmtSignedMoney(stat.profit)+'</td>'+
-          '<td class="num '+(avgProfit>=0?'pos':'neg')+'">'+fmtSignedMoney(avgProfit)+'</td>'+
-        '</tr>';
-      }
-    }
-
-    html += '</tbody></table></div></div>';
-
-    // 7. 盈亏稳定性分析
+    // 5. 盈亏稳定性分析
     var profitSessions = 0;
     var lossSessions = 0;
     var maxWinStreak = 0;
@@ -4139,11 +3810,15 @@
         var hands = e.duration * HANDS_PER_HOUR; // 每小时约30手
         var amt = (e.sign==="-"?-1:1)*e.amount;
 
-        var bbMultiplier = e.level==="50/100" ? 1 : 2;
-        var target = e.level==="50/100" ? data5050 : data100200;
-        target.hands += hands;
-        target.profit += amt;
-        target.bb += hands * bbMultiplier;
+        if(e.level==="50/100"){
+          data5050.hands += hands;
+          data5050.profit += amt;
+          data5050.bb += hands * 1; // 50/100 的 bb 是 100，即 1 × 100
+        } else if(e.level==="100/200"){
+          data100200.hands += hands;
+          data100200.profit += amt;
+          data100200.bb += hands * 2; // 100/200 的 bb 是 200，即 2 × 100
+        }
       }
     });
 
@@ -4201,13 +3876,18 @@
 
       bucket.forEach(function(e){
         if(typeof e.duration === "number" && e.duration > 0){
-          var hands = e.duration * HANDS_PER_HOUR;
+          var hands = e.duration * 30;
           var amt = (e.sign==="-"?-1:1)*e.amount;
-          var bbMultiplier = e.level==="50/100" ? 1 : 2;
-          var target = e.level==="50/100" ? p5050 : p100200;
-          target.hands += hands;
-          target.profit += amt;
-          target.bb += hands * bbMultiplier;
+
+          if(e.level==="50/100"){
+            p5050.hands += hands;
+            p5050.profit += amt;
+            p5050.bb += hands * 1;
+          } else if(e.level==="100/200"){
+            p100200.hands += hands;
+            p100200.profit += amt;
+            p100200.bb += hands * 2;
+          }
         }
       });
 
