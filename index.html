@@ -111,6 +111,69 @@
     transform: translateX(-50%) translateY(0);
   }
 
+  /* ---------- Confirm dialog (used for destructive actions) ---------- */
+  .confirm-overlay{
+    position: fixed;
+    inset: 0;
+    max-width: 560px;
+    margin: 0 auto;
+    background: rgba(7,10,8,0.68);
+    backdrop-filter: blur(2px);
+    z-index: 260;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 0 36px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  .confirm-overlay.open{ opacity:1; pointer-events:auto; }
+  .confirm-box{
+    background: var(--card-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 18px 18px;
+    width: 100%;
+    max-width: 300px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+    transform: scale(0.93) translateY(6px);
+    transition: transform .22s cubic-bezier(.32,.72,0,1);
+  }
+  .confirm-overlay.open .confirm-box{ transform: scale(1) translateY(0); }
+  .confirm-message{
+    font-family:'Spectral', serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    text-align:center;
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+  .confirm-actions{
+    display:flex;
+    gap: 9px;
+  }
+  .confirm-cancel, .confirm-ok{
+    flex:1;
+    padding: 11px;
+    border-radius: var(--radius-sm);
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight:600;
+    cursor:pointer;
+    border: 1px solid var(--line);
+  }
+  .confirm-cancel{
+    background: var(--card);
+    color: var(--ink-dim);
+  }
+  .confirm-ok{
+    background: rgba(181,82,74,0.16);
+    border-color: rgba(181,82,74,0.45);
+    color: var(--loss-bright);
+  }
+  .confirm-ok:active, .confirm-cancel:active{ opacity:.7; }
+
   .eyebrow{
     font-size: 11px;
     letter-spacing: 0.18em;
@@ -183,7 +246,7 @@
   #list{
     padding: 22px 16px 10px;
     display:flex;
-    flex-direction: column-reverse; /* oldest visually first via column-reverse + DOM order */
+    flex-direction: column;
     gap: 10px;
   }
 
@@ -393,6 +456,55 @@
     display:flex;
     align-items:center;
     justify-content: space-between;
+  }
+
+  /* skip-review toggle next to "本局复盘" label */
+  .skip-review-toggle{
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    cursor:pointer;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .skip-review-toggle input{
+    position:absolute;
+    opacity:0;
+    width:1px; height:1px;
+  }
+  .srt-box{
+    width: 15px; height:15px;
+    border-radius: 4px;
+    border: 1px solid var(--ink-faint);
+    flex-shrink:0;
+    position:relative;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .srt-box::after{
+    content:"";
+    position:absolute;
+    left:4px; top:1px;
+    width:4px; height:8px;
+    border: solid #1A1408;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity:0;
+  }
+  .skip-review-toggle input:checked + .srt-box{
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+  .skip-review-toggle input:checked + .srt-box::after{ opacity:1; }
+  .srt-text{
+    font-size: 10.5px;
+    color: var(--ink-faint);
+  }
+  .skip-review-toggle input:checked ~ .srt-text{ color: var(--gold-bright); }
+
+  .review-disabled{
+    opacity: 0.32;
+    pointer-events: none;
+    filter: grayscale(0.7);
   }
 
   /* Date control */
@@ -977,12 +1089,46 @@
     border-radius: var(--radius);
     padding: 18px 14px 14px;
   }
-  .trend-svg{ width:100%; height:auto; display:block; }
+  .trend-svg{ width:100%; height:auto; display:block; touch-action: pan-y; }
   .trend-line{ fill:none; stroke-width: 2.4; stroke-linecap:round; stroke-linejoin:round; }
   .trend-area{ stroke:none; }
   .zero-line{ stroke: var(--ink-faint); stroke-width:1; stroke-dasharray: 3 3; opacity:.5; }
+  .grid-line{ stroke: var(--line); stroke-width:1; }
   .trend-dot{ fill: var(--bg); stroke-width: 2.2; }
   .chart-axis-text{ font-family:'IBM Plex Mono',monospace; font-size:9px; fill: var(--ink-faint); }
+
+  .chart-point-hit{
+    fill: transparent;
+    cursor: pointer;
+  }
+  .chart-point-hit.active{
+    fill: var(--gold-bright);
+    fill-opacity: 0.12;
+  }
+
+  .point-detail{
+    display:none;
+    align-items:center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: var(--card-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+  }
+  .point-detail.show{ display:flex; }
+  .pd-date{
+    font-family:'Spectral', serif;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+  }
+  .pd-val{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--gold-bright);
+    font-variant-numeric: tabular-nums;
+  }
 
   .chart-axis-labels{
     display:flex;
@@ -1076,7 +1222,6 @@
     border-radius: var(--radius-sm);
     padding: 13px 14px;
     margin-bottom: 9px;
-    cursor:pointer;
     position:relative;
     overflow:hidden;
   }
@@ -1086,7 +1231,6 @@
   }
   .hov-card.venue-venetian::before{ background: var(--venetian); }
   .hov-card.venue-mgm::before{ background: var(--mgm); }
-  .hov-card:active{ background: var(--card-raised); }
   .hov-meta{
     display:flex;
     align-items:center;
@@ -1115,6 +1259,53 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  .hov-text.expanded{
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    white-space: pre-wrap;
+  }
+  /* icon button column on the right of each hand card */
+  .hov-card{
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .hov-card-body{
+    flex: 1;
+    min-width: 0;
+  }
+  .hov-icon-col{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+  .hov-icon-btn{
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--card-raised);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--ink-dim);
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .hov-icon-btn svg{ display:block; }
+  .hov-icon-btn:active{ opacity:.7; }
+  .hov-icon-btn.edit-btn{
+    color: var(--gold-bright);
+    border-color: rgba(201,162,75,0.32);
+  }
+  .hov-icon-btn.expand-btn.is-expanded{
+    background: rgba(201,162,75,0.1);
+    border-color: rgba(201,162,75,0.3);
+    color: var(--gold-bright);
   }
 
   /* tiny calendar (custom, since native date input styling is unreliable on mobile webviews) */
@@ -1300,9 +1491,16 @@
     </div>
 
     <div class="field">
-      <div class="field-label">本局复盘</div>
+      <div class="field-label">
+        <span>本局复盘</span>
+        <label class="skip-review-toggle" id="skipReviewLabel">
+          <input type="checkbox" id="skipReviewCheck">
+          <span class="srt-box"></span>
+          <span class="srt-text">暂不复盘</span>
+        </label>
+      </div>
       <div class="slider-block" id="sliderBlock"></div>
-      <div class="total-card">
+      <div class="total-card" id="totalCard">
         <span class="tt-label">总分</span>
         <span class="tt-val"><span id="totalScore">5.0</span><span class="tt-max">/10</span></span>
       </div>
@@ -1366,6 +1564,16 @@
   <textarea class="he-textarea" id="heTextarea" placeholder="位置、底池、对手范围、关键决策……把这手牌记清楚。" rows="6"></textarea>
 </div>
 
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-message" id="confirmMessage">确定要删除吗？</div>
+    <div class="confirm-actions">
+      <button class="confirm-cancel" id="confirmCancel">取消</button>
+      <button class="confirm-ok" id="confirmOk">删除</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
   "use strict";
@@ -1427,8 +1635,9 @@
     return n;
   }
   function computeTotal(scores){
+    if(!scores) return null;
     var sum = 0;
-    CRITERIA.forEach(function(c){ sum += scores[c.key]; });
+    CRITERIA.forEach(function(c){ sum += (scores[c.key]||0); });
     return Math.round(sum*10)/10;
   }
 
@@ -1442,19 +1651,24 @@
   }
 
   // ---------- Default draft ----------
-  function freshDraft(){
-    var iso = todayISO();
+  function freshScores(){
     var scores = {};
     CRITERIA.forEach(function(c){ scores[c.key] = 1.0; });
+    return scores;
+  }
+
+  function freshDraft(){
+    var iso = todayISO();
     return {
       id: null,
       date: iso,
       session: nextSessionFor(iso, null),
       duration: null,
       durationSet: false,
-      venue: null,
-      level: null,
-      scores: scores,
+      venue: "venetian",
+      level: "50/100",
+      scores: freshScores(),
+      skipReview: false,
       sign: "+",
       amount: "",
       hands: []
@@ -1490,10 +1704,8 @@
   }
 
   function renderList(){
-    // sort ascending by date then session, so DOM order is oldest->newest;
-    // combined with column-reverse the newest renders at the bottom visually,
-    // and the page naturally opens scrolled to the latest entry at the bottom.
-    var sorted = getChronologicalEntries();
+    // sort descending: newest entries appear at the top
+    var sorted = getChronologicalEntries().reverse();
 
     listEl.innerHTML = "";
     emptyEl.style.display = sorted.length ? "none" : "block";
@@ -1509,8 +1721,6 @@
       groups[groups.length-1].items.push(e);
     });
 
-    // since #list is column-reverse, append groups in normal order
-    // (first group = earliest date) and the browser will flip visual order.
     groups.forEach(function(g){
       var groupEl = document.createElement("div");
       groupEl.className = "day-group";
@@ -1530,17 +1740,18 @@
 
   function renderEntryCard(e){
     var total = computeTotal(e.scores);
-    var pct = total/10;
+    var hasScore = total !== null;
+    var pct = hasScore ? total/10 : 0;
     var card = document.createElement("div");
     card.className = "entry venue-"+e.venue;
     card.setAttribute("data-id", e.id);
 
     var amt = e.amount;
     var isPos = e.sign !== "-";
-    var color = total>=7 ? "var(--gold-bright)" : (total>=4 ? "var(--ink-dim)" : "var(--loss-bright)");
+    var color = !hasScore ? "var(--ink-faint)" : (total>=7 ? "var(--gold-bright)" : (total>=4 ? "var(--ink-dim)" : "var(--loss-bright)"));
 
     var r = 21, circ = 2*Math.PI*r;
-    var dash = circ*pct;
+    var dash = hasScore ? circ*pct : 0;
 
     card.innerHTML =
       '<div class="ring">'+
@@ -1549,11 +1760,11 @@
           '<circle class="prog" cx="25" cy="25" r="'+r+'" stroke="'+color+'" '+
             'stroke-dasharray="'+dash.toFixed(1)+' '+circ.toFixed(1)+'"/>'+
         '</svg>'+
-        '<div class="score-text">'+total.toFixed(1)+'</div>'+
+        '<div class="score-text"'+(!hasScore?' style="color:var(--ink-faint)"':'')+'>'+(hasScore?total.toFixed(1):"—")+'</div>'+
       '</div>'+
       '<div class="mid">'+
         '<div class="date-line">'+formatCN(e.date)+'</div>'+
-        '<div class="meta-line">Session '+e.session+'<span class="dot">·</span>'+VENUE_LABEL[e.venue]+'<span class="dot">·</span>'+e.level+'</div>'+
+        '<div class="meta-line">Session '+e.session+'<span class="dot">·</span>'+VENUE_LABEL[e.venue]+'<span class="dot">·</span>'+e.level+(!hasScore?'<span class="dot">·</span>未复盘':'')+'</div>'+
       '</div>'+
       '<div class="amount" style="color:'+(isPos?'var(--gold-bright)':'var(--loss-bright)')+'">'+
         '<span class="unit">HK$</span>'+(isPos?'+':'−')+formatMoney(amt)+
@@ -1590,7 +1801,8 @@
       durationSet: (typeof e.duration === "number"),
       venue: e.venue,
       level: e.level,
-      scores: Object.assign({}, e.scores),
+      scores: e.scores ? Object.assign({}, e.scores) : freshScores(),
+      skipReview: !e.scores,
       sign: e.sign,
       amount: e.amount,
       hands: (e.hands || []).slice()
@@ -1605,6 +1817,7 @@
     sheetOverlay.classList.add("open");
     sheet.classList.add("open");
     document.body.style.overflow = "hidden";
+    sheet.scrollTop = 0;
   }
   function hideSheet(){
     sheetOverlay.classList.remove("open");
@@ -1774,8 +1987,25 @@
 
   function updateTotalUI(){
     var total = computeTotal(draft.scores);
-    document.getElementById("totalScore").textContent = total.toFixed(1);
+    document.getElementById("totalScore").textContent = total===null ? "—" : total.toFixed(1);
   }
+
+  // ---------- Form: skip review toggle ("暂不复盘") ----------
+  var skipReviewCheck = document.getElementById("skipReviewCheck");
+  var totalCard = document.getElementById("totalCard");
+
+  function toggleReviewBlock(skip){
+    sliderBlock.classList.toggle("review-disabled", skip);
+    totalCard.classList.toggle("review-disabled", skip);
+    Array.prototype.forEach.call(sliderBlock.querySelectorAll("input[type=range]"), function(inp){
+      inp.disabled = skip;
+    });
+  }
+
+  skipReviewCheck.addEventListener("change", function(){
+    draft.skipReview = skipReviewCheck.checked;
+    toggleReviewBlock(draft.skipReview);
+  });
 
   // ---------- Form: amount ----------
   var signPlus = document.getElementById("signPlus");
@@ -2009,18 +2239,29 @@
 
   heDelete.addEventListener("click", function(){
     if(handEditMode === "direct"){
-      var entry = entries.find(function(e){ return e.id === handEditEntryId; });
-      if(entry){
-        entry.hands.splice(handEditIndex, 1);
-        saveEntries();
-      }
-      closeHandEditor();
-      renderHandsOverview();
+      showConfirm("确定删除这手关键牌局记录？删除后无法恢复。").then(function(confirmed){
+        if(!confirmed) return;
+        var entry = entries.find(function(e){ return e.id === handEditEntryId; });
+        if(entry){
+          entry.hands.splice(handEditIndex, 1);
+          saveEntries();
+        }
+        closeHandEditor();
+        renderHandsOverview();
+      });
       return;
     }
     if(handEditIndex !== null){
-      draft.hands.splice(handEditIndex, 1);
+      // an existing hand within the draft being edited — confirm before removing
+      showConfirm("确定删除这手关键牌局记录？").then(function(confirmed){
+        if(!confirmed) return;
+        draft.hands.splice(handEditIndex, 1);
+        closeHandEditor();
+        renderHandsList();
+      });
+      return;
     }
+    // creating a brand-new hand that was never saved — Delete just discards it, no confirmation needed
     closeHandEditor();
     renderHandsList();
   });
@@ -2053,6 +2294,8 @@
       document.getElementById("val-"+c.key).textContent = v.toFixed(1);
     });
     updateTotalUI();
+    skipReviewCheck.checked = draft.skipReview;
+    toggleReviewBlock(draft.skipReview);
 
     if(draft.sign==="-"){
       signMinus.classList.add("active"); signPlus.classList.remove("active");
@@ -2090,7 +2333,7 @@
       session: draft.session,
       venue: draft.venue,
       level: draft.level,
-      scores: draft.scores,
+      scores: draft.skipReview ? null : draft.scores,
       sign: draft.sign,
       amount: amt,
       duration: draft.duration,
@@ -2110,10 +2353,13 @@
 
   deleteBtn.addEventListener("click", function(){
     if(!editingId) return;
-    entries = entries.filter(function(e){ return e.id!==editingId; });
-    saveEntries();
-    render();
-    hideSheet();
+    showConfirm("确定删除这条记录？删除后无法恢复。").then(function(confirmed){
+      if(!confirmed) return;
+      entries = entries.filter(function(e){ return e.id!==editingId; });
+      saveEntries();
+      render();
+      hideSheet();
+    });
   });
 
   function scrollToInvalidField(el){
@@ -2137,6 +2383,31 @@
     if(toastTimer) clearTimeout(toastTimer);
     toastTimer = setTimeout(function(){ toastEl.classList.remove("show"); }, 2600);
   }
+
+  // ---------- Confirm dialog (shared, used for destructive actions) ----------
+  var confirmOverlay = document.getElementById("confirmOverlay");
+  var confirmMessage = document.getElementById("confirmMessage");
+  var confirmCancelBtn = document.getElementById("confirmCancel");
+  var confirmOkBtn = document.getElementById("confirmOk");
+  var confirmResolveFn = null;
+
+  function showConfirm(message, okLabel){
+    return new Promise(function(resolve){
+      confirmMessage.textContent = message;
+      confirmOkBtn.textContent = okLabel || "删除";
+      confirmOverlay.classList.add("open");
+      confirmResolveFn = resolve;
+    });
+  }
+  function hideConfirm(result){
+    confirmOverlay.classList.remove("open");
+    if(confirmResolveFn){ confirmResolveFn(result); confirmResolveFn = null; }
+  }
+  confirmCancelBtn.addEventListener("click", function(){ hideConfirm(false); });
+  confirmOkBtn.addEventListener("click", function(){ hideConfirm(true); });
+  confirmOverlay.addEventListener("click", function(ev){
+    if(ev.target === confirmOverlay) hideConfirm(false);
+  });
 
   // ---------- Export / Import ----------
   var exportBtn = document.getElementById("exportBtn");
@@ -2210,7 +2481,7 @@
         duration: (typeof imp.duration === "number") ? imp.duration : null,
         venue: imp.venue,
         level: imp.level,
-        scores: imp.scores || {},
+        scores: (imp.scores && typeof imp.scores === "object") ? imp.scores : null,
         sign: imp.sign === "-" ? "-" : "+",
         amount: typeof imp.amount === "number" ? imp.amount : parseFloat(imp.amount) || 0,
         hands: Array.isArray(imp.hands) ? imp.hands.slice(0,5) : []
@@ -2267,6 +2538,15 @@
   function fmtSignedMoney(n){
     return (n>=0?"+":"−")+"HK$"+formatMoney(Math.abs(n));
   }
+  // compact money label for chart Y-axis ticks (limited horizontal space)
+  function fmtAxisMoney(n){
+    var sign = n < 0 ? "−" : "";
+    var abs = Math.abs(n);
+    if(abs >= 1000){
+      return sign + (abs/1000).toFixed(abs >= 10000 ? 0 : 1) + "k";
+    }
+    return sign + Math.round(abs);
+  }
   function fmtDateShort(iso){
     var d = parseISO(iso);
     return (d.getMonth()+1)+"/"+d.getDate();
@@ -2298,7 +2578,7 @@
 
   function buildMultiSeriesSVG(allLabels, seriesList, opts){
     opts = opts || {};
-    var W = 320, H = 180, padTop = 20, padBottom = 20, padLeft = 8, padRight = 8;
+    var W = 320, H = 200, padTop = 20, padBottom = 24, padLeft = 38, padRight = 10;
     if(!allLabels.length){
       return '<div class="chart-empty"><div class="ce-glyph">♠︎ ♦︎</div>还没有足够的数据</div>';
     }
@@ -2310,34 +2590,50 @@
     var minY = Math.min.apply(null, allValues);
     var maxY = Math.max.apply(null, allValues);
     if(minY === maxY){ minY -= 1; maxY += 1; }
+    // pad the range slightly so points near the top/bottom aren't clipped
+    var rangePad = (maxY - minY) * 0.08;
+    minY -= rangePad;
+    maxY += rangePad;
 
     var plotW = W - padLeft - padRight;
     var plotH = H - padTop - padBottom;
     var n = allLabels.length;
 
-    function xPos(i){ return n === 1 ? W/2 : padLeft + (i/(n-1)) * plotW; }
+    function xPos(i){ return n === 1 ? padLeft + plotW/2 : padLeft + (i/(n-1)) * plotW; }
     function yPos(v){ return padTop + (1 - (v - minY)/(maxY - minY)) * plotH; }
 
     var showZeroLine = minY < 0 && maxY > 0;
     var zeroY = yPos(0);
     var defs = '<defs>';
 
+    // ---- Y axis: 4 evenly spaced gridlines + value labels ----
+    var Y_TICKS = 4;
+    var yGrid = "", yLabels = "";
+    for(var t=0; t<=Y_TICKS; t++){
+      var v = minY + (maxY - minY) * (t / Y_TICKS);
+      var yy = yPos(v);
+      yGrid += '<line x1="'+padLeft+'" y1="'+yy.toFixed(1)+'" x2="'+(W-padRight)+'" y2="'+yy.toFixed(1)+'" class="grid-line"/>';
+      yLabels += '<text x="'+(padLeft-6)+'" y="'+(yy+3).toFixed(1)+'" class="chart-axis-text" text-anchor="end">'+escapeHtml(formatAxisValue(v, opts.valueFmt))+'</text>';
+    }
+
     var seriesSvg = "";
+    var hitAreas = "";
     seriesList.forEach(function(s, si){
       // build index map: label -> y value
       var map = {};
       s.points.forEach(function(p){ map[p.label] = p.y; });
 
-      // only draw where we have data (skip gaps)
+      // only draw where we have data; if connectGaps=true, skip missing labels instead of breaking the line
       var segs = [];
       var curSeg = [];
       allLabels.forEach(function(lbl, i){
         if(map[lbl] !== undefined){
-          curSeg.push({i:i, y:map[lbl]});
-        } else {
+          curSeg.push({i:i, y:map[lbl], label:lbl});
+        } else if(!opts.connectGaps) {
           if(curSeg.length) segs.push(curSeg);
           curSeg = [];
         }
+        // if connectGaps: missing labels are simply skipped, current segment continues
       });
       if(curSeg.length) segs.push(curSeg);
 
@@ -2358,9 +2654,16 @@
           seriesSvg += '<path d="'+areaD+'" fill="url(#'+gid+')" class="trend-area"/>';
         }
         seriesSvg += '<path d="'+pathD+'" stroke="'+s.color+'" class="trend-line" stroke-opacity="'+(si===0?1:0.8)+'"/>';
-        // dot at last point of each segment
-        var last = seg[seg.length-1];
-        seriesSvg += '<circle cx="'+xPos(last.i).toFixed(1)+'" cy="'+yPos(last.y).toFixed(1)+'" r="3.5" fill="'+s.color+'" class="trend-dot" stroke="'+s.color+'"/>';
+
+        // a small visible dot + a larger invisible tap target at every point on the primary series
+        seg.forEach(function(pt){
+          var px = xPos(pt.i).toFixed(1), py = yPos(pt.y).toFixed(1);
+          seriesSvg += '<circle cx="'+px+'" cy="'+py+'" r="3" fill="'+s.color+'" class="trend-dot" stroke="'+s.color+'"/>';
+          if(si===0){
+            hitAreas += '<circle cx="'+px+'" cy="'+py+'" r="11" class="chart-point-hit" '+
+              'data-label="'+escapeHtml(pt.label)+'" data-value="'+pt.y+'"/>';
+          }
+        });
       });
     });
 
@@ -2369,20 +2672,62 @@
     // x-axis: show first, middle, last label
     var axisLabels = "";
     if(n >= 2){
-      axisLabels = '<text x="'+xPos(0).toFixed(1)+'" y="'+(H-2)+'" class="chart-axis-text" text-anchor="start">'+escapeHtml(periodLabel(allLabels[0], opts.period||"day"))+'</text>';
+      axisLabels = '<text x="'+xPos(0).toFixed(1)+'" y="'+(H-4)+'" class="chart-axis-text" text-anchor="start">'+escapeHtml(periodLabel(allLabels[0], opts.period||"day"))+'</text>';
       if(n > 2){
         var mid = Math.floor((n-1)/2);
-        axisLabels += '<text x="'+xPos(mid).toFixed(1)+'" y="'+(H-2)+'" class="chart-axis-text" text-anchor="middle">'+escapeHtml(periodLabel(allLabels[mid], opts.period||"day"))+'</text>';
+        axisLabels += '<text x="'+xPos(mid).toFixed(1)+'" y="'+(H-4)+'" class="chart-axis-text" text-anchor="middle">'+escapeHtml(periodLabel(allLabels[mid], opts.period||"day"))+'</text>';
       }
-      axisLabels += '<text x="'+xPos(n-1).toFixed(1)+'" y="'+(H-2)+'" class="chart-axis-text" text-anchor="end">'+escapeHtml(periodLabel(allLabels[n-1], opts.period||"day"))+'</text>';
+      axisLabels += '<text x="'+xPos(n-1).toFixed(1)+'" y="'+(H-4)+'" class="chart-axis-text" text-anchor="end">'+escapeHtml(periodLabel(allLabels[n-1], opts.period||"day"))+'</text>';
+    } else {
+      axisLabels = '<text x="'+xPos(0).toFixed(1)+'" y="'+(H-4)+'" class="chart-axis-text" text-anchor="middle">'+escapeHtml(periodLabel(allLabels[0], opts.period||"day"))+'</text>';
     }
 
     return '<svg viewBox="0 0 '+W+' '+H+'" class="trend-svg" preserveAspectRatio="none">'+
       defs+
+      yGrid+
       (showZeroLine ? '<line x1="'+padLeft+'" y1="'+zeroY.toFixed(1)+'" x2="'+(W-padRight)+'" y2="'+zeroY.toFixed(1)+'" class="zero-line"/>' : '')+
       seriesSvg+
+      yLabels+
       axisLabels+
+      hitAreas+
       '</svg>';
+  }
+
+  // format a Y-axis tick value using the series' value formatter when given,
+  // falling back to a plain rounded number.
+  function formatAxisValue(v, valueFmt){
+    if(typeof valueFmt === "function"){
+      return valueFmt(v);
+    }
+    var rounded = Math.round(v*100)/100;
+    return (rounded%1===0) ? rounded.toFixed(0) : rounded.toFixed(1);
+  }
+
+  // wire up click handling for the invisible tap targets drawn by buildMultiSeriesSVG.
+  // wrapEl: the container the chart SVG was injected into (id string)
+  // detailEl: the container to show the clicked point's detail in (id string)
+  // series: the primary series array used to build labels (for period text)
+  // opts.valueFmt: optional formatter for the value shown in the detail line
+  function wireChartPointClicks(wrapId, detailId, series, opts){
+    opts = opts || {};
+    var wrapEl = document.getElementById(wrapId);
+    var detailEl = document.getElementById(detailId);
+    if(!wrapEl || !detailEl) return;
+    var period = currentStatPeriod;
+    var hits = wrapEl.querySelectorAll(".chart-point-hit");
+    Array.prototype.forEach.call(hits, function(hit){
+      hit.addEventListener("click", function(){
+        Array.prototype.forEach.call(hits, function(h){ h.classList.remove("active"); });
+        hit.classList.add("active");
+        var label = hit.getAttribute("data-label");
+        var value = parseFloat(hit.getAttribute("data-value"));
+        var valStr = typeof opts.valueFmt === "function" ? opts.valueFmt(value) : value;
+        detailEl.innerHTML =
+          '<span class="pd-date">'+escapeHtml(periodLabel(label, period))+'</span>'+
+          '<span class="pd-val">'+escapeHtml(String(valStr))+'</span>';
+        detailEl.classList.add("show");
+      });
+    });
   }
 
   // ---- aggregate entries by period ----
@@ -2415,50 +2760,64 @@
   // ---- build period-aggregated score series (5 dims + total) ----
   function buildScoreSeries(chrono, period){
     var agg = bucketByPeriod(chrono, period);
-    // for each bucket: average of the scores across all entries in that bucket
-    var seriesData = {}; // key -> {sum, count}
-    var totalData  = {}; // key -> {sum, count}
-    CRITERIA.forEach(function(c){ seriesData[c.key]={}; });
+    // for each bucket: average of the total score across all *reviewed* entries in that bucket
+    // (entries saved with "暂不复盘" have scores === null and are excluded entirely)
+    var totalData = {}; // key -> {sum, count}
 
     agg.labels.forEach(function(k){
-      CRITERIA.forEach(function(c){ seriesData[c.key][k]={sum:0,count:0}; });
-      totalData[k]={sum:0,count:0};
+      totalData[k] = {sum:0, count:0};
       agg.buckets[k].forEach(function(e){
-        CRITERIA.forEach(function(c){
-          seriesData[c.key][k].sum += (e.scores[c.key]||0);
-          seriesData[c.key][k].count++;
-        });
-        totalData[k].sum += computeTotal(e.scores);
+        var t = computeTotal(e.scores);
+        if(t === null) return; // skipped review, exclude from the score trend
+        totalData[k].sum += t;
         totalData[k].count++;
       });
     });
 
-    var result = [];
-    CRITERIA.forEach(function(c, ci){
-      var pts = agg.labels.map(function(k){
-        var d = seriesData[c.key][k];
-        return { label:k, y: d.count>0 ? Math.round(d.sum/d.count*10)/10 : 0 };
+    // per-criterion data
+    var criterionData = {};
+    CRITERIA.forEach(function(c){ criterionData[c.key] = {}; });
+    agg.labels.forEach(function(k){
+      CRITERIA.forEach(function(c){ criterionData[c.key][k] = {sum:0,count:0}; });
+      agg.buckets[k].forEach(function(e){
+        if(!e.scores) return;
+        CRITERIA.forEach(function(c){
+          criterionData[c.key][k].sum += (e.scores[c.key]||0);
+          criterionData[c.key][k].count++;
+        });
       });
-      result.push({ label:c.name, color:SERIES_COLORS[ci], points:pts });
     });
-    // total score series
-    var totalPts = agg.labels.map(function(k){
-      var d = totalData[k];
-      return { label:k, y: d.count>0 ? Math.round(d.sum/d.count*10)/10 : 0 };
+
+    // only emit a point for periods that have at least one reviewed entry
+    var totalPts = agg.labels
+      .map(function(k){
+        var d = totalData[k];
+        return d.count>0 ? { label:k, y: Math.round(d.sum/d.count*10)/10 } : null;
+      })
+      .filter(function(p){ return p !== null; });
+
+    var dimSeries = CRITERIA.map(function(c, ci){
+      var pts = agg.labels
+        .map(function(k){
+          var d = criterionData[c.key][k];
+          return d.count>0 ? { label:k, y: Math.round(d.sum/d.count*10)/10 } : null;
+        })
+        .filter(function(p){ return p !== null; });
+      return { label:c.name, color:SERIES_COLORS[ci+1], points:pts };
     });
-    result.push({ label:"总分", color:"#E8E4D8", points:totalPts });
-    return result;
+
+    return {
+      dimSeries: dimSeries,
+      totalSeries: [{ label:"总分", color:SERIES_COLORS[0], points:totalPts }]
+    };
   }
 
   // ---- build period-aggregated winrate series (5 score dims) ----
   // Win rate formula: for each bucket, compute cumulative winrate up to & including that bucket
   function buildWinrateSeries(chrono, period){
     var agg = bucketByPeriod(chrono, period);
-    // cumulative totals
+    // cumulative totals (cumulative up to & including each period bucket)
     var cum = { amt5050:0, dur5050:0, amt100200:0, dur100200:0 };
-    // per-criterion cumulative sums (just average per period, not cumulative for scores)
-    var criterionCum = {}; // c.key -> {sum, count}
-    CRITERIA.forEach(function(c){ criterionCum[c.key]={sum:0,count:0}; });
 
     var winratePts = [];
     agg.labels.forEach(function(k){
@@ -2468,41 +2827,13 @@
           if(e.level==="50/100"){ cum.amt5050+=amt; cum.dur5050+=e.duration; }
           else if(e.level==="100/200"){ cum.amt100200+=amt; cum.dur100200+=e.duration; }
         }
-        CRITERIA.forEach(function(c){
-          criterionCum[c.key].sum += (e.scores[c.key]||0);
-          criterionCum[c.key].count++;
-        });
       });
       var wr = (cum.dur5050>0 ? cum.amt5050/(cum.dur5050*30) : 0) +
                (cum.dur100200>0 ? cum.amt100200/(cum.dur100200*60) : 0);
       winratePts.push({ label:k, y: Math.round(wr*100)/100 });
     });
 
-    var result = [{ label:"赢率（bb/百手）", color:SERIES_COLORS[0], points:winratePts }];
-
-    // also append 5 score dim series
-    CRITERIA.forEach(function(c, ci){
-      var cumS=0, cumC=0;
-      var pts = agg.labels.map(function(k){
-        agg.buckets[k].forEach(function(e){ cumS+=(e.scores[c.key]||0); cumC++; });
-        return { label:k, y: cumC>0 ? Math.round(cumS/cumC*10)/10 : 0 };
-      });
-      // reset cumS/cumC inside the loop above is wrong; rebuild correctly
-      result.push({ label:c.name, color:SERIES_COLORS[ci+1], points:[] });
-    });
-
-    // redo the score series correctly
-    result.splice(1);
-    CRITERIA.forEach(function(c, ci){
-      var cCum=0, cCount=0;
-      var pts = agg.labels.map(function(k){
-        agg.buckets[k].forEach(function(e){ cCum+=(e.scores[c.key]||0); cCount++; });
-        return { label:k, y: cCount>0 ? Math.round(cCum/cCount*10)/10 : 0 };
-      });
-      result.push({ label:c.name, color:SERIES_COLORS[ci+1], points:pts });
-    });
-
-    return result;
+    return [{ label:"赢率（bb/百手）", color:SERIES_COLORS[0], points:winratePts }];
   }
 
   // ---- period toggle + chart rendering ----
@@ -2547,51 +2878,48 @@
           '<div class="sp-current-val'+(lastVal<0?' neg':'')+'">'+fmtSignedMoney(lastVal)+'</div>'+
         '</div>'+
         '<div class="chart-wrap" id="chartWrap1"></div>'+
+        '<div class="point-detail" id="pointDetail1"></div>'+
         '<div class="sp-chart-meta">纵坐标为港币（HKD）</div>';
 
       document.getElementById("chartWrap1").innerHTML =
-        buildMultiSeriesSVG(allLabels, series, {period:period, includeZero:true});
+        buildMultiSeriesSVG(allLabels, series, {period:period, includeZero:true, valueFmt:fmtAxisMoney});
+      wireChartPointClicks("chartWrap1", "pointDetail1", series, {valueFmt: fmtSignedMoney});
 
     } else if(kind === "score"){
-      var allSeriesScore = buildScoreSeries(chrono, period);
-      // separate total from dim series
-      var dimSeries = allSeriesScore.slice(0, CRITERIA.length);
-      var totalSeries = [allSeriesScore[CRITERIA.length]];
-
-      var lastTotal = totalSeries[0].points.length ? totalSeries[0].points[totalSeries[0].points.length-1].y : 0;
+      var scoreResult = buildScoreSeries(chrono, period);
+      var dimSeries = scoreResult.dimSeries;
+      var totalSeries = scoreResult.totalSeries;
 
       var legendHtml = '<div class="series-legend">'+
-        dimSeries.map(function(s){ return '<span class="legend-item"><span class="legend-dot" style="background:'+s.color+'"></span>'+s.label+'</span>'; }).join('')+
+        dimSeries.map(function(s){
+          return '<span class="legend-item"><span class="legend-dot" style="background:'+s.color+'"></span>'+s.label+'</span>';
+        }).join('')+
         '</div>';
 
       contentEl.innerHTML =
-        '<div class="sp-current">'+
-          '<div class="sp-current-label">当前平均总分</div>'+
-          '<div class="sp-current-val">'+lastTotal.toFixed(1)+' / 10</div>'+
-        '</div>'+
         '<div class="sp-section-title">五维分项趋势</div>'+
         '<div class="chart-wrap" id="chartWrap1"></div>'+
+        '<div class="point-detail" id="pointDetail1"></div>'+
         legendHtml+
-        '<div class="sp-section-title">总分趋势</div>'+
-        '<div class="chart-wrap" id="chartWrap2"></div>';
+        '<div class="sp-section-title" style="margin-top:22px">总分趋势</div>'+
+        '<div class="chart-wrap" id="chartWrap2"></div>'+
+        '<div class="point-detail" id="pointDetail2"></div>';
 
       document.getElementById("chartWrap1").innerHTML =
-        buildMultiSeriesSVG(allLabels, dimSeries, {period:period, includeZero:false});
+        buildMultiSeriesSVG(allLabels, dimSeries, {period:period, includeZero:false, connectGaps:true, valueFmt:function(v){ return v.toFixed(1); }});
+      wireChartPointClicks("chartWrap1", "pointDetail1", dimSeries, {valueFmt:function(v){ return v.toFixed(1); }});
+
       document.getElementById("chartWrap2").innerHTML =
-        buildMultiSeriesSVG(allLabels, totalSeries, {period:period, includeZero:false});
+        buildMultiSeriesSVG(allLabels, totalSeries, {period:period, includeZero:false, connectGaps:true, valueFmt:function(v){ return v.toFixed(1); }});
+      wireChartPointClicks("chartWrap2", "pointDetail2", totalSeries, {valueFmt:function(v){ return v.toFixed(1)+" / 10"; }});
 
     } else if(kind === "winrate"){
       var allSeriesWr = buildWinrateSeries(chrono, period);
       var wrSeries = [allSeriesWr[0]];
-      var scoreSeries = allSeriesWr.slice(1);
 
       var lastWr = wrSeries[0].points.length ? wrSeries[0].points[wrSeries[0].points.length-1].y : null;
       var wrValStr = lastWr === null ? "—" : (lastWr>=0?"+":"−")+Math.abs(lastWr).toFixed(2)+" bb/百手";
       var wrValClass = "sp-current-val"+(lastWr!==null && lastWr<0?" neg":"");
-
-      var scoreLegendHtml = '<div class="series-legend">'+
-        scoreSeries.map(function(s){ return '<span class="legend-item"><span class="legend-dot" style="background:'+s.color+'"></span>'+s.label+'</span>'; }).join('')+
-        '</div>';
 
       contentEl.innerHTML =
         '<div class="sp-current">'+
@@ -2600,14 +2928,11 @@
         '</div>'+
         '<div class="sp-section-title">赢率趋势（bb/百手）</div>'+
         '<div class="chart-wrap" id="chartWrap1"></div>'+
-        '<div class="sp-section-title">五维分项趋势</div>'+
-        '<div class="chart-wrap" id="chartWrap2"></div>'+
-        scoreLegendHtml;
+        '<div class="point-detail" id="pointDetail1"></div>';
 
       document.getElementById("chartWrap1").innerHTML =
-        buildMultiSeriesSVG(allLabels, wrSeries, {period:period, includeZero:true});
-      document.getElementById("chartWrap2").innerHTML =
-        buildMultiSeriesSVG(allLabels, scoreSeries, {period:period, includeZero:false});
+        buildMultiSeriesSVG(allLabels, wrSeries, {period:period, includeZero:true, valueFmt:function(v){ return v.toFixed(1); }});
+      wireChartPointClicks("chartWrap1", "pointDetail1", wrSeries, {valueFmt:function(v){ return (v>=0?"+":"−")+Math.abs(v).toFixed(2)+" bb/百手"; }});
     }
   }
 
@@ -2632,16 +2957,41 @@
     flat.forEach(function(item){
       var card = document.createElement("div");
       card.className = "hov-card venue-" + item.venue;
+      // SVG icons
+      var expandIcon = '<svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">'+
+        '<path d="M3 5.5l4.5 4 4.5-4"/></svg>';
+      var collapseIcon = '<svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">'+
+        '<path d="M3 9.5l4.5-4 4.5 4"/></svg>';
+      var editIcon = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+
+        '<path d="M9.5 2l2.5 2.5-7 7H2.5V9L9.5 2z"/></svg>';
+
       card.innerHTML =
-        '<div class="hov-meta">'+
-          '<span class="hov-date">'+formatCN(item.date)+'</span>'+
-          '<span class="hov-tag">'+VENUE_LABEL[item.venue]+'</span>'+
-          '<span class="hov-tag">'+item.level+'</span>'+
+        '<div class="hov-card-body">'+
+          '<div class="hov-meta">'+
+            '<span class="hov-date">'+formatCN(item.date)+'</span>'+
+            '<span class="hov-tag">'+VENUE_LABEL[item.venue]+'</span>'+
+            '<span class="hov-tag">'+item.level+'</span>'+
+          '</div>'+
+          '<div class="hov-text">'+escapeHtml(item.text)+'</div>'+
         '</div>'+
-        '<div class="hov-text">'+escapeHtml(item.text)+'</div>';
-      card.addEventListener("click", function(){
+        '<div class="hov-icon-col">'+
+          '<button class="hov-icon-btn expand-btn" title="展开/收起">'+expandIcon+'</button>'+
+          '<button class="hov-icon-btn edit-btn" title="编辑">'+editIcon+'</button>'+
+        '</div>';
+
+      var textEl = card.querySelector(".hov-text");
+      var expandBtn = card.querySelector(".expand-btn");
+      var editBtn = card.querySelector(".edit-btn");
+
+      expandBtn.addEventListener("click", function(){
+        var nowExpanded = textEl.classList.toggle("expanded");
+        expandBtn.classList.toggle("is-expanded", nowExpanded);
+        expandBtn.innerHTML = nowExpanded ? collapseIcon : expandIcon;
+      });
+      editBtn.addEventListener("click", function(){
         openHandEditorDirect(item.entryId, item.handIdx);
       });
+
       spBody.appendChild(card);
     });
   }
@@ -2649,10 +2999,7 @@
   // ---------- Init ----------
   render();
 
-  // scroll list to bottom (latest entries) on load
-  window.addEventListener("load", function(){
-    window.scrollTo(0, document.body.scrollHeight);
-  });
+
 })();
 </script>
 </body>
