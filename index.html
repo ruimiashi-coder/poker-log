@@ -3469,14 +3469,14 @@
         }
       });
 
-      // 50/100: bb/百手 = 盈利 / (时长*HANDS_PER_HOUR) / (BB_50_100/100)
+      // 50/100: bb/百手 = 盈利 / (时长*HANDS_PER_HOUR) / 1
       // which is: 盈利 / (时长*30*1) = 盈利 / (时长*30)
       if(cum.dur5050 > 0){
         var wr5050 = cum.amt5050 / (cum.dur5050 * HANDS_PER_HOUR * 1);
         winratePts5050.push({ label:k, y: Math.round(wr5050*100)/100 });
       }
 
-      // 100/200: bb/百手 = 盈利 / (时长*HANDS_PER_HOUR) / (BB_100_200/100)
+      // 100/200: bb/百手 = 盈利 / (时长*HANDS_PER_HOUR) / 2
       // which is: 盈利 / (时长*30*2) = 盈利 / (时长*60)
       if(cum.dur100200 > 0){
         var wr100200 = cum.amt100200 / (cum.dur100200 * HANDS_PER_HOUR * 2);
@@ -3608,11 +3608,11 @@
         '<div class="sp-section-title">50/100 赢率趋势</div>'+
         '<div class="chart-wrap" id="chartWrap1"></div>'+
         '<div class="point-detail" id="pointDetail1"></div>'+
-        '<div class="sp-chart-meta">计算方式：盈利 / (时长 × '+HANDS_PER_HOUR+'手/小时 × 1bb) = bb/百手（bb='+BB_50_100+'）</div>'+
+        '<div class="sp-chart-meta">计算方式：盈利 / (时长 × '+HANDS_PER_HOUR+'手/小时 × 1bb) = bb/百手（bb=100）</div>'+
         '<div class="sp-section-title" style="margin-top:28px;">100/200 赢率趋势</div>'+
         '<div class="chart-wrap" id="chartWrap2"></div>'+
         '<div class="point-detail" id="pointDetail2"></div>'+
-        '<div class="sp-chart-meta">计算方式：盈利 / (时长 × '+HANDS_PER_HOUR+'手/小时 × 2bb) = bb/百手（bb='+BB_100_200+'）</div>'+
+        '<div class="sp-chart-meta">计算方式：盈利 / (时长 × '+HANDS_PER_HOUR+'手/小时 × 2bb) = bb/百手（bb=200）</div>'+
         '<div id="winrateAnalysis"></div>';
 
       // Render 50/100 chart
