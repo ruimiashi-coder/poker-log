@@ -1847,8 +1847,8 @@
         <span class="duration-val" id="durationVal">请拖动选择</span>
       </div>
       <div class="duration-card">
-        <input type="range" class="rng" id="durationRng" min="1" max="16" step="1" value="8">
-        <div class="duration-ticks"><span>1 小时</span><span>16 小时</span></div>
+        <input type="range" class="rng" id="durationRng" min="1" max="10" step="1" value="1">
+        <div class="duration-ticks"><span>1 小时</span><span>10 小时</span></div>
       </div>
     </div>
 
@@ -2095,8 +2095,8 @@
       id: null,
       date: iso,
       session: nextSessionFor(iso, null),
-      duration: 8,
-      durationSet: true,
+      duration: null,
+      durationSet: false,
       venue: "venetian",
       level: "50/100",
       scores: freshScores(),
@@ -2864,7 +2864,7 @@
       durationVal.textContent = draft.duration + " 小时";
       durationVal.classList.add("set");
     } else {
-      durationRng.value = 8;
+      durationRng.value = 1;
       durationVal.textContent = "请拖动选择";
       durationVal.classList.remove("set");
     }

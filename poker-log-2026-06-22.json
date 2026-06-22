@@ -1,0 +1,488 @@
+[
+  {
+    "id": "1781987595414-r85705",
+    "date": "2026-06-18",
+    "session": 1,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 2,
+      "aggro": 2,
+      "discip": 2,
+      "emotion": 2,
+      "review": 2
+    },
+    "sign": "+",
+    "amount": 32800,
+    "duration": 4,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1781988040620-4ac28m",
+    "date": "2026-06-19",
+    "session": 1,
+    "duration": 8,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 2,
+      "aggro": 1.5,
+      "discip": 1.5,
+      "emotion": 2,
+      "review": 2
+    },
+    "sign": "-",
+    "amount": 22900,
+    "tableCondition": "",
+    "hands": [
+      "多人底池原则，顶对超对可以去raise别人，但绝对不能随便冷call别人的raise",
+      "短桌，前位open 300，我KJ♥️3b 1000，他call，底池2100\nFlop A J 5两张♦️\nx, bet 700, call\nTurn 5\nx x\nRiver Q♦️花到\n他bet 2000 into 3500，我长考后raise to 10000，他5♣️4♣️ call了\n\n我是感觉这里我有所有的Full house，他没有任何的full house，也只有KT♦️这一组K花，所以我有很大的坚果优势，可以对他强行施压\n\n下来复盘的时候感觉开始不太好了，因为turn上x x了，所以我几乎失去了所有的AA JJ\n我的full house在他眼里可能只有QQ和A5了\n当然我还是有很多的K花，J花\n\n复盘下来我感觉这个面确实很难找bluff，挺适合River bluff的，但是下次最好用在bet bet bet这种让我不会丢失任何full house的行动线上\n\n愿意fold 三条5的人，可能大概率都不会自己打出来了，愿意自己打出来的可能更多的是会call一个不是All in的raise的"
+    ],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1781988353499-vftswn",
+    "date": "2026-06-20",
+    "session": 1,
+    "duration": 8,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 2,
+      "aggro": 1.5,
+      "discip": 1.5,
+      "emotion": 1.5,
+      "review": 2
+    },
+    "sign": "-",
+    "amount": 22600,
+    "tableCondition": "",
+    "hands": [
+      "然后3b底池overbluff了一把-6600\n这里应该可以少掉3600"
+    ],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1781988822147-q88w6f",
+    "date": "2026-06-14",
+    "session": 1,
+    "duration": 6,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 1.5,
+      "aggro": 1.5,
+      "discip": 2,
+      "emotion": 2,
+      "review": 2
+    },
+    "sign": "-",
+    "amount": 11800,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1781989045923-l6xhvf",
+    "date": "2026-06-13",
+    "session": 1,
+    "duration": 6,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 1.5,
+      "aggro": 2,
+      "discip": 2,
+      "emotion": 2,
+      "review": 2
+    },
+    "sign": "+",
+    "amount": 5100,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1781989146417-p1nrvm",
+    "date": "2026-06-12",
+    "session": 1,
+    "duration": 4,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": null,
+    "sign": "+",
+    "amount": 10500,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1781990711461-iq8f9w",
+    "date": "2026-06-20",
+    "session": 2,
+    "duration": 7,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 1.5,
+      "aggro": 2,
+      "discip": 2,
+      "emotion": 2,
+      "review": 1.5
+    },
+    "sign": "+",
+    "amount": 28000,
+    "tableCondition": "",
+    "hands": [
+      "对于有能力诈唬的鲸鱼老板，要分清他在每个行动节点的的跟住站成分更多，还是疯鱼成分更多，从而决定强牌是overbet还是overprotect\n\n典型例子:\n2/3号位的幽默眼睛讨喜老板，进攻的时候疯鱼成分多，那就可以适当的overprotect\n但防守的时候肯定不会去主动xr或者donk你，那就是跟住站成分明显多，AK on AQT就完全没必要x back了，损失大量价值！",
+      "ABB xr大法不要用在高公对链接面上！\n非必要损失3200！\n\n23♠️limp call MP open 300, Bb call, Pot 900\n\nA♣️A♠️T♣️  Pot 900\nx x bet 300 fold xr 1000 call\n\n这里的xr不好，因为他大量的KJ KQ QJ Ax都会call两条街，哪怕河牌miss了你也得再开枪才能打走，而且Ax，TT都完全是对方范围\n\n4♦️ Pot 2900\nbet 2200 call\n这里单看turn没啥问题，增强了继续bet合理，但是因为Flop的xr是错的，所以反而多输了\n\n8♥️ Pot 7300\nx bet 3500 fold\n对方的权益太容易实现，你的权益太容易被deny"
+    ],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782054413532-62u91x",
+    "date": "2026-05-01",
+    "session": 1,
+    "venue": "venetian",
+    "level": "100/200",
+    "scores": {
+      "observe": 1,
+      "aggro": 1.5,
+      "discip": 1.5,
+      "emotion": 1.5,
+      "review": 0.5
+    },
+    "sign": "+",
+    "amount": 10000,
+    "duration": 5,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782055828383-1edg2o",
+    "date": "2026-05-02",
+    "session": 1,
+    "venue": "venetian",
+    "level": "100/200",
+    "scores": {
+      "observe": 1,
+      "aggro": 1.5,
+      "discip": 1,
+      "emotion": 1.5,
+      "review": 0.5
+    },
+    "sign": "+",
+    "amount": 32000,
+    "duration": 10,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782055866087-0th3k6",
+    "date": "2026-05-03",
+    "session": 1,
+    "venue": "venetian",
+    "level": "100/200",
+    "scores": {
+      "observe": 1,
+      "aggro": 1,
+      "discip": 0.5,
+      "emotion": 1,
+      "review": 0.5
+    },
+    "sign": "-",
+    "amount": 7000,
+    "duration": 10,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782055916585-75wjhu",
+    "date": "2026-05-04",
+    "session": 1,
+    "venue": "venetian",
+    "level": "100/200",
+    "scores": {
+      "observe": 1,
+      "aggro": 0.5,
+      "discip": 0.5,
+      "emotion": 0,
+      "review": 0.5
+    },
+    "sign": "-",
+    "amount": 55000,
+    "duration": 4,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782055942215-8ncxtx",
+    "date": "2026-05-04",
+    "session": 2,
+    "venue": "mgm",
+    "level": "100/200",
+    "scores": {
+      "observe": 1,
+      "aggro": 1,
+      "discip": 0,
+      "emotion": 0,
+      "review": 0.5
+    },
+    "sign": "-",
+    "amount": 78000,
+    "duration": 6,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782056025153-hpsfmp",
+    "date": "2026-05-05",
+    "session": 1,
+    "venue": "venetian",
+    "level": "100/200",
+    "scores": {
+      "observe": 1.5,
+      "aggro": 2,
+      "discip": 1.5,
+      "emotion": 2,
+      "review": 0.5
+    },
+    "sign": "+",
+    "amount": 16000,
+    "duration": 2,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782056052629-q380vk",
+    "date": "2026-05-05",
+    "session": 2,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 1.5,
+      "aggro": 1.5,
+      "discip": 1,
+      "emotion": 2,
+      "review": 0.5
+    },
+    "sign": "-",
+    "amount": 6000,
+    "duration": 2,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782056179550-yba511",
+    "date": "2026-05-20",
+    "session": 1,
+    "duration": 8,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 2,
+      "aggro": 2,
+      "discip": 0.5,
+      "emotion": 1.5,
+      "review": 1.5
+    },
+    "sign": "+",
+    "amount": 0,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782056249285-5x9wn5",
+    "date": "2026-05-24",
+    "session": 1,
+    "duration": 10,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 1.5,
+      "aggro": 1.5,
+      "discip": 1.5,
+      "emotion": 1.5,
+      "review": 2
+    },
+    "sign": "-",
+    "amount": 30000,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782056482883-fywnid",
+    "date": "2025-10-02",
+    "session": 2,
+    "duration": 8,
+    "venue": "mgm",
+    "level": "100/200",
+    "scores": null,
+    "sign": "+",
+    "amount": 7000,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782056523500-neyk1x",
+    "date": "2025-10-03",
+    "session": 2,
+    "duration": 8,
+    "venue": "venetian",
+    "level": "100/200",
+    "scores": null,
+    "sign": "+",
+    "amount": 80000,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782056553528-zddf8e",
+    "date": "2025-10-04",
+    "session": 1,
+    "duration": 8,
+    "venue": "venetian",
+    "level": "100/200",
+    "scores": null,
+    "sign": "+",
+    "amount": 100000,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782056820156-yshxll",
+    "date": "2025-10-06",
+    "session": 1,
+    "duration": 8,
+    "venue": "venetian",
+    "level": "100/200",
+    "scores": null,
+    "sign": "+",
+    "amount": 80000,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782056853070-ggb74a",
+    "date": "2025-10-05",
+    "session": 2,
+    "duration": 10,
+    "venue": "venetian",
+    "level": "100/200",
+    "scores": null,
+    "sign": "+",
+    "amount": 100000,
+    "tableCondition": "",
+    "hands": [],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782122199026-3k4ehw",
+    "date": "2026-06-21",
+    "session": 1,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 1.75,
+      "aggro": 1.75,
+      "discip": 1.5,
+      "emotion": 2,
+      "review": 2
+    },
+    "sign": "+",
+    "amount": 7000,
+    "duration": 6,
+    "tableCondition": "桌况soft，没有任何一个对我有威胁的玩家，玩家以紧弱游客、松弱老板为主，还有一个喜欢搞人容易情绪失控的bad reg，整体气氛友好聊天很多\n\n特殊牌桌动态：贴身上家的（红线他）游客马上要赶船回去了",
+    "hands": [
+      "连续来好牌，连续open，3b，搞炸bad reg心态，让其T4s 3b我-call我4b，送给我总共14000",
+      "不规矩的翻前范围+不到位的现场动态观察+错误的尺寸选择 = 白送5000\n\nHJ老板开的 500 4人池，CO紧弱游客call, 庄位我call，大盲也call，底池2000，我45o想进去买顺清老板\n\nFlop T♠️ 7♥️ 6♣️ Pot 2000\nx x x x\n\nTurn 2♥️\nx, CO游客1000，我call，其他人fold \n\nRiver 5♥️ Pot 4000\nCO游客x, 我打了3500，他88带8♥️给我call了\nBluff就应该推他10000 All in的\n打紧弱游客，这种复杂牌面的bluff一定要大，因为就是要去攻击他的封顶范围，就得去打一个非常大的尺度，打掉他的全范围\n\n贴身上家的（红线他）游客马上要赶船回去了，还差3000回水，你这时候偷一个3600 into 3600出来，不就是给他一个回水的机会吗？要剥削他没有nuts的节点，就老老实实的shove 10000 into 3600打掉他全范围就好了啊，价值牌再打3600给他call的理由就好了",
+      "turn都出花了，还在那里对着b33去防2oc = 买到棺材板-2600！\n\n危险turn出张上不要拿着2oc去防什么b33，很容易击中了高张结果被反向隐含赔率！\n\nHJ open 300, 我CO A♦️Q♣️ 3b 900, HJ call\n\nFlop T♠️ 8♠️ 2♥️ Pot 2000\nx x\n\nTurn 6♠️ Pot 2000\n他probe 600, 我call\n\nRiver Q♦️ Pot 3200\n他bet 2000，我没fold掉，他show A♠️9♠️"
+    ],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782124451306-n2w94p",
+    "date": "2026-06-21",
+    "session": 2,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 2,
+      "aggro": 2,
+      "discip": 2,
+      "emotion": 2,
+      "review": 2
+    },
+    "sign": "+",
+    "amount": 35000,
+    "duration": 6,
+    "tableCondition": "与上一场几乎同样的牌桌",
+    "hands": [
+      "深筹码cooler住老板吃到18500极限价值\n\n有效后手30000。我在大盲KJo，庄位是一个大概vpip 50 pfr 15的跟注站老板，哪怕庄位也绝对不超过pfr 20。这个老板就是典型的面对bbb不会鱼到超对跟你打光，但是面对bxb会用一个中对弱踢脚过度跟注哪怕b200的玩家。\n\n老板open 300，我call，Pot 650\n感觉这里KJo并不领先他，所以只是flat，没有深筹码3b在不利位置造大池的想法\n\nFlop J J 2，Pot 650\nx, bet 200，xr to 1200，call\n\nTurn J J 2 8，Pot 3050\nbet 3000, call\n\nRiver J J 2 8 K\nbet 14000, 长考后call，老板后手还剩13000左右\n\n我KJo 开牌，老板show AJo\n\n请教过后结论这手打的很几乎每个节点都很满意，吃满了深筹码的价值"
+    ],
+    "buyin": 100,
+    "rebuy": null
+  },
+  {
+    "id": "1782125212529-og4r48",
+    "date": "2026-06-21",
+    "session": 3,
+    "venue": "venetian",
+    "level": "50/100",
+    "scores": {
+      "observe": 1,
+      "aggro": 1.5,
+      "discip": 2,
+      "emotion": 2,
+      "review": 2
+    },
+    "sign": "-",
+    "amount": 13500,
+    "duration": 2,
+    "tableCondition": "拆桌到了新桌上，一开始有印度大老板，但是被bb了13000，但也靠着各种连偷带抢一度又打回去7000\n\n后半夜进入半auto-pilot状态。后来都是留到后半夜的reg为主了，总体除了印度大老板和一两个Weak Reg以外，其他的都是标准的紧凶，怀疑还有后半夜100/200爆桌上来的reg，打法凶的不像是50/100，小口袋对极限偷鸡",
+    "hands": [
+      "AT被印度大老板JT bb了，TT2打光，发 J 。-13000",
+      "3OA的顶对顶踢turn上不完全确定应该怎么处理，需要深入学习！\n\nHJ open 300，庄位call，我在大盲AQo 3b到1400，HJ call，Pot 3000\n\nFlop Q 9 4，Pot 3000\nCbet 1500, call\n\nTurn J，Pot 6000，他后手还7000左右\nx x\n\nRiver 5白板，Pot 6000\nBet 6000, fold",
+      "转牌深筹码遭遇重注是否需要过度弃牌？（如果是超对的话）这个需要研究一下\n\n被怀疑是100/200的厚嘴唇歪嘴银色金属框眼镜reg绝命恶偷了，转牌的节点需要好好研究下怎样才是最优的。很奇怪为啥他会觉得我的3b只有高牌和超对?不然不会这样偷我啊。-7400\n\n庄open，我小盲66带6♦️3b to 1200, call, pot 2500\n\nFlop T♦️8 4 pot 2500\nbet 1200, call\n\nTurn 7♦️ pot 4900\nx, bet 5000, call\n\nRiver J♦️ pot 14900\nx, bet all in 15500, fold\n\n对手show 22带2♦️"
+    ],
+    "buyin": 300,
+    "rebuy": null
+  }
+]
