@@ -45,6 +45,8 @@
       repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
   }
 
+  .serif{ font-family: 'Spectral', serif; }
+
   /* ---------- App shell ---------- */
   #app{
     max-width: 560px;
@@ -72,8 +74,8 @@
     margin-bottom: 16px;
   }
   .icon-btn{
-    width: 44px; height: 44px;
-    border-radius: 10px;
+    width: 32px; height: 32px;
+    border-radius: 9px;
     background: var(--card);
     border: 1px solid var(--line);
     color: var(--ink-dim);
@@ -81,7 +83,7 @@
     cursor:pointer;
     flex-shrink:0;
   }
-  .icon-btn svg{ width:18px; height:18px; }
+  .icon-btn svg{ width:16px; height:16px; }
   .icon-btn:active{ background: var(--card-raised); }
   .hidden-file-input{ display:none; }
 
@@ -556,20 +558,19 @@
     margin:0;
   }
   .sheet-close{
-    width:44px; height:44px;
+    width:30px; height:30px;
     border-radius:50%;
     background: var(--card);
     border:1px solid var(--line);
     color: var(--ink-dim);
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
-    font-size: 18px;
+    font-size: 15px;
   }
 
   .sheet-body{
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
     padding: 4px 20px 24px;
     flex:1;
   }
@@ -679,13 +680,13 @@
     gap: 8px;
   }
   .stepper-btn-compact{
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
     background: var(--card-raised);
     border: 1px solid var(--line);
     color: var(--ink);
-    font-size: 18px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1326,12 +1327,12 @@
     border-bottom: 1px solid var(--line);
   }
   .sp-back{
-    width: 44px; height:44px;
+    width: 38px; height:38px;
     border-radius: 50%;
     background: none;
     border:none;
     color: var(--ink-dim);
-    font-size: 26px;
+    font-size: 24px;
     line-height:1;
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
@@ -1352,7 +1353,6 @@
   .sp-body{
     flex:1;
     overflow-y: auto;
-    overscroll-behavior: contain;
     padding: 20px 20px 40px;
   }
 
@@ -1623,9 +1623,9 @@
     border-color: rgba(181,82,74,0.3);
   }
   .hov-icon-btn{
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
     background: var(--card-raised);
     border: 1px solid var(--line);
     color: var(--ink-dim);
@@ -1636,8 +1636,8 @@
     flex-shrink: 0;
   }
   .hov-icon-btn svg{
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     transition: transform 0.2s ease;
   }
   .hov-icon-btn:active{
@@ -1814,13 +1814,13 @@
     gap: 4px;
   }
   .amount-sign-btn{
-    width: 44px;
-    height: 44px;
-    border-radius: 9px;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
     border: 1px solid var(--line);
     background: var(--card);
     color: var(--ink-faint);
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s ease;
@@ -1949,14 +1949,14 @@
     padding: 0 4px;
   }
   .cal-head .cal-nav{
-    width:44px; height:44px;
+    width:30px; height:30px;
     border-radius:50%;
     background: var(--card-raised);
     border:1px solid var(--line);
     color: var(--ink-dim);
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
-    font-size:16px;
+    font-size:14px;
   }
   .cal-head .cal-ym{
     font-family:'Spectral', serif;
@@ -3475,7 +3475,6 @@
     var origIdx = parseInt(handle.getAttribute("data-idx"), 10);
     var cardEls = Array.prototype.slice.call(handsDragZone.querySelectorAll(".hand-card"));
     if(cardEls.length < 2) return; // nothing to reorder
-    if(origIdx < 0 || origIdx >= cardEls.length) return; // invalid index
 
     dragState = {
       startY: e.clientY,
@@ -3491,7 +3490,7 @@
     draggedCard.style.transition = "none";
     draggedCard.style.zIndex = "50";
 
-    try{ handle.setPointerCapture(e.pointerId); }catch(err){ console.warn("setPointerCapture failed:", err); }
+    try{ handle.setPointerCapture(e.pointerId); }catch(err){}
     handle.addEventListener("pointermove", onHandleMove);
     handle.addEventListener("pointerup", onHandleUp);
     handle.addEventListener("pointercancel", onHandleUp);
@@ -3849,16 +3848,6 @@
   document.getElementById("saveBtn").addEventListener("click", function(){
     var amt = parseFloat(draft.amount);
     var amountValid = !isNaN(amt) && amt >= 0 && draft.amount !== "";
-
-    // Validate date and session
-    if(!draft.date || !/^\d{4}-\d{2}-\d{2}$/.test(draft.date)){
-      showToast("日期格式不正确");
-      return;
-    }
-    if(!draft.session || draft.session < 1 || draft.session > 99){
-      showToast("Session必须在1-99之间");
-      return;
-    }
 
     // checks in top-to-bottom form order; stop at the first unfilled field
     var checks = [
