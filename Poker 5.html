@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Macau Poker</title>
+<title>哥哥小猫狗的牌局记录</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Spectral:ital@1&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -45,6 +45,8 @@
       repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 3px);
   }
 
+  .serif{ font-family: 'Spectral', serif; }
+
   /* ---------- App shell ---------- */
   #app{
     max-width: 560px;
@@ -72,8 +74,8 @@
     margin-bottom: 16px;
   }
   .icon-btn{
-    width: 44px; height: 44px;
-    border-radius: 10px;
+    width: 32px; height: 32px;
+    border-radius: 9px;
     background: var(--card);
     border: 1px solid var(--line);
     color: var(--ink-dim);
@@ -81,7 +83,7 @@
     cursor:pointer;
     flex-shrink:0;
   }
-  .icon-btn svg{ width:18px; height:18px; }
+  .icon-btn svg{ width:16px; height:16px; }
   .icon-btn:active{ background: var(--card-raised); }
   .hidden-file-input{ display:none; }
 
@@ -264,133 +266,6 @@
     letter-spacing: 0.02em;
   }
 
-  /* Year divider */
-  .year-divider{
-    position: relative;
-    margin: 20px 0;
-    text-align: center;
-    height: 1px;
-    background: var(--line);
-  }
-  .year-divider-text{
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--bg);
-    padding: 0 12px;
-    font-family: 'Spectral', serif;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--ink-faint);
-    font-weight: 500;
-  }
-
-  /* Session group (consecutive dates) */
-  .session-group{
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .session-group-header{
-    padding: 14px 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    transition: background .15s ease;
-    user-select: none;
-  }
-  .session-group-header:active{
-    background: var(--card-raised);
-  }
-  .session-group.collapsed .session-group-header{
-    padding-bottom: 14px;
-  }
-  .sg-chevron{
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    color: var(--ink-faint);
-    transition: transform .25s ease;
-  }
-  .session-group.collapsed .sg-chevron{
-    transform: rotate(-90deg);
-  }
-  .sg-info{
-    flex: 1;
-    min-width: 0;
-  }
-  .sg-title{
-    font-family: 'Spectral', serif;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 4px;
-  }
-  .sg-meta{
-    font-size: 11px;
-    color: var(--ink-faint);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 10px;
-  }
-  .sg-meta-item{
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .sg-meta-label{
-    opacity: 0.7;
-  }
-  .sg-meta-value{
-    font-weight: 600;
-    color: var(--ink-dim);
-  }
-  .sg-amount{
-    flex-shrink: 0;
-    text-align: right;
-  }
-  .sg-amount-value{
-    font-size: 17px;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-  }
-  .sg-amount-value.pos{
-    color: var(--gold-bright);
-  }
-  .sg-amount-value.neg{
-    color: var(--loss-bright);
-  }
-  .sg-amount-label{
-    font-size: 10px;
-    color: var(--ink-faint);
-    margin-top: 2px;
-  }
-  .session-group-body{
-    max-height: 2000px;
-    overflow: hidden;
-    transition: max-height .3s ease;
-  }
-  .session-group.collapsed .session-group-body{
-    max-height: 0;
-  }
-  .session-group-entries{
-    padding: 0 10px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .session-group-entries .day-label{
-    padding-left: 6px;
-    font-size: 12px;
-  }
-  .session-group-entries .entry{
-    margin: 0;
-  }
-
   .entry{
     background: var(--card);
     border: 1px solid var(--line);
@@ -556,20 +431,19 @@
     margin:0;
   }
   .sheet-close{
-    width:44px; height:44px;
+    width:30px; height:30px;
     border-radius:50%;
     background: var(--card);
     border:1px solid var(--line);
     color: var(--ink-dim);
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
-    font-size: 18px;
+    font-size: 15px;
   }
 
   .sheet-body{
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
     padding: 4px 20px 24px;
     flex:1;
   }
@@ -679,13 +553,13 @@
     gap: 8px;
   }
   .stepper-btn-compact{
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
     background: var(--card-raised);
     border: 1px solid var(--line);
     color: var(--ink);
-    font-size: 18px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -755,18 +629,6 @@
     font-size: 11px;
     font-weight: 600;
     padding: 7px 8px;
-  }
-
-  /* Hand type pills */
-  .hand-type-pill.selected{
-    border-color: var(--gold);
-    color: var(--ink);
-    background: rgba(201,162,75,0.16);
-  }
-  .hand-subtype-pill.selected{
-    border-color: var(--gold);
-    color: var(--gold-bright);
-    background: rgba(201,162,75,0.12);
   }
 
   /* Duration slider */
@@ -1065,7 +927,7 @@
     margin-top: 10px;
   }
 
-  /* ---------- Key hands (牌谱) ---------- */
+  /* ---------- Key hands (关键牌局) ---------- */
   .hands-drag-zone{
     position: relative;
     height: 0;
@@ -1256,7 +1118,7 @@
   }
   .suit-btn{
     flex:1;
-    height: 40px;
+    aspect-ratio: 1.5;
     border-radius: var(--radius-sm);
     border: 1px solid var(--line);
     background: var(--card);
@@ -1267,11 +1129,6 @@
   .suit-btn:active{ background: var(--card-raised); }
   .suit-btn.suit-black{ color: var(--ink); }
   .suit-btn.suit-red{ color: var(--suit-red); }
-  .suit-btn.format-btn{
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--ink-dim);
-  }
 
   .he-textarea{
     flex:1;
@@ -1285,19 +1142,6 @@
     font-family:'Spectral', serif;
     font-size: 16px;
     line-height: 1.75;
-    overflow-y: auto;
-  }
-  .he-textarea[contenteditable="true"]:empty:before{
-    content: attr(data-placeholder);
-    color: var(--ink-faint);
-    pointer-events: none;
-  }
-  .he-textarea:focus{
-    outline: none;
-  }
-  .he-textarea[contenteditable="true"]{
-    white-space: pre-wrap;
-    word-wrap: break-word;
   }
   .he-textarea::placeholder{ color: var(--ink-faint); }
 
@@ -1326,12 +1170,12 @@
     border-bottom: 1px solid var(--line);
   }
   .sp-back{
-    width: 44px; height:44px;
+    width: 38px; height:38px;
     border-radius: 50%;
     background: none;
     border:none;
     color: var(--ink-dim);
-    font-size: 26px;
+    font-size: 24px;
     line-height:1;
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
@@ -1352,7 +1196,6 @@
   .sp-body{
     flex:1;
     overflow-y: auto;
-    overscroll-behavior: contain;
     padding: 20px 20px 40px;
   }
 
@@ -1596,36 +1439,10 @@
     border-radius: 5px;
     padding: 2px 6px;
   }
-  .hov-tag.hand-type-tag{
-    background: rgba(201,162,75,0.16);
-    color: var(--gold-bright);
-    border: 1px solid rgba(201,162,75,0.3);
-    font-weight: 600;
-  }
-  .hov-tag.hand-subtype-tag{
-    background: rgba(201,162,75,0.1);
-    color: var(--gold);
-    border: 1px solid rgba(201,162,75,0.25);
-    font-weight: 500;
-  }
-  .hov-tag.hand-amount-tag{
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600;
-    border: 1px solid rgba(201,162,75,0.3);
-  }
-  .hov-tag.hand-amount-tag.pos{
-    background: rgba(201,162,75,0.16);
-    color: var(--gold-bright);
-  }
-  .hov-tag.hand-amount-tag.neg{
-    background: rgba(181,82,74,0.12);
-    color: var(--loss-bright);
-    border-color: rgba(181,82,74,0.3);
-  }
   .hov-icon-btn{
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
     background: var(--card-raised);
     border: 1px solid var(--line);
     color: var(--ink-dim);
@@ -1636,8 +1453,8 @@
     flex-shrink: 0;
   }
   .hov-icon-btn svg{
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     transition: transform 0.2s ease;
   }
   .hov-icon-btn:active{
@@ -1729,208 +1546,6 @@
     color: var(--ink-faint);
   }
 
-  /* Hands filter */
-  .hands-filter{
-    padding: 16px 0 20px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 16px;
-  }
-  .filter-row{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  .filter-row:last-child{
-    margin-bottom: 0;
-  }
-  .filter-pill{
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--ink-dim);
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    white-space: nowrap;
-  }
-  .filter-pill:active{
-    transform: scale(0.96);
-  }
-  .filter-pill.selected{
-    border-color: var(--gold);
-    background: rgba(201,162,75,0.16);
-    color: var(--gold-bright);
-    font-weight: 600;
-  }
-  .filter-pill.filter-subtype{
-    font-size: 11px;
-    padding: 6px 10px;
-  }
-  .filter-clear-btn{
-    margin-left: auto;
-    padding: 8px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
-    background: var(--card-raised);
-    color: var(--ink-faint);
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    white-space: nowrap;
-  }
-  .filter-clear-btn:hover{
-    border-color: var(--loss);
-    color: var(--loss-bright);
-  }
-  .filter-clear-btn:active{
-    transform: scale(0.96);
-    background: rgba(181,82,74,0.08);
-  }
-
-  /* Amount filter */
-  .filter-amount-row{
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
-  }
-  .filter-amount-label{
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--ink-dim);
-    margin-bottom: 10px;
-    letter-spacing: 0.05em;
-  }
-  .filter-amount-controls{
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .amount-sign-toggle{
-    display: flex;
-    gap: 4px;
-  }
-  .amount-sign-btn{
-    width: 44px;
-    height: 44px;
-    border-radius: 9px;
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--ink-faint);
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .amount-sign-btn:active{
-    transform: scale(0.94);
-  }
-  .amount-sign-btn.active{
-    border-color: var(--gold);
-    background: rgba(201,162,75,0.16);
-    color: var(--gold-bright);
-  }
-  .amount-slider-wrap{
-    flex: 1;
-    position: relative;
-  }
-  .amount-slider-wrap input[type="range"]{
-    width: 100%;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--line);
-    outline: none;
-    -webkit-appearance: none;
-  }
-  .amount-slider-wrap input[type="range"]::-webkit-slider-thumb{
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--gold-bright);
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    transition: all 0.15s ease;
-  }
-  .amount-slider-wrap input[type="range"]::-webkit-slider-thumb:hover{
-    transform: scale(1.15);
-  }
-  .amount-slider-wrap input[type="range"]::-moz-range-thumb{
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--gold-bright);
-    cursor: pointer;
-    border: none;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  }
-  .amount-slider-value{
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gold-bright);
-    margin-top: 6px;
-    text-align: center;
-  }
-  .amount-slider-ticks{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 4px;
-    font-size: 10px;
-    color: var(--ink-faint);
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  /* Search filter */
-  .filter-search-row{
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--line);
-  }
-  .filter-search-wrap{
-    position: relative;
-  }
-  .filter-search-wrap input{
-    width: 100%;
-    padding: 10px 16px 10px 40px;
-    border-radius: 10px;
-    border: 1px solid var(--line);
-    background: var(--card);
-    color: var(--ink);
-    font-size: 14px;
-    outline: none;
-    transition: all 0.2s ease;
-  }
-  .filter-search-wrap input:focus{
-    border-color: var(--gold);
-    background: var(--card-raised);
-    box-shadow: 0 0 0 3px rgba(201,162,75,0.1);
-  }
-  .filter-search-wrap input::placeholder{
-    color: var(--ink-faint);
-  }
-  .filter-search-wrap .search-icon{
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 18px;
-    height: 18px;
-    color: var(--ink-faint);
-    pointer-events: none;
-  }
-
-  /* Search highlighting */
-  .search-highlight{
-    background: rgba(201,162,75,0.3);
-    color: var(--ink);
-    border-radius: 2px;
-    padding: 1px 0;
-  }
-
   /* tiny calendar (custom, since native date input styling is unreliable on mobile webviews) */
   .cal-pop{
     background: var(--card);
@@ -1949,14 +1564,14 @@
     padding: 0 4px;
   }
   .cal-head .cal-nav{
-    width:44px; height:44px;
+    width:30px; height:30px;
     border-radius:50%;
     background: var(--card-raised);
     border:1px solid var(--line);
     color: var(--ink-dim);
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
-    font-size:16px;
+    font-size:14px;
   }
   .cal-head .cal-ym{
     font-family:'Spectral', serif;
@@ -1989,135 +1604,6 @@
 
   ::selection{ background: var(--gold); color: var(--gold-contrast); }
 
-  /* ---------- Info tooltip ---------- */
-  .info-icon{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 1px solid var(--ink-faint);
-    color: var(--ink-faint);
-    font-size: 9px;
-    font-weight: 600;
-    font-family: 'IBM Plex Mono', monospace;
-    cursor: help;
-    margin-left: 5px;
-    position: relative;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-    z-index: 10;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .info-icon:hover{
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(201,162,75,0.08);
-  }
-  .info-icon.active{
-    border-color: var(--gold);
-    color: var(--gold);
-    background: rgba(201,162,75,0.08);
-  }
-  .info-icon .tooltip{
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--card-raised);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    font-size: 11.5px;
-    line-height: 1.7;
-    color: var(--ink);
-    font-weight: 400;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-    z-index: 9999;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.5);
-    min-width: 200px;
-    max-width: 320px;
-    white-space: normal;
-  }
-  /* Adjust tooltip position if it would go off screen on the right */
-  .amount .info-icon .tooltip,
-  .nav-btn .info-icon .tooltip{
-    left: auto;
-    right: 0;
-    transform: none;
-  }
-  .amount .info-icon .tooltip::after,
-  .nav-btn .info-icon .tooltip::after{
-    left: auto;
-    right: 12px;
-    transform: none;
-  }
-  /* Stat cards - show tooltip above and centered */
-  .stat-card .info-icon .tooltip{
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .stat-card .info-icon .tooltip::after{
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  /* Chart page labels - show tooltip below */
-  .sp-current-label .info-icon .tooltip{
-    bottom: auto;
-    top: calc(100% + 8px);
-  }
-  .sp-current-label .info-icon .tooltip::after{
-    top: auto;
-    bottom: 100%;
-    border-top-color: transparent;
-    border-bottom-color: var(--card-raised);
-  }
-  /* Analysis table rows - show tooltip to the right, more compact */
-  .analysis-table td .info-icon .tooltip{
-    bottom: auto;
-    top: 50%;
-    left: calc(100% + 8px);
-    transform: translateY(-50%);
-    padding: 8px 12px;
-    line-height: 1.5;
-  }
-  .analysis-table td .info-icon .tooltip::after{
-    top: 50%;
-    left: auto;
-    right: 100%;
-    transform: translateY(-50%);
-    border-top-color: transparent;
-    border-left-color: transparent;
-    border-right-color: var(--card-raised);
-  }
-  .info-icon .tooltip::after{
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-top-color: var(--card-raised);
-  }
-  .info-icon:hover .tooltip,
-  .info-icon.active .tooltip{
-    opacity: 1;
-    visibility: visible;
-  }
-  .tooltip-formula{
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--gold-bright);
-    font-size: 10.5px;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--line);
-  }
-
   /* ---------- Analysis modules ---------- */
   .analysis-section{
     margin-top: 28px;
@@ -2129,8 +1615,6 @@
     font-weight: 600;
     margin-bottom: 12px;
     letter-spacing: 0.02em;
-    display: flex;
-    align-items: center;
   }
 
   /* Stats grid - 2x3 cards */
@@ -2152,8 +1636,6 @@
     text-transform: uppercase;
     color: var(--ink-faint);
     margin-bottom: 6px;
-    display: flex;
-    align-items: center;
   }
   .stat-card-value{
     font-family:'IBM Plex Mono', monospace;
@@ -2259,9 +1741,6 @@
       <button class="icon-btn" id="importBtn" aria-label="导入数据">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V4m0 0l-3.5 3.5M12 4l3.5 3.5"/><path d="M5 18h14"/></svg>
       </button>
-      <button class="icon-btn" id="clearAllBtn" aria-label="清空所有记录">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/><path d="M10 11v6M14 11v6"/></svg>
-      </button>
       <input type="file" id="importFileInput" accept="application/json,.json" class="hidden-file-input">
     </div>
     <p class="eyebrow">Personal Log</p>
@@ -2280,7 +1759,7 @@
       <button class="nav-btn" data-stat="amount">金额</button>
       <button class="nav-btn" data-stat="winrate">赢率</button>
       <button class="nav-btn" data-stat="score">分数</button>
-      <button class="nav-btn" data-stat="hands">牌谱</button>
+      <button class="nav-btn" data-stat="hands">关键牌局</button>
     </div>
   </header>
 
@@ -2443,13 +1922,13 @@
 
     <div class="field">
       <div class="field-label">
-        <span>牌谱</span>
-        <span id="handsCount">0/10</span>
+        <span>关键牌局</span>
+        <span id="handsCount">0/5</span>
       </div>
       <div class="hands-drag-zone" id="handsDragZone"></div>
       <div class="hand-add" id="handAddBtn">
         <span class="plus-icon">+</span>
-        <span>记一手牌谱</span>
+        <span>记一手关键牌局</span>
       </div>
     </div>
 
@@ -2473,70 +1952,16 @@
 <div class="hand-editor" id="handEditor">
   <div class="he-topbar">
     <button class="he-delete" id="heDelete">Delete</button>
-    <span class="he-title" id="heTitle">牌谱</span>
+    <span class="he-title" id="heTitle">关键牌局</span>
     <button class="he-save" id="heSave">Save</button>
   </div>
-  <div style="padding: 16px 16px 0; overflow-y: auto; flex: 1;">
-    <div class="field" style="margin-bottom: 16px;">
-      <div class="field-label">输赢金额</div>
-      <div class="amount-row">
-        <div class="sign-toggle">
-          <button class="sign-btn plus" id="heSignPlus">+</button>
-          <button class="sign-btn minus" id="heSignMinus">−</button>
-        </div>
-        <div class="amount-input-wrap">
-          <span class="hkd-sym">HK$</span>
-          <input type="number" id="heAmountInput" placeholder="0" inputmode="decimal">
-        </div>
-      </div>
-    </div>
-    <div class="field" style="margin-bottom: 16px;">
-      <div class="field-label">牌局类型</div>
-      <div class="compact-pills" style="justify-content: flex-start;">
-        <div class="pill-compact hand-type-pill" data-type="correct">正确手牌</div>
-        <div class="pill-compact hand-type-pill" data-type="lucky">幸运手牌</div>
-        <div class="pill-compact hand-type-pill" data-type="unlucky">倒霉手牌</div>
-        <div class="pill-compact hand-type-pill" data-type="error">错误手牌</div>
-      </div>
-    </div>
-    <div class="field" id="heCorrectTypeField" style="margin-bottom: 16px; display: none;">
-      <div class="field-label">正确类型</div>
-      <div class="compact-pills" style="justify-content: flex-start; flex-wrap: wrap;">
-        <div class="pill-compact hand-subtype-pill small" data-subtype="max-value">吃满价值</div>
-        <div class="pill-compact hand-subtype-pill small" data-subtype="deny-equity">拒绝权益</div>
-        <div class="pill-compact hand-subtype-pill small" data-subtype="catch-bluff">正确抓诈</div>
-        <div class="pill-compact hand-subtype-pill small" data-subtype="disciplined-fold">纪律弃牌</div>
-      </div>
-    </div>
-    <div class="field" id="heErrorTypeField" style="margin-bottom: 16px; display: none;">
-      <div class="field-label">错误类型</div>
-      <div class="compact-pills" style="justify-content: flex-start; flex-wrap: wrap;">
-        <div class="pill-compact hand-subtype-pill small" data-subtype="weak-vs-strong">弱范围对抗强范围</div>
-        <div class="pill-compact hand-subtype-pill small" data-subtype="too-wide">入池太宽</div>
-        <div class="pill-compact hand-subtype-pill small" data-subtype="bad-bluff">不合理的诈唬</div>
-        <div class="pill-compact hand-subtype-pill small" data-subtype="bad-call">不合理的跟注</div>
-        <div class="pill-compact hand-subtype-pill small" data-subtype="missed-value">价值没吃满</div>
-        <div class="pill-compact hand-subtype-pill small" data-subtype="insufficient-bluff">诈唬不足</div>
-        <div class="pill-compact hand-subtype-pill small" data-subtype="insufficient-call">跟注不足</div>
-      </div>
-    </div>
-    <div class="field" style="margin-bottom: 10px;">
-      <div class="field-label">牌局描述</div>
-    </div>
-    <div class="he-suits">
-      <button class="suit-btn format-btn" data-format="bold" title="加粗"><strong>B</strong></button>
-      <button class="suit-btn format-btn" data-format="underline" title="下划线"><u>U</u></button>
-      <button class="suit-btn format-btn" data-format="italic" title="斜体"><em>I</em></button>
-      <button class="suit-btn format-btn" data-format="strikethrough" title="划去"><s>S</s></button>
-      <button class="suit-btn format-btn" data-format="red" title="红色" style="color: #C2645C;"><strong>A</strong></button>
-      <button class="suit-btn format-btn" data-format="blue" title="蓝色" style="color: #6A9FB5;"><strong>A</strong></button>
-      <button class="suit-btn suit-black" data-suit="♠️">♠️</button>
-      <button class="suit-btn suit-red" data-suit="♥️">♥️</button>
-      <button class="suit-btn suit-black" data-suit="♣️">♣️</button>
-      <button class="suit-btn suit-red" data-suit="♦️">♦️</button>
-    </div>
-    <div class="he-textarea" id="heTextarea" contenteditable="true" data-placeholder="位置、底池、对手范围、关键决策……把这手牌记清楚。" style="padding: 12px 16px; min-height: 120px;"></div>
+  <div class="he-suits">
+    <button class="suit-btn suit-black" data-suit="♠️">♠️</button>
+    <button class="suit-btn suit-red" data-suit="♥️">♥️</button>
+    <button class="suit-btn suit-black" data-suit="♣️">♣️</button>
+    <button class="suit-btn suit-red" data-suit="♦️">♦️</button>
   </div>
+  <textarea class="he-textarea" id="heTextarea" placeholder="位置、底池、对手范围、关键决策……把这手牌记清楚。" rows="6"></textarea>
 </div>
 
 <div class="table-condition-editor" id="tableConditionEditor">
@@ -2558,18 +1983,6 @@
   </div>
 </div>
 
-<div class="confirm-overlay" id="clearAllOverlay">
-  <div class="confirm-box">
-    <div class="confirm-message">清空所有记录</div>
-    <div class="confirm-hint" style="font-size: 12px; color: var(--ink-dim); margin: 12px 0;">此操作不可恢复，请输入密码（结婚纪念日）确认</div>
-    <input type="password" id="clearAllPassword" placeholder="输入密码" style="width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--ink); font-size: 14px; margin-bottom: 16px; font-family: 'IBM Plex Mono', monospace;" inputmode="numeric">
-    <div class="confirm-actions">
-      <button class="confirm-cancel" id="clearAllCancel">取消</button>
-      <button class="confirm-ok" id="clearAllOk">确认清空</button>
-    </div>
-  </div>
-</div>
-
 <script>
 (function(){
   "use strict";
@@ -2585,21 +1998,6 @@
   ];
   var VENUE_LABEL = { venetian:"威尼斯人", mgm:"MGM" };
 
-  // ---------- Helper functions ----------
-  function normalizeHandData(hand){
-    if(typeof hand === "string"){
-      return { text: hand, type: null, amount: 0, sign: "+", correctType: null, errorType: null };
-    }
-    return {
-      text: hand.text || "",
-      type: hand.type || null,
-      amount: hand.amount || 0,
-      sign: hand.sign || "+",
-      correctType: hand.correctType || null,
-      errorType: hand.errorType || null
-    };
-  }
-
   // ---------- State ----------
   var entries = loadEntries();
   var editingId = null;       // null = creating new
@@ -2613,14 +2011,6 @@
       if(!raw) return [];
       var arr = JSON.parse(raw);
       if(!Array.isArray(arr)) return [];
-      // Normalize hands from old string format to new object format
-      arr.forEach(function(entry){
-        if(Array.isArray(entry.hands)){
-          entry.hands = entry.hands.map(function(h){
-            return normalizeHandData(h);
-          });
-        }
-      });
       return arr;
     }catch(e){
       console.error("Failed to load entries:", e);
@@ -2678,7 +2068,7 @@
   }
 
   var HANDS_PER_HOUR = 30;
-  var MAX_HANDS_PER_SESSION = 10;
+  var MAX_HANDS_PER_SESSION = 5;
   var BUYIN_OPTIONS = [100, 150, 200, 250, 300];
 
   function getChronologicalEntries(){
@@ -2764,208 +2154,33 @@
     emptyEl.style.display = sorted.length ? "none" : "block";
 
     // group by date for day labels
-    var dayGroups = [];
+    var groups = [];
     var lastDate = null;
     sorted.forEach(function(e){
       if(e.date !== lastDate){
-        dayGroups.push({ date:e.date, items:[] });
+        groups.push({ date:e.date, items:[] });
         lastDate = e.date;
       }
-      dayGroups[dayGroups.length-1].items.push(e);
+      groups[groups.length-1].items.push(e);
     });
 
-    // Group consecutive dates into session groups
-    var sessionGroups = [];
-    var currentGroup = null;
+    // since #list is column-reverse, append groups in normal order
+    // (first group = earliest date) and the browser will flip visual order.
+    groups.forEach(function(g){
+      var groupEl = document.createElement("div");
+      groupEl.className = "day-group";
 
-    dayGroups.forEach(function(dayGroup, idx){
-      var currentDate = parseISO(dayGroup.date);
-      var isConsecutive = false;
+      var label = document.createElement("div");
+      label.className = "day-label";
+      label.textContent = formatCN(g.date) + (g.items.length>1 ? "（"+g.items.length+"局）" : "");
+      groupEl.appendChild(label);
 
-      if(currentGroup){
-        var lastGroupDate = parseISO(currentGroup.days[currentGroup.days.length - 1].date);
-        var dayDiff = Math.round((currentDate - lastGroupDate) / (1000 * 60 * 60 * 24));
-        isConsecutive = dayDiff === 1;
-      }
-
-      if(isConsecutive){
-        currentGroup.days.push(dayGroup);
-      } else {
-        if(currentGroup){
-          sessionGroups.push(currentGroup);
-        }
-        currentGroup = {
-          days: [dayGroup],
-          startDate: dayGroup.date,
-          endDate: dayGroup.date
-        };
-      }
-    });
-
-    if(currentGroup){
-      sessionGroups.push(currentGroup);
-    }
-
-    // Render session groups
-    var lastYear = null;
-    sessionGroups.forEach(function(sg){
-      sg.endDate = sg.days[sg.days.length - 1].date;
-
-      // Check if we need to add a year divider
-      var currentYear = sg.startDate.substring(0, 4);
-      if(currentYear !== lastYear){
-        var yearDivider = document.createElement("div");
-        yearDivider.className = "year-divider";
-        yearDivider.innerHTML = '<span class="year-divider-text">'+currentYear+'</span>';
-        listEl.appendChild(yearDivider);
-      }
-      lastYear = currentYear;
-
-      // Calculate group statistics
-      var totalSessions = 0;
-      var totalAmount = 0;
-      var totalDuration = 0;
-      var totalScore = 0;
-      var scoredCount = 0;
-      var venues = {};
-      var levels = {};
-
-      sg.days.forEach(function(day){
-        day.items.forEach(function(e){
-          totalSessions++;
-          var amt = (e.sign === "-" ? -1 : 1) * e.amount;
-          totalAmount += amt;
-          if(typeof e.duration === "number") totalDuration += e.duration;
-
-          var score = computeTotal(e.scores);
-          if(score !== null){
-            totalScore += score;
-            scoredCount++;
-          }
-
-          venues[e.venue] = (venues[e.venue] || 0) + 1;
-          levels[e.level] = (levels[e.level] || 0) + 1;
-        });
+      g.items.forEach(function(e){
+        groupEl.appendChild(renderEntryCard(e));
       });
 
-      var avgScore = scoredCount > 0 ? totalScore / scoredCount : null;
-
-      // Only create collapsible group if there are multiple days
-      if(sg.days.length > 1){
-        var groupEl = renderSessionGroup(sg, totalSessions, totalAmount, totalDuration, avgScore, venues, levels);
-        listEl.appendChild(groupEl);
-      } else {
-        // Single day - render normally
-        var dayGroup = sg.days[0];
-        var groupEl = document.createElement("div");
-        groupEl.className = "day-group";
-
-        var label = document.createElement("div");
-        label.className = "day-label";
-        label.textContent = formatCN(dayGroup.date) + (dayGroup.items.length>1 ? "（"+dayGroup.items.length+"局）" : "");
-        groupEl.appendChild(label);
-
-        dayGroup.items.forEach(function(e){
-          groupEl.appendChild(renderEntryCard(e));
-        });
-
-        listEl.appendChild(groupEl);
-      }
+      listEl.appendChild(groupEl);
     });
-  }
-
-  function renderSessionGroup(sg, totalSessions, totalAmount, totalDuration, avgScore, venues, levels){
-    var groupEl = document.createElement("div");
-    groupEl.className = "session-group collapsed";
-
-    // Format date range
-    var startDate = parseISO(sg.startDate);
-    var endDate = parseISO(sg.endDate);
-    var dateRange = formatCN(sg.startDate);
-    if(sg.startDate !== sg.endDate){
-      dateRange += " - " + (endDate.getMonth() === startDate.getMonth() ? endDate.getDate() + "日" : formatCN(sg.endDate));
-    }
-
-    // Format venues and levels
-    var venueList = Object.keys(venues).map(function(v){ return VENUE_LABEL[v] + "×" + venues[v]; }).join("、");
-    var levelList = Object.keys(levels).map(function(l){ return l + "×" + levels[l]; }).join("、");
-
-    var isPos = totalAmount >= 0;
-    var amountSign = isPos ? "+" : "−";
-
-    groupEl.innerHTML =
-      '<div class="session-group-header">'+
-        '<svg class="sg-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'+
-        '<div class="sg-info">'+
-          '<div class="sg-title">'+dateRange+'（'+sg.days.length+'天）</div>'+
-          '<div class="sg-meta">'+
-            '<span class="sg-meta-item"><span class="sg-meta-label">场次</span><span class="sg-meta-value">'+totalSessions+'局</span></span>'+
-            '<span class="sg-meta-item"><span class="sg-meta-label">时长</span><span class="sg-meta-value">'+totalDuration.toFixed(1)+'h</span></span>'+
-            (avgScore !== null ? '<span class="sg-meta-item"><span class="sg-meta-label">平均分</span><span class="sg-meta-value">'+avgScore.toFixed(1)+'</span></span>' : '')+
-            '<span class="sg-meta-item"><span class="sg-meta-label">场馆</span><span class="sg-meta-value">'+venueList+'</span></span>'+
-            '<span class="sg-meta-item"><span class="sg-meta-label">级别</span><span class="sg-meta-value">'+levelList+'</span></span>'+
-          '</div>'+
-        '</div>'+
-        '<div class="sg-amount">'+
-          '<div class="sg-amount-value '+(isPos?'pos':'neg')+'">'+amountSign+'HK$'+formatMoney(Math.abs(totalAmount))+'</div>'+
-          '<div class="sg-amount-label">总盈亏</div>'+
-        '</div>'+
-      '</div>'+
-      '<div class="session-group-body">'+
-        '<div class="session-group-entries"></div>'+
-      '</div>';
-
-    var entriesContainer = groupEl.querySelector('.session-group-entries');
-
-    // Render all days in the group
-    sg.days.forEach(function(dayGroup){
-      var dayLabel = document.createElement("div");
-      dayLabel.className = "day-label";
-      dayLabel.textContent = formatCN(dayGroup.date) + (dayGroup.items.length>1 ? "（"+dayGroup.items.length+"局）" : "");
-      entriesContainer.appendChild(dayLabel);
-
-      dayGroup.items.forEach(function(e){
-        entriesContainer.appendChild(renderEntryCard(e));
-      });
-    });
-
-    // Toggle collapse on header click
-    var header = groupEl.querySelector('.session-group-header');
-    header.addEventListener('click', function(){
-      var wasCollapsed = groupEl.classList.contains('collapsed');
-
-      if(wasCollapsed){
-        // Expanding: record position before expansion
-        var rectBefore = groupEl.getBoundingClientRect();
-        var scrollBefore = window.pageYOffset || document.documentElement.scrollTop;
-        var topBefore = rectBefore.top + scrollBefore;
-
-        // Expand
-        groupEl.classList.remove('collapsed');
-
-        // Wait for expansion animation to start, then adjust scroll
-        requestAnimationFrame(function(){
-          requestAnimationFrame(function(){
-            var rectAfter = groupEl.getBoundingClientRect();
-            var scrollAfter = window.pageYOffset || document.documentElement.scrollTop;
-            var topAfter = rectAfter.top + scrollAfter;
-
-            // Calculate how much the group moved
-            var deltaY = topAfter - topBefore;
-
-            // Adjust scroll to keep the group's top position fixed on screen
-            if(deltaY !== 0){
-              window.scrollTo(0, scrollAfter + deltaY);
-            }
-          });
-        });
-      } else {
-        // Collapsing: just collapse without adjustment
-        groupEl.classList.add('collapsed');
-      }
-    });
-
-    return groupEl;
   }
 
   function renderEntryCard(e){
@@ -2998,11 +2213,6 @@
       '</div>'+
       '<div class="amount" style="color:'+(isPos?'var(--gold-bright)':'var(--loss-bright)')+'">'+
         '<span class="unit">HK$</span>'+(isPos?'+':'−')+formatMoney(amt)+
-      '</div>';
-            '本局盈亏金额。正数表示盈利，负数表示亏损。'+
-            '<div class="tooltip-formula">计入累计：符号 × 金额</div>'+
-          '</span>'+
-        '</span>'+
       '</div>';
 
     card.addEventListener("click", function(){ openSheetForEdit(e.id); });
@@ -3403,7 +2613,7 @@
     }
   });
 
-  // ---------- Form: key hands (牌谱) ----------
+  // ---------- Form: key hands (关键牌局) ----------
   var handsDragZone = document.getElementById("handsDragZone");
   var handAddBtn = document.getElementById("handAddBtn");
   var handsCount = document.getElementById("handsCount");
@@ -3422,9 +2632,8 @@
   function escapeHtml(s){
     return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
-  function handPreviewText(hand){
-    var text = typeof hand === "string" ? hand : (hand.text || "");
-    var oneLine = String(text).replace(/\s+/g, " ").trim();
+  function handPreviewText(s){
+    var oneLine = String(s).replace(/\s+/g, " ").trim();
     return oneLine.length > 46 ? oneLine.slice(0,46) + "…" : oneLine;
   }
 
@@ -3432,15 +2641,14 @@
     handsDragZone.innerHTML = "";
     var n = draft.hands.length;
 
-    draft.hands.forEach(function(hand, idx){
-      var handData = normalizeHandData(hand);
+    draft.hands.forEach(function(text, idx){
       var card = document.createElement("div");
       card.className = "hand-card";
       card.style.top = (idx * HAND_ITEM_H) + "px";
       card.setAttribute("data-idx", idx);
       card.innerHTML =
         '<div class="hand-handle" data-idx="'+idx+'">⠿⠿</div>'+
-        '<div class="hand-preview">'+(handData.text ? escapeHtml(handPreviewText(handData.text)) : '<span style="color:var(--ink-faint)">（空）</span>')+'</div>'+
+        '<div class="hand-preview">'+(text ? escapeHtml(handPreviewText(text)) : '<span style="color:var(--ink-faint)">（空）</span>')+'</div>'+
         '<div class="hand-index">'+(idx+1)+'</div>'+
         '<div class="hand-arrow">›</div>';
 
@@ -3475,7 +2683,6 @@
     var origIdx = parseInt(handle.getAttribute("data-idx"), 10);
     var cardEls = Array.prototype.slice.call(handsDragZone.querySelectorAll(".hand-card"));
     if(cardEls.length < 2) return; // nothing to reorder
-    if(origIdx < 0 || origIdx >= cardEls.length) return; // invalid index
 
     dragState = {
       startY: e.clientY,
@@ -3491,7 +2698,7 @@
     draggedCard.style.transition = "none";
     draggedCard.style.zIndex = "50";
 
-    try{ handle.setPointerCapture(e.pointerId); }catch(err){ console.warn("setPointerCapture failed:", err); }
+    try{ handle.setPointerCapture(e.pointerId); }catch(err){}
     handle.addEventListener("pointermove", onHandleMove);
     handle.addEventListener("pointerup", onHandleUp);
     handle.addEventListener("pointercancel", onHandleUp);
@@ -3547,30 +2754,15 @@
   }
 
   handAddBtn.addEventListener("click", function(){
-    if(draft.hands.length >= MAX_HANDS_PER_SESSION) return;
+    if(draft.hands.length >= 5) return;
     openHandEditor(null);
   });
-
-  // Hand editor state
-  var currentHandData = null;
-
-  function freshHandData(){
-    return {
-      text: "",
-      type: null,
-      amount: 0,
-      sign: "+",
-      correctType: null,
-      errorType: null
-    };
-  }
 
   function openHandEditor(idx){
     handEditMode = "draft";
     handEditEntryId = null;
     handEditIndex = idx;
-    currentHandData = idx === null ? freshHandData() : normalizeHandData(draft.hands[idx]);
-    populateHandEditor();
+    heTextarea.value = idx === null ? "" : draft.hands[idx];
     showHandEditor();
   }
 
@@ -3580,122 +2772,16 @@
     handEditMode = "direct";
     handEditEntryId = entryId;
     handEditIndex = idx;
-    currentHandData = normalizeHandData(entry.hands[idx]);
-    populateHandEditor();
+    heTextarea.value = entry.hands[idx] || "";
     showHandEditor();
   }
-
-  function populateHandEditor(){
-    heTextarea.innerHTML = currentHandData.text;
-
-    // Set hand type
-    var handTypePills = document.querySelectorAll(".hand-type-pill");
-    handTypePills.forEach(function(p){
-      p.classList.toggle("selected", p.getAttribute("data-type") === currentHandData.type);
-    });
-
-    // Set amount and sign
-    if(currentHandData.sign === "-"){
-      heSignMinus.classList.add("active");
-      heSignPlus.classList.remove("active");
-    } else {
-      heSignPlus.classList.add("active");
-      heSignMinus.classList.remove("active");
-    }
-    heAmountInput.value = currentHandData.amount || "";
-
-    // Set subtype
-    var handSubtypePills = document.querySelectorAll(".hand-subtype-pill");
-    handSubtypePills.forEach(function(p){
-      var subtype = p.getAttribute("data-subtype");
-      var isSelected = (currentHandData.type === "correct" && subtype === currentHandData.correctType) ||
-                       (currentHandData.type === "error" && subtype === currentHandData.errorType);
-      p.classList.toggle("selected", isSelected);
-    });
-
-    updateHandSubtypeVisibility();
-  }
-
-  function updateHandSubtypeVisibility(){
-    var correctField = document.getElementById("heCorrectTypeField");
-    var errorField = document.getElementById("heErrorTypeField");
-    correctField.style.display = currentHandData.type === "correct" ? "block" : "none";
-    errorField.style.display = currentHandData.type === "error" ? "block" : "none";
-  }
-
-  // Hand type pills
-  var handTypePills = document.querySelectorAll(".hand-type-pill");
-  handTypePills.forEach(function(p){
-    p.addEventListener("click", function(){
-      var type = p.getAttribute("data-type");
-      currentHandData.type = currentHandData.type === type ? null : type;
-      handTypePills.forEach(function(pill){
-        pill.classList.toggle("selected", pill.getAttribute("data-type") === currentHandData.type);
-      });
-      if(currentHandData.type !== "correct") currentHandData.correctType = null;
-      if(currentHandData.type !== "error") currentHandData.errorType = null;
-      var handSubtypePills = document.querySelectorAll(".hand-subtype-pill");
-      handSubtypePills.forEach(function(pill){ pill.classList.remove("selected"); });
-      updateHandSubtypeVisibility();
-    });
-  });
-
-  // Hand subtype pills
-  var handSubtypePills = document.querySelectorAll(".hand-subtype-pill");
-  handSubtypePills.forEach(function(p){
-    p.addEventListener("click", function(){
-      var subtype = p.getAttribute("data-subtype");
-      var parent = p.parentElement.parentElement;
-      if(parent.id === "heCorrectTypeField"){
-        currentHandData.correctType = currentHandData.correctType === subtype ? null : subtype;
-      } else if(parent.id === "heErrorTypeField"){
-        currentHandData.errorType = currentHandData.errorType === subtype ? null : subtype;
-      }
-      var siblings = p.parentElement.querySelectorAll(".hand-subtype-pill");
-      siblings.forEach(function(pill){
-        var pillSubtype = pill.getAttribute("data-subtype");
-        var isSelected = (parent.id === "heCorrectTypeField" && pillSubtype === currentHandData.correctType) ||
-                        (parent.id === "heErrorTypeField" && pillSubtype === currentHandData.errorType);
-        pill.classList.toggle("selected", isSelected);
-      });
-    });
-  });
-
-  // Hand amount sign
-  var heSignPlus = document.getElementById("heSignPlus");
-  var heSignMinus = document.getElementById("heSignMinus");
-  var heAmountInput = document.getElementById("heAmountInput");
-
-  heSignPlus.addEventListener("click", function(){
-    currentHandData.sign = "+";
-    heSignPlus.classList.add("active");
-    heSignMinus.classList.remove("active");
-  });
-
-  heSignMinus.addEventListener("click", function(){
-    currentHandData.sign = "-";
-    heSignMinus.classList.add("active");
-    heSignPlus.classList.remove("active");
-  });
-
-  heAmountInput.addEventListener("input", function(){
-    var val = parseFloat(heAmountInput.value);
-    currentHandData.amount = isNaN(val) ? 0 : val;
-  });
 
   function showHandEditor(){
     handEditor.classList.add("open");
     setTimeout(function(){
       heTextarea.focus();
-      // Move cursor to end for contenteditable
-      var range = document.createRange();
-      var sel = window.getSelection();
-      if(heTextarea.childNodes.length > 0){
-        range.selectNodeContents(heTextarea);
-        range.collapse(false);
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
+      var len = heTextarea.value.length;
+      heTextarea.setSelectionRange(len, len);
     }, 320);
   }
 
@@ -3703,45 +2789,26 @@
     handEditor.classList.remove("open");
   }
 
-  // Format buttons
-  var formatBtns = document.querySelectorAll(".format-btn");
-  formatBtns.forEach(function(btn){
-    btn.addEventListener("click", function(e){
-      e.preventDefault();
-      var format = btn.getAttribute("data-format");
-      heTextarea.focus();
-
-      if(format === "red"){
-        document.execCommand("foreColor", false, "#C2645C");
-      } else if(format === "blue"){
-        document.execCommand("foreColor", false, "#6A9FB5");
-      } else {
-        document.execCommand(format, false, null);
-      }
-    });
-  });
-
   suitBtns.forEach(function(btn){
     btn.addEventListener("click", function(){
       var symbol = btn.getAttribute("data-suit");
-      if(!symbol) return; // Skip format buttons
-
-      heTextarea.focus({ preventScroll: true });
-      document.execCommand("insertText", false, symbol);
+      var start = heTextarea.selectionStart;
+      var end = heTextarea.selectionEnd;
+      var val = heTextarea.value;
+      heTextarea.value = val.slice(0, start) + symbol + val.slice(end);
+      var newPos = start + symbol.length;
+      heTextarea.focus();
+      heTextarea.setSelectionRange(newPos, newPos);
     });
   });
 
   heSave.addEventListener("click", function(){
-    currentHandData.text = heTextarea.innerHTML.trim();
-
+    var text = heTextarea.value.trim();
     if(handEditMode === "direct"){
       var entry = entries.find(function(e){ return e.id === handEditEntryId; });
       if(entry){
-        if(currentHandData.text) {
-          entry.hands[handEditIndex] = currentHandData;
-        } else {
-          entry.hands.splice(handEditIndex, 1);
-        }
+        if(text) entry.hands[handEditIndex] = text;
+        else entry.hands.splice(handEditIndex, 1);
         saveEntries();
       }
       closeHandEditor();
@@ -3749,13 +2816,10 @@
       return;
     }
     if(handEditIndex === null){
-      if(currentHandData.text) draft.hands.push(currentHandData);
+      if(text) draft.hands.push(text);
     } else {
-      if(currentHandData.text) {
-        draft.hands[handEditIndex] = currentHandData;
-      } else {
-        draft.hands.splice(handEditIndex, 1);
-      }
+      if(text) draft.hands[handEditIndex] = text;
+      else draft.hands.splice(handEditIndex, 1); // saving empty = remove
     }
     closeHandEditor();
     renderHandsList();
@@ -3763,7 +2827,7 @@
 
   heDelete.addEventListener("click", function(){
     if(handEditMode === "direct"){
-      showConfirm("确定删除这手牌谱记录？删除后无法恢复。").then(function(confirmed){
+      showConfirm("确定删除这手关键牌局记录？删除后无法恢复。").then(function(confirmed){
         if(!confirmed) return;
         var entry = entries.find(function(e){ return e.id === handEditEntryId; });
         if(entry){
@@ -3777,7 +2841,7 @@
     }
     if(handEditIndex !== null){
       // an existing hand within the draft being edited — confirm before removing
-      showConfirm("确定删除这手牌谱记录？").then(function(confirmed){
+      showConfirm("确定删除这手关键牌局记录？").then(function(confirmed){
         if(!confirmed) return;
         draft.hands.splice(handEditIndex, 1);
         closeHandEditor();
@@ -3849,16 +2913,6 @@
   document.getElementById("saveBtn").addEventListener("click", function(){
     var amt = parseFloat(draft.amount);
     var amountValid = !isNaN(amt) && amt >= 0 && draft.amount !== "";
-
-    // Validate date and session
-    if(!draft.date || !/^\d{4}-\d{2}-\d{2}$/.test(draft.date)){
-      showToast("日期格式不正确");
-      return;
-    }
-    if(!draft.session || draft.session < 1 || draft.session > 99){
-      showToast("Session必须在1-99之间");
-      return;
-    }
 
     // checks in top-to-bottom form order; stop at the first unfilled field
     var checks = [
@@ -3984,54 +3038,6 @@
     importFileInput.click();
   });
 
-  // Clear all button
-  var clearAllBtn = document.getElementById("clearAllBtn");
-  var clearAllOverlay = document.getElementById("clearAllOverlay");
-  var clearAllPassword = document.getElementById("clearAllPassword");
-  var clearAllCancel = document.getElementById("clearAllCancel");
-  var clearAllOk = document.getElementById("clearAllOk");
-
-  clearAllBtn.addEventListener("click", function(){
-    if(!entries.length){ showToast("没有记录可以清空"); return; }
-    clearAllPassword.value = "";
-    clearAllOverlay.classList.add("open");
-    setTimeout(function(){ clearAllPassword.focus(); }, 100);
-  });
-
-  clearAllCancel.addEventListener("click", function(){
-    clearAllOverlay.classList.remove("open");
-  });
-
-  clearAllOverlay.addEventListener("click", function(e){
-    if(e.target === clearAllOverlay){
-      clearAllOverlay.classList.remove("open");
-    }
-  });
-
-  clearAllOk.addEventListener("click", function(){
-    var password = clearAllPassword.value;
-    if(password !== "0413"){
-      showToast("密码错误");
-      clearAllPassword.value = "";
-      clearAllPassword.focus();
-      return;
-    }
-
-    // Clear all entries
-    entries = [];
-    saveEntries();
-    render();
-    clearAllOverlay.classList.remove("open");
-    showToast("已清空所有记录");
-  });
-
-  // Allow Enter key to submit password
-  clearAllPassword.addEventListener("keypress", function(e){
-    if(e.key === "Enter"){
-      clearAllOk.click();
-    }
-  });
-
   importFileInput.addEventListener("change", function(){
     var file = importFileInput.files[0];
     if(!file) return;
@@ -4073,14 +3079,6 @@
       var isDup = entries.some(function(e){ return entriesContentEqual(e, imp); });
       if(isDup){ skipped++; return; }
 
-      // Normalize hands: convert old string format to new object format
-      var normalizedHands = [];
-      if(Array.isArray(imp.hands)){
-        normalizedHands = imp.hands.slice(0,10).map(function(h){
-          return normalizeHandData(h);
-        });
-      }
-
       var clean = {
         id: imp.id || (Date.now()+"-"+Math.random().toString(36).slice(2,8)),
         date: imp.date,
@@ -4092,7 +3090,7 @@
         sign: imp.sign === "-" ? "-" : "+",
         amount: typeof imp.amount === "number" ? imp.amount : parseFloat(imp.amount) || 0,
         tableCondition: imp.tableCondition || "",
-        hands: normalizedHands,
+        hands: Array.isArray(imp.hands) ? imp.hands.slice(0,5) : [],
         buyin: (typeof imp.buyin === "number") ? imp.buyin : getDefaultBuyin(imp.level),
         rebuy: (typeof imp.rebuy === "number") ? imp.rebuy : null
       };
@@ -4105,7 +3103,7 @@
     return { added: added, skipped: skipped };
   }
 
-  // ---------- Stat pages (金额 / 分数 / 赢率 / 牌谱) ----------
+  // ---------- Stat pages (金额 / 分数 / 赢率 / 关键牌局) ----------
   var statPage = document.getElementById("statPage");
   var spBack = document.getElementById("spBack");
   var spTitle = document.getElementById("spTitle");
@@ -4116,7 +3114,7 @@
     amount: "金额趋势",
     score: "分数趋势",
     winrate: "赢率趋势",
-    hands: "牌谱"
+    hands: "关键牌局"
   };
 
   // current stat kind and period for the open page
@@ -4530,16 +3528,7 @@
 
       contentEl.innerHTML =
         '<div class="sp-current">'+
-          '<div class="sp-current-label">'+
-            '当前累计'+
-            '<span class="info-icon" style="margin-left:8px;">'+
-              'i'+
-              '<span class="tooltip">'+
-                '所有牌局的累计盈亏金额。正数表示总体盈利，负数表示总体亏损。'+
-                '<div class="tooltip-formula">公式：累计 = Σ(符号 × 金额)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="sp-current-label">当前累计</div>'+
           '<div class="sp-current-val'+(lastVal<0?' neg':'')+'">'+fmtSignedMoney(lastVal)+'</div>'+
         '</div>'+
         '<div class="chart-wrap" id="chartWrap1"></div>'+
@@ -4613,16 +3602,7 @@
 
       contentEl.innerHTML =
         '<div class="sp-current">'+
-          '<div class="sp-current-label">'+
-            '当前赢率（bb/百手）'+
-            '<span class="info-icon" style="margin-left:8px;">'+
-              'i'+
-              '<span class="tooltip">'+
-                '赢率表示每百手的平均盈利大盲注数。正数越高说明打得越好。'+
-                '<div class="tooltip-formula">50/100: 盈利/(时长×30×1)<br>100/200: 盈利/(时长×30×2)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="sp-current-label">当前赢率（bb/百手）</div>'+
           '<div class="sp-current-val" style="font-size:20px;">'+wrValStr+'</div>'+
         '</div>'+
         '<div class="sp-section-title">50/100 赢率趋势</div>'+
@@ -4658,32 +3638,16 @@
     }
   }
 
-  // ---- 牌谱总览：flatten all hands across all entries, newest first ----
-  var handsFilter = {
-    venue: null,
-    level: null,
-    handType: null,
-    subType: null,
-    amountSign: null, // "+" or "-"
-    amountThreshold: 0,
-    searchText: ""
-  };
-
+  // ---- 关键牌局总览：flatten all hands across all entries, newest first ----
   function renderHandsOverview(){
     var chrono = getChronologicalEntries();
     var flat = [];
     chrono.forEach(function(e){
-      (e.hands || []).forEach(function(hand, idx){
-        var handData = normalizeHandData(hand);
+      (e.hands || []).forEach(function(text, idx){
         flat.push({
           entryId: e.id,
           handIdx: idx,
-          text: handData.text,
-          handType: handData.type,
-          handAmount: handData.amount,
-          handSign: handData.sign,
-          correctType: handData.correctType,
-          errorType: handData.errorType,
+          text: text,
           date: e.date,
           session: e.session,
           venue: e.venue,
@@ -4695,120 +3659,13 @@
     // newest first
     flat.reverse();
 
-    // Apply filters
-    var filtered = flat.filter(function(item){
-      if(handsFilter.venue && item.venue !== handsFilter.venue) return false;
-      if(handsFilter.level && item.level !== handsFilter.level) return false;
-      if(handsFilter.handType && item.handType !== handsFilter.handType) return false;
-      if(handsFilter.subType){
-        if(item.handType === "correct" && item.correctType !== handsFilter.subType) return false;
-        if(item.handType === "error" && item.errorType !== handsFilter.subType) return false;
-      }
-      // Amount filter
-      if(handsFilter.amountThreshold > 0 && item.handAmount){
-        var absAmount = Math.abs(item.handAmount);
-        if(absAmount < handsFilter.amountThreshold) return false;
-        if(handsFilter.amountSign === "+" && item.handSign === "-") return false;
-        if(handsFilter.amountSign === "-" && item.handSign !== "-") return false;
-      }
-      // Search filter
-      if(handsFilter.searchText){
-        var searchLower = handsFilter.searchText.toLowerCase();
-        var textContent = (item.text || "").toLowerCase();
-        if(textContent.indexOf(searchLower) === -1) return false;
-      }
-      return true;
-    });
-
     if(!flat.length){
-      spBody.innerHTML = '<div class="hands-overview-empty"><div class="ce-glyph">♣︎ ♥︎</div>还没有记录任何牌谱<br>在记录里的"牌谱"栏可以添加。</div>';
+      spBody.innerHTML = '<div class="hands-overview-empty"><div class="ce-glyph">♣︎ ♥︎</div>还没有记录任何关键牌局<br>在记录里的"关键牌局"栏可以添加。</div>';
       return;
     }
 
-    // Check if filter UI already exists
-    var existingFilter = spBody.querySelector('.hands-filter');
-    var existingListContainer = spBody.querySelector('.hands-list-container');
-
-    if(!existingFilter){
-      // First render - create filter UI and list container
-      var filterHtml = '<div class="hands-filter">'+
-        '<div class="filter-row">'+
-          '<div class="filter-pill" data-filter-type="venue" data-value="venetian">威尼斯人</div>'+
-          '<div class="filter-pill" data-filter-type="venue" data-value="mgm">MGM</div>'+
-          '<div class="filter-pill" data-filter-type="level" data-value="50/100">50/100</div>'+
-          '<div class="filter-pill" data-filter-type="level" data-value="100/200">100/200</div>'+
-          '<button class="filter-clear-btn" id="filterClearBtn">清除筛选</button>'+
-        '</div>'+
-        '<div class="filter-row">'+
-          '<div class="filter-pill" data-filter-type="handType" data-value="correct">正确手牌</div>'+
-          '<div class="filter-pill" data-filter-type="handType" data-value="lucky">幸运手牌</div>'+
-          '<div class="filter-pill" data-filter-type="handType" data-value="unlucky">倒霉手牌</div>'+
-          '<div class="filter-pill" data-filter-type="handType" data-value="error">错误手牌</div>'+
-        '</div>'+
-        '<div class="filter-row" id="correctTypeRow">'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="max-value">吃满价值</div>'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="deny-equity">拒绝权益</div>'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="catch-bluff">正确抓诈</div>'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="disciplined-fold">纪律弃牌</div>'+
-        '</div>'+
-        '<div class="filter-row" id="errorTypeRow">'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="weak-vs-strong">弱范围对抗强范围</div>'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="too-wide">入池太宽</div>'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="bad-bluff">不合理的诈唬</div>'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="bad-call">不合理的跟注</div>'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="missed-value">价值没吃满</div>'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="insufficient-bluff">诈唬不足</div>'+
-          '<div class="filter-pill filter-subtype" data-filter-type="subType" data-value="insufficient-call">跟注不足</div>'+
-        '</div>'+
-        '<div class="filter-amount-row">'+
-          '<div class="filter-amount-label">金额筛选</div>'+
-          '<div class="filter-amount-controls">'+
-            '<div class="amount-sign-toggle">'+
-              '<button class="amount-sign-btn" id="amountSignPlus" data-sign="+">+</button>'+
-              '<button class="amount-sign-btn" id="amountSignMinus" data-sign="-">−</button>'+
-            '</div>'+
-            '<div class="amount-slider-wrap">'+
-              '<input type="range" id="amountSlider" min="0" max="50000" step="100" value="0">'+
-              '<div class="amount-slider-value" id="amountSliderValue">≥ HK$0</div>'+
-              '<div class="amount-slider-ticks">'+
-                '<span>0</span>'+
-                '<span>1万</span>'+
-                '<span>2.5万</span>'+
-                '<span>5万</span>'+
-              '</div>'+
-            '</div>'+
-          '</div>'+
-        '</div>'+
-        '<div class="filter-search-row">'+
-          '<div class="filter-search-wrap">'+
-            '<input type="text" id="searchInput" placeholder="搜索牌谱内容..." />'+
-            '<svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>'+
-          '</div>'+
-        '</div>'+
-      '</div>';
-
-      spBody.innerHTML = filterHtml + '<div class="hands-list-container"></div>';
-      attachFilterListeners();
-    }
-
-    // Get or create list container
-    var listContainer = spBody.querySelector('.hands-list-container');
-    if(!listContainer){
-      listContainer = document.createElement('div');
-      listContainer.className = 'hands-list-container';
-      spBody.appendChild(listContainer);
-    }
-
-    // Clear and render list
-    listContainer.innerHTML = '';
-
-    if(!filtered.length){
-      listContainer.innerHTML = '<div class="hands-overview-empty"><div class="ce-glyph">♣︎ ♥︎</div>没有符合筛选条件的牌谱</div>';
-      updateFilterUI();
-      return;
-    }
-
-    filtered.forEach(function(item){
+    spBody.innerHTML = "";
+    flat.forEach(function(item){
       var e = item.entry;
 
       // Calculate extra info
@@ -4830,63 +3687,6 @@
 
       var tcStr = (e.tableCondition && e.tableCondition.trim()) ? e.tableCondition : "";
 
-      // Hand type labels
-      var HAND_TYPE_LABELS = {
-        correct: "正确手牌",
-        lucky: "幸运手牌",
-        unlucky: "倒霉手牌",
-        error: "错误手牌"
-      };
-      var CORRECT_TYPE_LABELS = {
-        "max-value": "吃满价值",
-        "deny-equity": "拒绝权益",
-        "catch-bluff": "正确抓诈",
-        "disciplined-fold": "纪律弃牌"
-      };
-      var ERROR_TYPE_LABELS = {
-        "weak-vs-strong": "弱范围对抗强范围",
-        "too-wide": "入池太宽",
-        "bad-bluff": "不合理的诈唬",
-        "bad-call": "不合理的跟注",
-        "missed-value": "价值没吃满",
-        "insufficient-bluff": "诈唬不足",
-        "insufficient-call": "跟注不足"
-      };
-
-      var handTypeTag = "";
-      if(item.handType){
-        handTypeTag = '<span class="hov-tag hand-type-tag">'+HAND_TYPE_LABELS[item.handType]+'</span>';
-      }
-      var handSubtypeTag = "";
-      if(item.handType === "correct" && item.correctType){
-        handSubtypeTag = '<span class="hov-tag hand-subtype-tag">'+CORRECT_TYPE_LABELS[item.correctType]+'</span>';
-      } else if(item.handType === "error" && item.errorType){
-        handSubtypeTag = '<span class="hov-tag hand-subtype-tag">'+ERROR_TYPE_LABELS[item.errorType]+'</span>';
-      }
-
-      // Hand amount display
-      var handAmountStr = "";
-      var handAmountTag = "";
-      if(item.handAmount && item.handAmount > 0){
-        var handIsPos = item.handSign !== "-";
-        handAmountStr = (handIsPos?"+":"−")+"HK$"+formatMoney(item.handAmount);
-        handAmountTag = '<span class="hov-tag hand-amount-tag '+(handIsPos?'pos':'neg')+'">'+handAmountStr+'</span>';
-      }
-
-      // Highlight search text
-      var displayText = item.text;
-      if(handsFilter.searchText){
-        var searchLower = handsFilter.searchText.toLowerCase();
-        var textLower = displayText.toLowerCase();
-        var startIdx = textLower.indexOf(searchLower);
-        if(startIdx !== -1){
-          var before = displayText.substring(0, startIdx);
-          var match = displayText.substring(startIdx, startIdx + handsFilter.searchText.length);
-          var after = displayText.substring(startIdx + handsFilter.searchText.length);
-          displayText = before + '<span class="search-highlight">' + match + '</span>' + after;
-        }
-      }
-
       var card = document.createElement("div");
       card.className = "hov-card venue-" + item.venue;
       card.innerHTML =
@@ -4895,9 +3695,6 @@
             '<span class="hov-date">'+formatCN(item.date)+'</span>'+
             '<span class="hov-tag">'+VENUE_LABEL[item.venue]+'</span>'+
             '<span class="hov-tag">'+item.level+'</span>'+
-            handTypeTag+
-            handSubtypeTag+
-            handAmountTag+
           '</div>'+
           '<div class="hov-meta-right">'+
             '<button class="hov-icon-btn hov-expand-btn" aria-label="展开">'+
@@ -4908,7 +3705,7 @@
             '</button>'+
           '</div>'+
         '</div>'+
-        '<div class="hov-text">'+displayText+'</div>'+
+        '<div class="hov-text">'+escapeHtml(item.text)+'</div>'+
         '<div class="hov-extra">'+
           (tcStr ?
             '<div class="hov-extra-tc">'+
@@ -4916,17 +3713,9 @@
               '<div class="hov-extra-tc-text">'+escapeHtml(tcStr)+'</div>'+
             '</div>'
             : '')+
-          (handAmountStr ?
-            '<div class="hov-extra-row">'+
-              '<div class="hov-extra-item">'+
-                '<div class="hov-extra-label">本手输赢</div>'+
-                '<div class="hov-extra-value amount'+(item.handSign==="-"?' neg':'')+'">'+handAmountStr+'</div>'+
-              '</div>'+
-            '</div>'
-            : '')+
           '<div class="hov-extra-row">'+
             '<div class="hov-extra-item">'+
-              '<div class="hov-extra-label">总金额</div>'+
+              '<div class="hov-extra-label">金额</div>'+
               '<div class="hov-extra-value amount'+(isPos?'':' neg')+'">'+amountStr+'</div>'+
             '</div>'+
             '<div class="hov-extra-item">'+
@@ -4959,152 +3748,8 @@
         openHandEditorDirect(item.entryId, item.handIdx);
       });
 
-      listContainer.appendChild(card);
+      spBody.appendChild(card);
     });
-
-    updateFilterUI();
-  }
-
-  function attachFilterListeners(){
-    var filterPills = document.querySelectorAll(".filter-pill");
-    filterPills.forEach(function(pill){
-      pill.addEventListener("click", function(){
-        var filterType = pill.getAttribute("data-filter-type");
-        var value = pill.getAttribute("data-value");
-
-        // Toggle filter
-        if(handsFilter[filterType] === value){
-          handsFilter[filterType] = null;
-        } else {
-          handsFilter[filterType] = value;
-          // Clear subtype when changing handType
-          if(filterType === "handType"){
-            handsFilter.subType = null;
-          }
-        }
-
-        // Update UI
-        updateFilterUI();
-        renderHandsOverview();
-      });
-    });
-
-    // Clear filter button
-    var clearBtn = document.getElementById("filterClearBtn");
-    if(clearBtn){
-      clearBtn.addEventListener("click", function(){
-        handsFilter.venue = null;
-        handsFilter.level = null;
-        handsFilter.handType = null;
-        handsFilter.subType = null;
-        handsFilter.amountSign = null;
-        handsFilter.amountThreshold = 0;
-        handsFilter.searchText = "";
-        renderHandsOverview();
-      });
-    }
-
-    // Amount sign buttons
-    var amountSignPlus = document.getElementById("amountSignPlus");
-    var amountSignMinus = document.getElementById("amountSignMinus");
-    if(amountSignPlus){
-      amountSignPlus.addEventListener("click", function(){
-        if(handsFilter.amountSign === "+"){
-          handsFilter.amountSign = null;
-          amountSignPlus.classList.remove("active");
-        } else {
-          handsFilter.amountSign = "+";
-          amountSignPlus.classList.add("active");
-          amountSignMinus.classList.remove("active");
-        }
-        renderHandsOverview();
-      });
-    }
-    if(amountSignMinus){
-      amountSignMinus.addEventListener("click", function(){
-        if(handsFilter.amountSign === "-"){
-          handsFilter.amountSign = null;
-          amountSignMinus.classList.remove("active");
-        } else {
-          handsFilter.amountSign = "-";
-          amountSignMinus.classList.add("active");
-          amountSignPlus.classList.remove("active");
-        }
-        renderHandsOverview();
-      });
-    }
-
-    // Amount slider
-    var amountSlider = document.getElementById("amountSlider");
-    var amountSliderValue = document.getElementById("amountSliderValue");
-    if(amountSlider){
-      amountSlider.addEventListener("input", function(){
-        var val = parseInt(amountSlider.value);
-        handsFilter.amountThreshold = val;
-        amountSliderValue.textContent = "≥ HK$" + formatMoney(val);
-        renderHandsOverview();
-      });
-    }
-
-    // Search input
-    var searchInput = document.getElementById("searchInput");
-    if(searchInput){
-      searchInput.addEventListener("input", function(){
-        handsFilter.searchText = searchInput.value.trim();
-        renderHandsOverview();
-      });
-    }
-  }
-
-  function updateFilterUI(){
-    var correctRow = document.getElementById("correctTypeRow");
-    var errorRow = document.getElementById("errorTypeRow");
-
-    // Show/hide subtype rows based on handType
-    if(handsFilter.handType === "correct"){
-      correctRow.style.display = "flex";
-      errorRow.style.display = "none";
-    } else if(handsFilter.handType === "error"){
-      correctRow.style.display = "none";
-      errorRow.style.display = "flex";
-    } else {
-      correctRow.style.display = "none";
-      errorRow.style.display = "none";
-    }
-
-    // Update selected state
-    var filterPills = document.querySelectorAll(".filter-pill");
-    filterPills.forEach(function(pill){
-      var filterType = pill.getAttribute("data-filter-type");
-      var value = pill.getAttribute("data-value");
-      pill.classList.toggle("selected", handsFilter[filterType] === value);
-    });
-
-    // Update amount sign buttons
-    var amountSignPlus = document.getElementById("amountSignPlus");
-    var amountSignMinus = document.getElementById("amountSignMinus");
-    if(amountSignPlus){
-      amountSignPlus.classList.toggle("active", handsFilter.amountSign === "+");
-    }
-    if(amountSignMinus){
-      amountSignMinus.classList.toggle("active", handsFilter.amountSign === "-");
-    }
-
-    // Update amount slider
-    var amountSlider = document.getElementById("amountSlider");
-    var amountSliderValue = document.getElementById("amountSliderValue");
-    if(amountSlider){
-      amountSlider.value = handsFilter.amountThreshold;
-      if(amountSliderValue){
-        amountSliderValue.textContent = "≥ HK$" + formatMoney(handsFilter.amountThreshold);
-      }
-    }
-
-    // Update search input
-    var searchInput = document.getElementById("searchInput");
-    if(searchInput){
-      searchInput.value = handsFilter.searchText;
-    }
   }
 
   // ---- 金额分析模块 ----
@@ -5139,81 +3784,27 @@
       '<div class="analysis-title">核心统计</div>'+
       '<div class="stats-grid">'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '总盈利'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '所有Session的累计盈亏总和。正数表示整体盈利，负数表示整体亏损。'+
-                '<div class="tooltip-formula">总盈利 = Σ(每局符号 × 金额)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">总盈利</div>'+
           '<div class="stat-card-value'+(totalProfit<0?' neg':'')+'">'+fmtSignedMoney(totalProfit)+'</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '总时长'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '所有Session的游戏时长总和，以小时为单位。'+
-                '<div class="tooltip-formula">总时长 = Σ(每局时长)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">总时长</div>'+
           '<div class="stat-card-value">'+totalDuration.toFixed(1)+'h</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '时薪'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '平均每小时的盈利金额。时薪越高说明效率越好。'+
-                '<div class="tooltip-formula">时薪 = 总盈利 / 总时长</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">时薪</div>'+
           '<div class="stat-card-value'+(hourlyRate<0?' neg':'')+'">'+Math.round(hourlyRate)+'/h</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '平均Session盈利'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '每个Session的平均盈亏金额。反映单次游戏的平均表现。'+
-                '<div class="tooltip-formula">平均Session盈利 = 总盈利 / Session数</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">平均Session盈利</div>'+
           '<div class="stat-card-value'+(avgProfit<0?' neg':'')+'">'+fmtSignedMoney(avgProfit)+'</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '最大单次盈利'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '所有Session中单次盈利的最高金额。反映上限潜力。'+
-                '<div class="tooltip-formula">Max(所有正盈利Session)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">最大单次盈利</div>'+
           '<div class="stat-card-value">'+fmtSignedMoney(maxProfit > -Infinity ? maxProfit : 0)+'</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '最大单次亏损'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '所有Session中单次亏损的最大金额。反映风险控制情况。'+
-                '<div class="tooltip-formula">Min(所有负盈利Session)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">最大单次亏损</div>'+
           '<div class="stat-card-value neg">'+fmtSignedMoney(maxLoss < Infinity ? maxLoss : 0)+'</div>'+
         '</div>'+
       '</div>'+
@@ -5238,16 +3829,7 @@
     }).sort(function(a,b){ return b.profit - a.profit; });
 
     html += '<div class="analysis-section">'+
-      '<div class="analysis-title">'+
-        '场地分析'+
-        '<span class="info-icon">'+
-          'i'+
-          '<span class="tooltip">'+
-            '按游戏场地统计的盈亏表现。可以看出哪个场地的收益更好。'+
-            '<div class="tooltip-formula">时薪 = 该场地总盈亏 / 该场地总时长</div>'+
-          '</span>'+
-        '</span>'+
-      '</div>'+
+      '<div class="analysis-title">场地分析</div>'+
       '<div class="analysis-table-wrap">'+
         '<table class="analysis-table">'+
           '<thead><tr>'+
@@ -5286,16 +3868,7 @@
     }).sort(function(a,b){ return b.profit - a.profit; });
 
     html += '<div class="analysis-section">'+
-      '<div class="analysis-title">'+
-        '级别分析'+
-        '<span class="info-icon">'+
-          'i'+
-          '<span class="tooltip">'+
-            '按盲注级别统计的盈亏表现。高级别通常盈利更高但风险也更大。'+
-            '<div class="tooltip-formula">时薪 = 该级别总盈亏 / 该级别总时长</div>'+
-          '</span>'+
-        '</span>'+
-      '</div>'+
+      '<div class="analysis-title">级别分析</div>'+
       '<div class="analysis-table-wrap">'+
         '<table class="analysis-table">'+
           '<thead><tr>'+
@@ -5331,16 +3904,7 @@
     });
 
     html += '<div class="analysis-section">'+
-      '<div class="analysis-title">'+
-        '时间统计'+
-        '<span class="info-icon">'+
-          'i'+
-          '<span class="tooltip">'+
-            '按时间周期（年/月/周/日）统计的盈亏表现。可以看出不同时期的表现趋势。'+
-            '<div class="tooltip-formula">时薪 = 该时期总盈亏 / 该时期总时长</div>'+
-          '</span>'+
-        '</span>'+
-      '</div>'+
+      '<div class="analysis-title">时间统计</div>'+
       '<div class="analysis-table-wrap">'+
         '<table class="analysis-table">'+
           '<thead><tr>'+
@@ -5414,120 +3978,39 @@
     var avgExposure = sessionCount > 0 ? buyinStats.totalBuyinAmount / sessionCount : 0;
 
     html += '<div class="analysis-section">'+
-      '<div class="analysis-title">'+
-        'Buy-in & Rebuy 分析'+
-        '<span class="info-icon">'+
-          'i'+
-          '<span class="tooltip">'+
-            '买入和补仓情况分析。Rebuy次数越多通常说明波动越大或打法越激进。'+
-            '<div class="tooltip-formula">平均买入 = Σ(买入bb数) / 总场次</div>'+
-          '</span>'+
-        '</span>'+
-      '</div>'+
+      '<div class="analysis-title">Buy-in & Rebuy 分析</div>'+
       '<div class="stats-grid">'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '平均买入'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '平均每次Session的买入大盲注倍数。反映资金管理习惯。'+
-                '<div class="tooltip-formula">平均买入 = Σ(买入bb数) / Session数</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">平均买入</div>'+
           '<div class="stat-card-value">'+avgBuyin.toFixed(0)+' bb</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            'Rebuy率'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '发生过补仓的Session占比。Rebuy率高说明波动大或打法激进。'+
-                '<div class="tooltip-formula">Rebuy率 = 有Rebuy的场次 / 总场次 × 100%</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">Rebuy率</div>'+
           '<div class="stat-card-value">'+rebuyRate.toFixed(1)+'%</div>'+
           '<div class="stat-card-hint">'+buyinStats.recordedRebuyCount+'场有记录</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '平均Rebuy次数'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '在发生Rebuy的Session中，平均补仓次数。'+
-                '<div class="tooltip-formula">平均 = 总Rebuy次数 / 有Rebuy的场次</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">平均Rebuy次数</div>'+
           '<div class="stat-card-value">'+avgRebuyTimes.toFixed(2)+'</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '一枪率'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '没有Rebuy的Session占比。一枪率高说明资金控制好或运气好。'+
-                '<div class="tooltip-formula">一枪率 = 无Rebuy的场次 / 总场次 × 100%</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">一枪率</div>'+
           '<div class="stat-card-value">'+oneTimeRate.toFixed(1)+'%</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '平均资金暴露'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '平均每次Session带到桌面的资金总额（买入+补仓）。'+
-                '<div class="tooltip-formula">资金暴露 = (买入bb × bb值) 的平均值</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">平均资金暴露</div>'+
           '<div class="stat-card-value">HK$'+formatMoney(avgExposure)+'</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            'Rebuy场均盈利'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '发生Rebuy的Session的平均盈亏。与无Rebuy对比可看出补仓效果。'+
-                '<div class="tooltip-formula">场均 = Rebuy场次总盈亏 / Rebuy场次数</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">Rebuy场均盈利</div>'+
           '<div class="stat-card-value'+(avgRebuyProfit<0?' neg':'')+'">'+fmtSignedMoney(avgRebuyProfit)+'</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '无Rebuy场均盈利'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '没有Rebuy的Session的平均盈亏。通常一枪打好收益更稳定。'+
-                '<div class="tooltip-formula">场均 = 无Rebuy场次总盈亏 / 无Rebuy场次数</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">无Rebuy场均盈利</div>'+
           '<div class="stat-card-value'+(avgNoRebuyProfit<0?' neg':'')+'">'+fmtSignedMoney(avgNoRebuyProfit)+'</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            'Rebuy盈利差'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '无Rebuy场均盈利 - Rebuy场均盈利。正数说明不补仓更赚钱。'+
-                '<div class="tooltip-formula">差值 = 无Rebuy场均 - Rebuy场均</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">Rebuy盈利差</div>'+
           '<div class="stat-card-value'+(avgNoRebuyProfit-avgRebuyProfit<0?' neg':'')+'">'+fmtSignedMoney(avgNoRebuyProfit-avgRebuyProfit)+'</div>'+
         '</div>'+
       '</div>'+
@@ -5551,16 +4034,7 @@
     });
 
     html += '<div class="analysis-section">'+
-      '<div class="analysis-title">'+
-        'Rebuy次数与盈利关联'+
-        '<span class="info-icon">'+
-          'i'+
-          '<span class="tooltip">'+
-            '分析不同Rebuy次数对应的盈亏情况。可以看出补仓策略是否有效。'+
-            '<div class="tooltip-formula">场均盈亏 = 该Rebuy次数的总盈亏 / 场次数</div>'+
-          '</span>'+
-        '</span>'+
-      '</div>'+
+      '<div class="analysis-title">Rebuy次数与盈利关联</div>'+
       '<div class="analysis-table-wrap">'+
         '<table class="analysis-table">'+
           '<thead><tr>'+
@@ -5628,97 +4102,16 @@
     });
 
     html += '<div class="analysis-section">'+
-      '<div class="analysis-title">'+
-        '稳定性'+
-        '<span class="info-icon">'+
-          'i'+
-          '<span class="tooltip">'+
-            '盈亏稳定性指标。波动越小、连输越少说明打法越稳定。'+
-            '<div class="tooltip-formula">标准差 = √(Σ(每局盈亏-平均)² / 场次数)</div>'+
-          '</span>'+
-        '</span>'+
-      '</div>'+
+      '<div class="analysis-title">稳定性</div>'+
       '<div class="analysis-table-wrap">'+
         '<table class="analysis-table">'+
           '<tbody>'+
-            '<tr>'+
-              '<td>'+
-                '盈利Session占比'+
-                '<span class="info-icon" style="margin-left:6px;">'+
-                  'i'+
-                  '<span class="tooltip">'+
-                    '盈利场次占总场次的百分比。占比越高说明胜率越高。'+
-                    '<div class="tooltip-formula">盈利占比 = 盈利场次 / 总场次 × 100%</div>'+
-                  '</span>'+
-                '</span>'+
-              '</td>'+
-              '<td class="num pos">'+profitRate+'%</td>'+
-            '</tr>'+
-            '<tr>'+
-              '<td>'+
-                '亏损Session占比'+
-                '<span class="info-icon" style="margin-left:6px;">'+
-                  'i'+
-                  '<span class="tooltip">'+
-                    '亏损场次占总场次的百分比。占比越低说明失误越少。'+
-                    '<div class="tooltip-formula">亏损占比 = 亏损场次 / 总场次 × 100%</div>'+
-                  '</span>'+
-                '</span>'+
-              '</td>'+
-              '<td class="num neg">'+lossRate+'%</td>'+
-            '</tr>'+
-            '<tr>'+
-              '<td>'+
-                '连赢纪录'+
-                '<span class="info-icon" style="margin-left:6px;">'+
-                  'i'+
-                  '<span class="tooltip">'+
-                    '最长的连续盈利场次数。反映最佳状态的持续能力。'+
-                    '<div class="tooltip-formula">Max(连续盈利的场次数)</div>'+
-                  '</span>'+
-                '</span>'+
-              '</td>'+
-              '<td class="num">'+maxWinStreak+'次</td>'+
-            '</tr>'+
-            '<tr>'+
-              '<td>'+
-                '连输纪录'+
-                '<span class="info-icon" style="margin-left:6px;">'+
-                  'i'+
-                  '<span class="tooltip">'+
-                    '最长的连续亏损场次数。反映最差状态的持续时间。'+
-                    '<div class="tooltip-formula">Max(连续亏损的场次数)</div>'+
-                  '</span>'+
-                '</span>'+
-              '</td>'+
-              '<td class="num">'+maxLoseStreak+'次</td>'+
-            '</tr>'+
-            '<tr>'+
-              '<td>'+
-                '平均波动'+
-                '<span class="info-icon" style="margin-left:6px;">'+
-                  'i'+
-                  '<span class="tooltip">'+
-                    '盈亏的标准差，衡量结果的波动程度。波动越小越稳定。'+
-                    '<div class="tooltip-formula">标准差 = √(方差)</div>'+
-                  '</span>'+
-                '</span>'+
-              '</td>'+
-              '<td class="num">±'+Math.round(stdDev)+'</td>'+
-            '</tr>'+
-            '<tr>'+
-              '<td>'+
-                '最大回撤'+
-                '<span class="info-icon" style="margin-left:6px;">'+
-                  'i'+
-                  '<span class="tooltip">'+
-                    '从最高点到最低点的最大跌幅。衡量最坏情况下的亏损幅度。'+
-                    '<div class="tooltip-formula">最大回撤 = Max(累计峰值 - 当前累计)</div>'+
-                  '</span>'+
-                '</span>'+
-              '</td>'+
-              '<td class="num neg">'+fmtSignedMoney(-maxDrawdown)+'</td>'+
-            '</tr>'+
+            '<tr><td>盈利Session占比</td><td class="num pos">'+profitRate+'%</td></tr>'+
+            '<tr><td>亏损Session占比</td><td class="num neg">'+lossRate+'%</td></tr>'+
+            '<tr><td>连赢纪录</td><td class="num">'+maxWinStreak+'次</td></tr>'+
+            '<tr><td>连输纪录</td><td class="num">'+maxLoseStreak+'次</td></tr>'+
+            '<tr><td>平均波动</td><td class="num">±'+Math.round(stdDev)+'</td></tr>'+
+            '<tr><td>最大回撤</td><td class="num neg">'+fmtSignedMoney(-maxDrawdown)+'</td></tr>'+
           '</tbody>'+
         '</table>'+
       '</div>'+
@@ -5759,101 +4152,38 @@
 
     // 1. 赢率统计卡片 - 分级别显示
     html += '<div class="analysis-section">'+
-      '<div class="analysis-title">'+
-        '赢率统计（按级别）'+
-        '<span class="info-icon">'+
-          'i'+
-          '<span class="tooltip">'+
-            '按盲注级别统计的赢率表现。bb/百手表示每百手的大盲注收益。'+
-            '<div class="tooltip-formula">赢率 = 盈利 / (时长×30×bb倍数)</div>'+
-          '</span>'+
-        '</span>'+
-      '</div>'+
+      '<div class="analysis-title">赢率统计（按级别）</div>'+
       '<div class="stats-grid">'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '50/100 赢率'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '50/100级别的赢率（bb=100）。正数越高说明打得越好。'+
-                '<div class="tooltip-formula">赢率 = 盈利 / (时长×30×1)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">50/100 赢率</div>'+
           '<div class="stat-card-value'+(wr5050<0?' neg':'')+'">'+
             (wr5050>=0?'+':'−')+Math.abs(wr5050).toFixed(2)+
           '</div>'+
           '<div class="stat-card-sub">bb/百手</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '50/100 手数'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '50/100级别玩的总手数。按每小时30手估算。'+
-                '<div class="tooltip-formula">手数 = 时长 × 30手/小时</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">50/100 手数</div>'+
           '<div class="stat-card-value">'+Math.round(data5050.hands)+'</div>'+
           '<div class="stat-card-sub">约 '+Math.round(data5050.hands/100)+'百手</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '50/100 盈利'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '50/100级别的累计盈亏总额。'+
-                '<div class="tooltip-formula">盈利 = Σ(该级别每局金额)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">50/100 盈利</div>'+
           '<div class="stat-card-value'+(data5050.profit<0?' neg':'')+'">'+fmtSignedMoney(data5050.profit)+'</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '100/200 赢率'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '100/200级别的赢率（bb=200）。正数越高说明打得越好。'+
-                '<div class="tooltip-formula">赢率 = 盈利 / (时长×30×2)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">100/200 赢率</div>'+
           '<div class="stat-card-value'+(wr100200<0?' neg':'')+'">'+
             (wr100200>=0?'+':'−')+Math.abs(wr100200).toFixed(2)+
           '</div>'+
           '<div class="stat-card-sub">bb/百手</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '100/200 手数'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '100/200级别玩的总手数。按每小时30手估算。'+
-                '<div class="tooltip-formula">手数 = 时长 × 30手/小时</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">100/200 手数</div>'+
           '<div class="stat-card-value">'+Math.round(data100200.hands)+'</div>'+
           '<div class="stat-card-sub">约 '+Math.round(data100200.hands/100)+'百手</div>'+
         '</div>'+
         '<div class="stat-card">'+
-          '<div class="stat-card-label">'+
-            '100/200 盈利'+
-            '<span class="info-icon">'+
-              'i'+
-              '<span class="tooltip">'+
-                '100/200级别的累计盈亏总额。'+
-                '<div class="tooltip-formula">盈利 = Σ(该级别每局金额)</div>'+
-              '</span>'+
-            '</span>'+
-          '</div>'+
+          '<div class="stat-card-label">100/200 盈利</div>'+
           '<div class="stat-card-value'+(data100200.profit<0?' neg':'')+'">'+fmtSignedMoney(data100200.profit)+'</div>'+
         '</div>'+
       '</div>'+
@@ -5895,16 +4225,7 @@
     // 50/100 table
     if(timeRows5050.length > 0){
       html += '<div class="analysis-section">'+
-        '<div class="analysis-title">'+
-          '50/100 赢率明细'+
-          '<span class="info-icon">'+
-            'i'+
-            '<span class="tooltip">'+
-              '50/100级别按时间周期的详细赢率数据。可以看出各时期表现。'+
-              '<div class="tooltip-formula">bb/百手 = 盈利 / (手数×1)</div>'+
-            '</span>'+
-          '</span>'+
-        '</div>'+
+        '<div class="analysis-title">50/100 赢率明细</div>'+
         '<div class="analysis-table-wrap">'+
           '<table class="analysis-table">'+
             '<thead><tr>'+
@@ -5927,16 +4248,7 @@
     // 100/200 table
     if(timeRows100200.length > 0){
       html += '<div class="analysis-section">'+
-        '<div class="analysis-title">'+
-          '100/200 赢率明细'+
-          '<span class="info-icon">'+
-            'i'+
-            '<span class="tooltip">'+
-              '100/200级别按时间周期的详细赢率数据。可以看出各时期表现。'+
-              '<div class="tooltip-formula">bb/百手 = 盈利 / (手数×2)</div>'+
-            '</span>'+
-          '</span>'+
-        '</div>'+
+        '<div class="analysis-title">100/200 赢率明细</div>'+
         '<div class="analysis-table-wrap">'+
           '<table class="analysis-table">'+
             '<thead><tr>'+
@@ -5991,97 +4303,16 @@
       var wrStdDev = Math.sqrt(wrVariance);
 
       html += '<div class="analysis-section">'+
-        '<div class="analysis-title">'+
-          '稳定性分析'+
-          '<span class="info-icon">'+
-            'i'+
-            '<span class="tooltip">'+
-              '赢率的稳定性指标。正赢率周期越多、波动越小说明打法越稳定。'+
-              '<div class="tooltip-formula">标准差 = √(各周期赢率方差)</div>'+
-            '</span>'+
-          '</span>'+
-        '</div>'+
+        '<div class="analysis-title">稳定性分析</div>'+
         '<div class="analysis-table-wrap">'+
           '<table class="analysis-table">'+
             '<tbody>'+
-              '<tr>'+
-                '<td>'+
-                  '正赢率周期占比'+
-                  '<span class="info-icon" style="margin-left:6px;">'+
-                    'i'+
-                    '<span class="tooltip">'+
-                      '赢率为正的时间周期占比。占比越高说明长期表现越好。'+
-                      '<div class="tooltip-formula">占比 = 正赢率周期数 / 总周期数 × 100%</div>'+
-                    '</span>'+
-                  '</span>'+
-                '</td>'+
-                '<td class="num pos">'+posWRRate+'%</td>'+
-              '</tr>'+
-              '<tr>'+
-                '<td>'+
-                  '负赢率周期占比'+
-                  '<span class="info-icon" style="margin-left:6px;">'+
-                    'i'+
-                    '<span class="tooltip">'+
-                      '赢率为负的时间周期占比。占比越低说明失误越少。'+
-                      '<div class="tooltip-formula">占比 = 负赢率周期数 / 总周期数 × 100%</div>'+
-                    '</span>'+
-                  '</span>'+
-                '</td>'+
-                '<td class="num neg">'+negWRRate+'%</td>'+
-              '</tr>'+
-              '<tr>'+
-                '<td>'+
-                  '平均赢率'+
-                  '<span class="info-icon" style="margin-left:6px;">'+
-                    'i'+
-                    '<span class="tooltip">'+
-                      '所有时间周期的平均赢率。反映总体水平。'+
-                      '<div class="tooltip-formula">平均赢率 = Σ(各周期赢率) / 周期数</div>'+
-                    '</span>'+
-                  '</span>'+
-                '</td>'+
-                '<td class="num '+(avgWR>=0?'pos':'neg')+'">'+(avgWR>=0?'+':'−')+Math.abs(avgWR).toFixed(2)+' bb/百手</td>'+
-              '</tr>'+
-              '<tr>'+
-                '<td>'+
-                  '赢率标准差'+
-                  '<span class="info-icon" style="margin-left:6px;">'+
-                    'i'+
-                    '<span class="tooltip">'+
-                      '赢率的波动幅度。标准差越小说明表现越稳定。'+
-                      '<div class="tooltip-formula">标准差 = √(方差)</div>'+
-                    '</span>'+
-                  '</span>'+
-                '</td>'+
-                '<td class="num">±'+wrStdDev.toFixed(2)+'</td>'+
-              '</tr>'+
-              '<tr>'+
-                '<td>'+
-                  '最大连续正赢率周期'+
-                  '<span class="info-icon" style="margin-left:6px;">'+
-                    'i'+
-                    '<span class="tooltip">'+
-                      '连续正赢率的最长周期数。反映最佳状态的持续能力。'+
-                      '<div class="tooltip-formula">Max(连续正赢率周期数)</div>'+
-                    '</span>'+
-                  '</span>'+
-                '</td>'+
-                '<td class="num">'+maxPosStreak+'</td>'+
-              '</tr>'+
-              '<tr>'+
-                '<td>'+
-                  '最大连续负赢率周期'+
-                  '<span class="info-icon" style="margin-left:6px;">'+
-                    'i'+
-                    '<span class="tooltip">'+
-                      '连续负赢率的最长周期数。反映最差状态的持续时间。'+
-                      '<div class="tooltip-formula">Max(连续负赢率周期数)</div>'+
-                    '</span>'+
-                  '</span>'+
-                '</td>'+
-                '<td class="num">'+maxNegStreak+'</td>'+
-              '</tr>'+
+              '<tr><td>正赢率周期占比</td><td class="num pos">'+posWRRate+'%</td></tr>'+
+              '<tr><td>负赢率周期占比</td><td class="num neg">'+negWRRate+'%</td></tr>'+
+              '<tr><td>平均赢率</td><td class="num '+(avgWR>=0?'pos':'neg')+'">'+(avgWR>=0?'+':'−')+Math.abs(avgWR).toFixed(2)+' bb/百手</td></tr>'+
+              '<tr><td>赢率标准差</td><td class="num">±'+wrStdDev.toFixed(2)+'</td></tr>'+
+              '<tr><td>最大连续正赢率周期</td><td class="num">'+maxPosStreak+'</td></tr>'+
+              '<tr><td>最大连续负赢率周期</td><td class="num">'+maxNegStreak+'</td></tr>'+
             '</tbody>'+
           '</table>'+
         '</div>'+
@@ -6097,35 +4328,6 @@
   // scroll list to bottom (latest entries) on load
   window.addEventListener("load", function(){
     window.scrollTo(0, document.body.scrollHeight);
-  });
-
-  // ---------- Mobile tooltip support ----------
-  // Handle click events on info-icons for mobile devices
-  document.addEventListener("click", function(e){
-    var infoIcon = e.target.closest(".info-icon");
-
-    if(infoIcon){
-      e.preventDefault();
-      e.stopPropagation();
-
-      // Toggle active state on this icon
-      var wasActive = infoIcon.classList.contains("active");
-
-      // Close all other tooltips
-      document.querySelectorAll(".info-icon.active").forEach(function(icon){
-        icon.classList.remove("active");
-      });
-
-      // Toggle this one
-      if(!wasActive){
-        infoIcon.classList.add("active");
-      }
-    } else {
-      // Click outside - close all tooltips
-      document.querySelectorAll(".info-icon.active").forEach(function(icon){
-        icon.classList.remove("active");
-      });
-    }
   });
 })();
 </script>
